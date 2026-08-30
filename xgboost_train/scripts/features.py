@@ -89,33 +89,56 @@ def extract_flow_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     df = df.copy()
 
+    # -- Map FlowObject format to CICIDS format if live ingestion ----------------
+    if "duration_s" in df.columns:
+        df["Flow Duration"] = df["duration_s"] * 1e6
+    if "total_packets" in df.columns:
+        df["Total Fwd Packet"] = df["total_packets"]
+    if "bytes_in" in df.columns:
+        df["Total Length of Fwd Packet"] = df["bytes_in"]
+
     # -- Parse list columns if present (FlowObject format) -------------------
-    for col, prefix in [
-        ("inter_arrival_times", "iat"),
-        ("packet_sizes", "pkt_size"),
-    ]:
-        if col in df.columns:
-            parsed: pd.Series = df[col].apply(
-                lambda v: (
-                    ast.literal_eval(v) if isinstance(v, str)
-                    else (v if isinstance(v, list) else [])
-                )
-            )
-            df[f"{prefix}_mean"] = parsed.apply(
-                lambda lst: float(np.mean(lst)) if lst else 0.0
-            )
-            df[f"{prefix}_std"] = parsed.apply(
-                lambda lst: float(np.std(lst)) if lst else 0.0
-            )
+    if "packet_sizes" in df.columns:
+        parsed_sizes = df["packet_sizes"].apply(
+            lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
+        )
+        df["Fwd Packet Length Mean"] = parsed_sizes.apply(lambda lst: float(np.mean(lst)) if lst else 0.0)
+        df["Fwd Packet Length Std"] = parsed_sizes.apply(lambda lst: float(np.std(lst)) if lst else 0.0)
+        df["Fwd Packet Length Max"] = parsed_sizes.apply(lambda lst: float(np.max(lst)) if lst else 0.0)
+        df["Fwd Packet Length Min"] = parsed_sizes.apply(lambda lst: float(np.min(lst)) if lst else 0.0)
+
+    if "inter_arrival_times" in df.columns:
+        parsed_iats = df["inter_arrival_times"].apply(
+            lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
+        )
+        # Convert seconds to microseconds for CICIDS match
+        df["Flow IAT Mean"] = parsed_iats.apply(lambda lst: float(np.mean(lst)) * 1e6 if lst else 0.0)
+        df["Flow IAT Std"] = parsed_iats.apply(lambda lst: float(np.std(lst)) * 1e6 if lst else 0.0)
+        df["Flow IAT Max"] = parsed_iats.apply(lambda lst: float(np.max(lst)) * 1e6 if lst else 0.0)
+        df["Flow IAT Min"] = parsed_iats.apply(lambda lst: float(np.min(lst)) * 1e6 if lst else 0.0)
 
     # -- Rate features from FlowObject base columns (if present) -------------
     if {"bytes_in", "duration_s", "total_packets"}.issubset(df.columns):
         dur = df["duration_s"].clip(lower=0.001)
-        df["byte_rate"]   = df["bytes_in"]     / dur
-        df["packet_rate"] = df["total_packets"] / dur
+        df["Flow Bytes/s"]   = df["bytes_in"]     / dur
+        df["Flow Packets/s"] = df["total_packets"] / dur
+        
+    # -- TCP Flags from FlowObject -------------------------------------------
+    if "tcp_flags_seen" in df.columns:
+        parsed_flags = df["tcp_flags_seen"].apply(
+            lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
+        )
+        df["FIN Flag Count"] = parsed_flags.apply(lambda x: 1 if "F" in x else 0)
+        df["SYN Flag Count"] = parsed_flags.apply(lambda x: 1 if "S" in x else 0)
+        df["RST Flag Count"] = parsed_flags.apply(lambda x: 1 if "R" in x else 0)
+        df["PSH Flag Count"] = parsed_flags.apply(lambda x: 1 if "P" in x else 0)
+        df["ACK Flag Count"] = parsed_flags.apply(lambda x: 1 if "A" in x else 0)
+        df["URG Flag Count"] = parsed_flags.apply(lambda x: 1 if "U" in x else 0)
+        df["CWR Flag Count"] = parsed_flags.apply(lambda x: 1 if "C" in x else 0)
+        df["ECE Flag Count"] = parsed_flags.apply(lambda x: 1 if "E" in x else 0)
 
     # -- Drop non-feature columns --------------------------------------------
-    df = df.drop(columns=[c for c in _FLOW_DROP_COLS if c in df.columns])
+    df = df.drop(columns=[c for c in _FLOW_DROP_COLS if c in df.columns], errors="ignore")
 
     # -- Numeric only --------------------------------------------------------
     df = df.select_dtypes(include=[np.number])
@@ -123,6 +146,14 @@ def extract_flow_features(df: pd.DataFrame) -> pd.DataFrame:
     # -- Sanitise ------------------------------------------------------------
     df = df.replace([np.inf, -np.inf], np.nan)
     df = df.fillna(df.median(numeric_only=True))
+    df = df.fillna(0) # fallback if median is nan
+
+    # -- Align columns to model's exact training signature -------------------
+    col_path = MODELS_DIR / "flow_feature_columns.json"
+    if col_path.exists():
+        import json as _json
+        train_cols = _json.loads(col_path.read_text(encoding="utf-8"))
+        df = df.reindex(columns=train_cols, fill_value=0.0)
 
     return df
 

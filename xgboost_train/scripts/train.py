@@ -164,6 +164,12 @@ def train_flow_model() -> None:
     X = extract_flow_features(df)
     print(f"  Features : {X.shape[1]} columns after cleaning")
 
+    # Persist column list so test scripts can align unseen data exactly
+    import json as _json
+    col_path = MODELS_DIR / "flow_feature_columns.json"
+    col_path.write_text(_json.dumps(list(X.columns)), encoding="utf-8")
+    print(f"  Saved    : flow_feature_columns.json ({len(X.columns)} cols)")
+
     # -- Split ---------------------------------------------------------------
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42, stratify=y
