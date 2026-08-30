@@ -86,7 +86,8 @@ uv run python xgboost_train/scripts/live_inference.py
 2. **Ingest:** Parses the incoming JSON `FlowObject` payload.
 3. **Feature Extraction:** Calls `extract_flow_features` to map the `FlowObject` properties (like `bytes_in`, `duration_s`, and the `packet_sizes` array) into the exact 60 CICIDS column headers the XGBoost model expects.
 4. **Scoring:** Passes the features to Model A. If a `dns_meta` block is present with a `query_name`, it also passes the domain to Model B.
-5. **Output:** Prints the resulting human-readable probability dictionaries in real-time.
+5. **Output (Console):** Prints the resulting human-readable probability dictionaries in real-time to the terminal.
+6. **Output (Disk):** Appends the scored results to `xgboost_train/results/live_inference.jsonl`. This file acts as a persistent log of all detections that you can review after a simulation runs.
 
 ---
 
@@ -102,3 +103,19 @@ The `models/` directory contains all stateful elements required for inference:
 | `dns_label_encoder.pkl` | sklearn LabelEncoder for Model B | 3 target strings |
 | `dns_vectorizer.pkl` | sklearn CountVectorizer | `max_features=50` n-grams |
 | `flow_feature_columns.json` | Ordered list of exactly 60 feature column names Model A expects | List[str] length 60 |
+
+---
+
+## 🤝 Handoff to Person 2 (Ensemble) & Person 4 (API)
+
+As per the **SIH26145 System Architecture Specification (v1.0)**, Person 1's responsibilities conclude at generating the supervised class probabilities. 
+
+**For Person 2 (Unsupervised & Sequential Deep Learning Engineer):**
+- You must import `predict_flow_proba` and `predict_dns_proba` from `scripts/infer.py` into your ensemble scoring engine.
+- You will fuse these XGBoost probabilities with your PyTorch LSTM (C2 Beaconing) and Isolation Forest (Zero-day/Anomaly) scores.
+- You are responsible for calculating the final `confidence_score` (0.0–1.0) and deriving the `severity` (LOW, MEDIUM, HIGH, CRITICAL).
+- You must publish the final fused result to the **`alert.new`** Redis channel.
+
+**For Person 4 (Express API & Streaming Engineer):**
+- Person 2's output to `alert.new` must strictly conform to the **Standardized JSON Alert Schema (Section 6)**.
+- Ensure your Express backend parses `threat_class` as the agreed-upon enum (`VOLUMETRIC_DDOS`, `PORT_SCAN`, `DATA_EXFILTRATION`, `DGA_DOMAIN`, `DNS_TUNNELING`, `BOTNET_C2_BEACONING`, `ANOMALOUS_UNCLASSIFIED`) to pass down to Person 5 and 6 for the React dashboard.

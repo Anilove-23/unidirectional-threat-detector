@@ -53,16 +53,29 @@ def main():
                 print(f"\n[+] Received FlowObject ID: {flow_obj.get('flow_id')}")
                 
                 # 1. Model A: Score network flow stats
-                # predict_flow_proba internally calls extract_flow_features(flow_obj)
                 flow_prob_dict = predict_flow_proba(flow_obj)
                 print(f"[*] Flow Scored (Model A): {json.dumps(flow_prob_dict)}")
                 
                 # 2. Model B: Score DNS lexical features if present
+                dns_prob_dict = None
                 dns_meta = flow_obj.get("dns_meta")
                 if dns_meta and dns_meta.get("query_name"):
                     query = dns_meta["query_name"]
                     dns_prob_dict = predict_dns_proba(query)
                     print(f"[*] DNS Scored (Model B) for '{query}': {json.dumps(dns_prob_dict)}")
+                
+                # Save output to a persistent log file
+                log_entry = {
+                    "flow_id": flow_obj.get("flow_id"),
+                    "timestamp": flow_obj.get("last_seen"),
+                    "model_a_flow_probs": flow_prob_dict,
+                    "model_b_dns_probs": dns_prob_dict
+                }
+                
+                results_dir = SCRIPTS_DIR.parent / "results"
+                results_dir.mkdir(parents=True, exist_ok=True)
+                with open(results_dir / "live_inference.jsonl", "a", encoding="utf-8") as f:
+                    f.write(json.dumps(log_entry) + "\n")
                 
                 # Next: Hand these prob_dicts to Person 2!
                 
