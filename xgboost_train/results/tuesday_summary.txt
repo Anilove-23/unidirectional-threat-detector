@@ -1,0 +1,31 @@
+Test run        : 2026-08-30 18:40:43
+        Source file     : tuesday.csv
+        Total rows      : 322,078
+        Known-class rows: 315,106
+        Unknown rows    : 6,972
+
+        Accuracy (known classes)  : 99.9819%
+        Overall accuracy          : 97.8176%
+
+        Model classes : ['BENIGN', 'DATA_EXFILTRATION', 'PORT_SCAN', 'VOLUMETRIC_DDOS']
+
+        --- Classification Report (known rows) ---
+                      precision    recall  f1-score   support
+
+      BENIGN       1.00      1.00      1.00    315106
+
+   micro avg       1.00      1.00      1.00    315106
+   macro avg       1.00      1.00      1.00    315106
+weighted avg       1.00      1.00      1.00    315106
+
+
+        --- Prediction distribution on UNKNOWN (brute-force) rows ---
+        predicted_class
+BENIGN               6971
+DATA_EXFILTRATION       1
+
+        --- Mean probabilities on UNKNOWN rows ---
+        p_BENIGN               0.9979
+p_DATA_EXFILTRATION    0.0014
+p_PORT_SCAN            0.0007
+p_VOLUMETRIC_DDOS      0.0001
