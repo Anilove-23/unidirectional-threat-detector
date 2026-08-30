@@ -1,0 +1,38 @@
+{
+  "name": "unidirectional-threat-detector-backend",
+  "version": "1.0.0",
+  "description": "Person 4 Express API, Real-Time Streaming & Persistence Backend for SIH26145",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "mock:publish": "node src/redis/mockPublisher.js",
+    "test": "jest --detectOpenHandles"
+  },
+  "keywords": [
+    "express",
+    "redis",
+    "websocket",
+    "threat-detection",
+    "sih2026"
+  ],
+  "author": "Person 4 Backend Division",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ioredis": "^5.4.1",
+    "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 10000
+  }
+}

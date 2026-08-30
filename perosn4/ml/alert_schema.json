@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ThreatAlert",
+  "type": "object",
+  "description": "Standardized alert schema published to Redis channel alert.new by AI/ML inference (Person 1 & 2)",
+  "required": [
+    "timestamp",
+    "flow_id",
+    "five_tuple",
+    "threat_class",
+    "confidence_score",
+    "severity"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp when alert was generated"
+    },
+    "flow_id": {
+      "type": "string",
+      "description": "Unique flow identifier matching ingestion flow_id"
+    },
+    "five_tuple": {
+      "type": "object",
+      "required": ["src_ip", "dst_ip", "src_port", "dst_port", "protocol"],
+      "properties": {
+        "src_ip": { "type": "string" },
+        "dst_ip": { "type": "string" },
+        "src_port": { "type": "integer" },
+        "dst_port": { "type": "integer" },
+        "protocol": { "type": "string" }
+      }
+    },
+    "threat_class": {
+      "type": "string",
+      "enum": [
+        "BOTNET_C2_BEACONING",
+        "MALWARE_EXFILTRATION",
+        "UNAUTHORIZED_TUNNEL",
+        "PORT_SCAN_RECON",
+        "DDOS_VOLUMETRIC",
+        "DATA_DIODE_BYPASS_ATTEMPT",
+        "SUSPICIOUS_ANOMALY"
+      ]
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+    },
+    "model_source": {
+      "type": "object",
+      "properties": {
+        "supervised_score": { "type": "number" },
+        "anomaly_score": { "type": "number" },
+        "sequence_score": { "type": "number" },
+        "fired_models": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "ingestion_meta": {
+      "type": "object",
+      "properties": {
+        "sensor_id": { "type": "string" },
+        "capture_interface": { "type": "string" },
+        "pipeline_version": { "type": "string" }
+      }
+    }
+  }
+}

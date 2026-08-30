@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "IngestedFlow",
+  "type": "object",
+  "description": "Defines the shape of the raw JSON Flow Object published to Redis channel flow.raw by Ingestion (Person 3)",
+  "required": [
+    "flow_id",
+    "timestamp",
+    "five_tuple"
+  ],
+  "properties": {
+    "flow_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique UUID for the flow"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of packet capture"
+    },
+    "five_tuple": {
+      "type": "object",
+      "required": ["src_ip", "dst_ip", "src_port", "dst_port", "protocol"],
+      "properties": {
+        "src_ip": { "type": "string" },
+        "dst_ip": { "type": "string" },
+        "src_port": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "dst_port": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "protocol": { "type": "string" }
+      }
+    },
+    "packet_size_sequence": {
+      "type": "array",
+      "items": { "type": "number" }
+    },
+    "inter_arrival_times": {
+      "type": "array",
+      "items": { "type": "number" }
+    },
+    "tcp_flags_observed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tls_client_hello": {
+      "type": "object",
+      "properties": {
+        "ja3": { "type": "string" },
+        "ja4": { "type": "string" },
+        "cipher_suites": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

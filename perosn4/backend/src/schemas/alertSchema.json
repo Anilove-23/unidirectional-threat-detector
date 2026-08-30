@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ThreatAlert",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "flow_id",
+    "five_tuple",
+    "threat_class",
+    "confidence_score",
+    "severity"
+  ],
+  "properties": {
+    "timestamp": { "type": "string" },
+    "flow_id": { "type": "string" },
+    "five_tuple": {
+      "type": "object",
+      "required": ["src_ip", "dst_ip", "src_port", "dst_port", "protocol"],
+      "properties": {
+        "src_ip": { "type": "string" },
+        "dst_ip": { "type": "string" },
+        "src_port": { "type": "integer" },
+        "dst_port": { "type": "integer" },
+        "protocol": { "type": "string" }
+      }
+    },
+    "threat_class": {
+      "type": "string"
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+    },
+    "model_source": {
+      "type": "object"
+    },
+    "evidence": {
+      "type": "object"
+    },
+    "ingestion_meta": {
+      "type": "object"
+    }
+  }
+}
