@@ -1,6 +1,6 @@
 {
   "input_dim": 37,
-  "reconstruction_error_threshold": 0.7809340357780457,
+  "reconstruction_error_threshold": 1.5841057300567627,
   "feature_columns": [
     "duration_s",
     "total_packets",
