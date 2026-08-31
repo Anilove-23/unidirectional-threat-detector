@@ -21,7 +21,8 @@ export default function Alerts() {
   }
 
   return (
-    <div className="mx-auto flex max-w-[1600px] flex-col gap-4 px-4 py-5 sm:px-6">
+    <div className="mx-auto flex max-w-[1600px] flex-col gap-5 px-6 py-6 animate-fadeUp">
+      {/* Search & Filters */}
       <AlertFilters
         filters={filters}
         searchQuery={searchQuery}
@@ -31,7 +32,15 @@ export default function Alerts() {
         onSearch={setSearchQuery}
         onClear={clearFilters}
       />
-      <LiveAlertFeed alerts={filtered} onSelect={openAlert} title="All Alerts" maxHeight="max-h-[70vh]" />
+
+      {/* Main Alert Feed Table */}
+      <LiveAlertFeed
+        alerts={filtered}
+        onSelect={openAlert}
+        title="Threat Alert Registry"
+        maxHeight="max-h-[calc(100vh-270px)]"
+      />
+
       <Outlet />
     </div>
   );

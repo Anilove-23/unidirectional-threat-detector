@@ -1,77 +1,143 @@
+import { useState } from 'react';
 import { THREAT_CLASSES } from '../../types/alert';
 import { threatClassShortLabel } from '../../utils/threatUtils';
 
-const SEVERITY_OPTIONS = ['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'];
-const TIME_OPTIONS = [
+const SEVERITY_OPTS = ['ALL', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'];
+const TIME_OPTS = [
   { value: 'all', label: 'All time' },
-  { value: '5m', label: 'Last 5 min' },
-  { value: '15m', label: 'Last 15 min' },
-  { value: '1h', label: 'Last hour' },
+  { value: '5m',  label: 'Last 5m'  },
+  { value: '15m', label: 'Last 15m' },
+  { value: '1h',  label: 'Last 1h'  },
   { value: '24h', label: 'Last 24h' },
 ];
+const SEV_ACTIVE = {
+  CRITICAL: 'border-sev-critical text-sev-critical bg-sev-criticalBg',
+  HIGH:     'border-sev-high     text-sev-high     bg-sev-highBg',
+  MEDIUM:   'border-sev-medium   text-sev-medium   bg-sev-mediumBg',
+  LOW:      'border-sev-low      text-sev-low      bg-sev-lowBg',
+};
 
-function Select({ label, value, onChange, children }) {
+export default function AlertFilters({
+  filters, searchQuery,
+  onSeverity, onThreat, onTimeRange, onSearch, onClear,
+}) {
+  const [threatOpen, setThreatOpen] = useState(false);
+  const hasFilters =
+    filters.severity !== 'ALL' ||
+    filters.threatClass !== 'ALL' ||
+    filters.timeRange !== 'all'  ||
+    searchQuery;
+
   return (
-    <label className="flex flex-col gap-1">
-      <span className="text-[11px] font-medium uppercase tracking-wide text-ink-muted">{label}</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="rounded border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-ink-primary outline-none focus:border-signal"
-      >
-        {children}
-      </select>
-    </label>
-  );
-}
+    <div className="card p-4 flex flex-col gap-3">
 
-export default function AlertFilters({ filters, searchQuery, onSeverity, onThreat, onTimeRange, onSearch, onClear }) {
-  return (
-    <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface-1 p-3 shadow-panel">
-      <Select label="Severity" value={filters.severity} onChange={onSeverity}>
-        {SEVERITY_OPTIONS.map((s) => (
-          <option key={s} value={s}>
-            {s === 'ALL' ? 'All' : s.charAt(0) + s.slice(1).toLowerCase()}
-          </option>
-        ))}
-      </Select>
-
-      <Select label="Threat class" value={filters.threatClass} onChange={onThreat}>
-        <option value="ALL">All</option>
-        {THREAT_CLASSES.map((c) => (
-          <option key={c} value={c}>
-            {threatClassShortLabel(c)}
-          </option>
-        ))}
-      </Select>
-
-      <Select label="Time range" value={filters.timeRange} onChange={onTimeRange}>
-        {TIME_OPTIONS.map((t) => (
-          <option key={t.value} value={t.value}>
-            {t.label}
-          </option>
-        ))}
-      </Select>
-
-      <label className="flex min-w-[220px] flex-1 flex-col gap-1">
-        <span className="text-[11px] font-medium uppercase tracking-wide text-ink-muted">
-          Search (Source IP, Dest IP, Flow ID, class)
-        </span>
+      {/* ── Search bar ─────────────────────────────────── */}
+      <div className="relative">
+        <svg
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}
+        >
+          <circle cx="11" cy="11" r="8" /><path strokeLinecap="round" d="m21 21-4.35-4.35" />
+        </svg>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => onSearch(e.target.value)}
-          placeholder="e.g. 198.51.100.23"
-          className="rounded border border-border bg-surface-2 px-2.5 py-1.5 text-xs text-ink-primary outline-none placeholder:text-ink-muted focus:border-signal"
+          placeholder="Search by IP, Flow ID, or threat class…"
+          className="w-full rounded-lg border border-border bg-surface-2 py-2.5 pl-10 pr-9 text-sm text-ink-primary placeholder:text-ink-muted outline-none focus:border-accent transition-colors"
         />
-      </label>
+        {searchQuery && (
+          <button
+            onClick={() => onSearch('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink-primary"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
 
-      <button
-        onClick={onClear}
-        className="rounded border border-border px-3 py-1.5 text-xs font-medium text-ink-secondary transition-colors hover:border-border-strong hover:text-ink-primary"
-      >
-        Clear filters
-      </button>
+      {/* ── Filter chips ───────────────────────────────── */}
+      <div className="flex flex-wrap items-center gap-2">
+
+        {/* Severity */}
+        {SEVERITY_OPTS.map((s) => {
+          const isActive = filters.severity === s;
+          const colorCls = isActive && s !== 'ALL' ? SEV_ACTIVE[s] : '';
+          return (
+            <button
+              key={s}
+              onClick={() => onSeverity(s)}
+              className={`chip ${isActive ? (s === 'ALL' ? 'active' : colorCls) : ''}`}
+            >
+              {s === 'ALL' ? 'All severity' : s[0] + s.slice(1).toLowerCase()}
+            </button>
+          );
+        })}
+
+        <div className="h-4 w-px bg-border" />
+
+        {/* Time range */}
+        {TIME_OPTS.map((t) => (
+          <button
+            key={t.value}
+            onClick={() => onTimeRange(t.value)}
+            className={`chip ${filters.timeRange === t.value ? 'active' : ''}`}
+          >
+            {t.label}
+          </button>
+        ))}
+
+        <div className="h-4 w-px bg-border" />
+
+        {/* Threat class dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setThreatOpen((o) => !o)}
+            className={`chip ${filters.threatClass !== 'ALL' ? 'active' : ''}`}
+          >
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0 4-4 4 4m-4-4v12" />
+            </svg>
+            {filters.threatClass === 'ALL' ? 'Threat class' : threatClassShortLabel(filters.threatClass)}
+            <svg className={`h-3 w-3 transition-transform ${threatOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
+            </svg>
+          </button>
+
+          {threatOpen && (
+            <>
+              {/* Backdrop */}
+              <div className="fixed inset-0 z-10" onClick={() => setThreatOpen(false)} />
+              <div className="absolute top-full left-0 z-20 mt-1 min-w-[196px] rounded-lg border border-border bg-surface-2 shadow-elevated py-1 overflow-hidden">
+                {[{ value: 'ALL', label: 'All classes' },
+                  ...THREAT_CLASSES.map((c) => ({ value: c, label: threatClassShortLabel(c) }))
+                ].map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => { onThreat(value); setThreatOpen(false); }}
+                    className={`w-full text-left px-3 py-2 text-xs transition-colors hover:bg-surface-3
+                      ${filters.threatClass === value ? 'text-accent font-semibold' : 'text-ink-secondary'}`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Clear */}
+        {hasFilters && (
+          <button
+            onClick={onClear}
+            className="ml-auto text-xs text-ink-muted hover:text-ink-secondary transition-colors underline underline-offset-4 decoration-border"
+          >
+            Clear filters
+          </button>
+        )}
+      </div>
     </div>
   );
 }

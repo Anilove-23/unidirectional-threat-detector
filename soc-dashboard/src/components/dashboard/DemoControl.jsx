@@ -1,28 +1,30 @@
-/**
- * Live Demo Mode control — a development/demo utility, clearly separated
- * from the real/mock data toggle. Only rendered when VITE_USE_MOCK_DATA is
- * true; never shown against a real backend connection.
- */
 export default function DemoControl({ demo, onStart, onStop }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-signal/30 bg-signal/5 px-4 py-2.5">
-      <span className="font-mono text-[10px] uppercase tracking-widest text-signal">Demo Mode</span>
+    <div className="card flex items-center justify-between gap-3 border-accent/40 bg-accent-dim/40 px-4 py-2.5">
+      <div className="flex items-center gap-2.5">
+        <span className="h-2 w-2 rounded-full bg-accent animate-pulseDot shrink-0" />
+        <span className="text-xs font-semibold text-accent-hover tracking-wide">Demo Simulator Active</span>
+        {demo.active && (
+          <>
+            <span className="text-ink-muted">·</span>
+            <span className="text-xs text-ink-secondary">{demo.stepLabel}</span>
+          </>
+        )}
+      </div>
+
       {demo.active ? (
-        <>
-          <span className="text-xs text-ink-secondary">{demo.stepLabel}</span>
-          <button
-            onClick={onStop}
-            className="ml-auto rounded border border-border px-2.5 py-1 text-xs font-medium text-ink-secondary transition-colors hover:border-border-strong hover:text-ink-primary"
-          >
-            Stop
-          </button>
-        </>
+        <button
+          onClick={onStop}
+          className="rounded border border-border bg-surface-2 px-3 py-1 text-xs font-medium text-ink-secondary hover:border-border-strong hover:text-ink-primary transition-colors"
+        >
+          Stop Simulation
+        </button>
       ) : (
         <button
           onClick={onStart}
-          className="ml-auto rounded bg-signal/15 px-2.5 py-1 text-xs font-medium text-signal transition-colors hover:bg-signal/25"
+          className="rounded bg-accent px-3 py-1 text-xs font-medium text-white hover:bg-accent-hover transition-colors"
         >
-          Run scripted demo sequence
+          Run Attack Simulation
         </button>
       )}
     </div>

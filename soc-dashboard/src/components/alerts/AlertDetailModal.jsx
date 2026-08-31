@@ -5,21 +5,27 @@ import ModelContribution from './ModelContribution';
 import EvidencePanel from './EvidencePanel';
 import { formatTimestamp, formatConfidence } from '../../utils/alertFormatters';
 
-function Field({ label, value, mono = true }) {
+function DataItem({ label, value, mono = true }) {
   return (
-    <div>
-      <dt className="text-[10px] font-medium uppercase tracking-wide text-ink-muted">{label}</dt>
-      <dd className={`mt-0.5 text-sm text-ink-primary ${mono ? 'font-mono' : ''}`}>{value}</dd>
+    <div className="flex flex-col gap-0.5">
+      <dt className="text-2xs font-semibold uppercase tracking-wider text-ink-muted">{label}</dt>
+      <dd className={`text-xs text-ink-primary ${mono ? 'mono font-medium' : ''}`}>{value ?? '—'}</dd>
     </div>
   );
 }
 
-/**
- * Alert drill-down. Works for all seven threat classes — nothing here is
- * conditioned on threat_class beyond the badge label; the evidence section
- * dynamically renders whatever fields the alert carries (see
- * EvidencePanel.jsx).
- */
+function Section({ title, children }) {
+  return (
+    <section className="space-y-2.5">
+      <div className="flex items-center gap-2">
+        <h4 className="text-2xs font-semibold uppercase tracking-wider text-ink-muted">{title}</h4>
+        <div className="h-px flex-1 bg-border/80" />
+      </div>
+      {children}
+    </section>
+  );
+}
+
 export default function AlertDetailModal({ alert, onClose }) {
   const closeBtnRef = useRef(null);
 
@@ -36,7 +42,7 @@ export default function AlertDetailModal({ alert, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 pt-10 backdrop-blur-sm sm:pt-16"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/75 p-4 pt-10 backdrop-blur-sm sm:pt-14 animate-fadeUp"
       role="dialog"
       aria-modal="true"
       aria-label="Alert details"
@@ -44,63 +50,65 @@ export default function AlertDetailModal({ alert, onClose }) {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-2xl animate-slideIn rounded-lg border border-border-strong bg-surface-1 shadow-panel">
-        <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
-          <div>
+      <div className="card w-full max-w-2xl overflow-hidden shadow-modal border-border-strong">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 border-b border-border bg-surface-2/40 px-6 py-4">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-2">
               <SeverityBadge severity={alert.severity} />
               <ThreatClassBadge threatClass={alert.threat_class} />
             </div>
-            <p className="mt-2 font-mono text-[11px] text-ink-muted">Flow {alert.flow_id}</p>
+            <p className="mono text-2xs text-ink-muted">
+              Flow ID: <span className="text-ink-secondary">{alert.flow_id}</span>
+            </p>
           </div>
           <button
             ref={closeBtnRef}
             onClick={onClose}
             aria-label="Close alert details"
-            className="rounded border border-border px-2 py-1 text-xs text-ink-secondary transition-colors hover:border-border-strong hover:text-ink-primary"
+            className="rounded border border-border bg-surface-2 p-1 text-ink-muted transition-colors hover:border-border-strong hover:text-ink-primary"
           >
-            Close ✕
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
-        <div className="max-h-[70vh] space-y-6 overflow-y-auto px-5 py-5">
-          <section>
-            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">General</h4>
-            <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <Field label="Confidence" value={formatConfidence(alert.confidence_score)} />
-              <Field label="Timestamp" value={formatTimestamp(alert.timestamp)} />
-              <Field label="Sensor" value={alert.ingestion_meta?.sensor_id ?? '—'} />
-              <Field label="Capture Interface" value={alert.ingestion_meta?.capture_interface ?? '—'} />
-              <Field label="Pipeline Version" value={alert.ingestion_meta?.pipeline_version ?? '—'} />
+        {/* Content */}
+        <div className="max-h-[70vh] space-y-6 overflow-y-auto px-6 py-5">
+          <Section title="General Information">
+            <dl className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 rounded-lg border border-border bg-surface-2/40 p-3.5">
+              <DataItem label="Confidence" value={formatConfidence(alert.confidence_score)} />
+              <DataItem label="Timestamp" value={formatTimestamp(alert.timestamp)} />
+              <DataItem label="Protocol" value={alert.five_tuple.protocol} />
+              <DataItem label="Sensor ID" value={alert.ingestion_meta?.sensor_id} />
+              <DataItem label="Capture Interface" value={alert.ingestion_meta?.capture_interface} />
+              <DataItem label="Pipeline Version" value={alert.ingestion_meta?.pipeline_version} />
             </dl>
-          </section>
+          </Section>
 
-          <section>
-            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">Network Flow</h4>
-            <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <Field label="Source IP" value={alert.five_tuple.src_ip} />
-              <Field label="Destination IP" value={alert.five_tuple.dst_ip} />
-              <Field label="Source Port" value={alert.five_tuple.src_port} />
-              <Field label="Destination Port" value={alert.five_tuple.dst_port} />
-              <Field label="Protocol" value={alert.five_tuple.protocol} />
+          <Section title="Network 5-Tuple">
+            <dl className="grid grid-cols-2 gap-3.5 sm:grid-cols-4 rounded-lg border border-border bg-surface-2/40 p-3.5">
+              <DataItem label="Source IP" value={alert.five_tuple.src_ip} />
+              <DataItem label="Source Port" value={alert.five_tuple.src_port} />
+              <DataItem label="Destination IP" value={alert.five_tuple.dst_ip} />
+              <DataItem label="Dest Port" value={alert.five_tuple.dst_port} />
             </dl>
-          </section>
+          </Section>
 
-          <section>
-            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">Model Contribution</h4>
+          <Section title="Model Ensemble Contribution">
             <ModelContribution modelSource={alert.model_source} />
-          </section>
+          </Section>
 
-          <section>
-            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-muted">Evidence</h4>
+          <Section title="Extracted Forensic Evidence">
             <EvidencePanel evidence={alert.evidence} />
-          </section>
+          </Section>
         </div>
 
-        <div className="border-t border-border px-5 py-3">
-          <p className="text-[11px] text-ink-muted">
-            Passive detection record for analyst review. This alert is advisory only — SENTINEL-D does not send,
-            block, reset, or otherwise act on the monitored network.
+        {/* Footer */}
+        <div className="border-t border-border bg-surface-2/40 px-6 py-3">
+          <p className="text-2xs text-ink-muted">
+            Unidirectional passive detection record. This alert is advisory for SOC analyst review.
           </p>
         </div>
       </div>

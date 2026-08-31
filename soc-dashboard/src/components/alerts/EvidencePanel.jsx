@@ -1,12 +1,6 @@
 import { formatEvidenceKey } from '../../utils/threatUtils';
 import { formatEvidenceValue as fmtVal } from '../../utils/alertFormatters';
 
-/**
- * Renders whatever evidence fields are present on the alert — never
- * hardcoded to a specific threat class's field set (e.g. beacon interval
- * for BOTNET_C2_BEACONING). New evidence keys the backend adds later show
- * up automatically with a generated label.
- */
 export default function EvidencePanel({ evidence }) {
   const entries = Object.entries(evidence ?? {});
 
@@ -15,11 +9,13 @@ export default function EvidencePanel({ evidence }) {
   }
 
   return (
-    <dl className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+    <dl className="grid grid-cols-1 gap-2 sm:grid-cols-2">
       {entries.map(([key, value]) => (
-        <div key={key} className="rounded border border-border bg-surface-2 px-3 py-2">
-          <dt className="text-[10px] font-medium uppercase tracking-wide text-ink-muted">{formatEvidenceKey(key)}</dt>
-          <dd className="mt-0.5 truncate font-mono text-xs text-ink-primary" title={fmtVal(value)}>
+        <div key={key} className="rounded border border-border bg-surface-2/60 p-2.5">
+          <dt className="text-2xs font-semibold uppercase tracking-wider text-ink-muted">
+            {formatEvidenceKey(key)}
+          </dt>
+          <dd className="mt-1 truncate mono text-xs text-ink-primary font-medium" title={fmtVal(value)}>
             {fmtVal(value)}
           </dd>
         </div>

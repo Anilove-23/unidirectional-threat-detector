@@ -28,19 +28,22 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="mx-auto flex max-w-[1600px] flex-col gap-4 px-4 py-5 sm:px-6">
+    <div className="mx-auto flex max-w-[1600px] flex-col gap-6 px-6 py-6 animate-fadeUp">
       {USE_MOCK && <DemoControl demo={demo} onStart={start} onStop={stop} />}
 
+      {/* Summary Stats Row */}
       <SummaryStats stats={stats} />
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+      {/* Analytics Charts Grid */}
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <ThreatActivityChart alerts={alerts} />
         <ThreatDistributionChart alerts={alerts} />
         <ThroughputChart alerts={alerts} />
         <EntropyChart alerts={alerts} />
       </div>
 
-      <LiveAlertFeed alerts={recentAlerts} onSelect={openAlert} title="Live Alert Feed" />
+      {/* Live Feed */}
+      <LiveAlertFeed alerts={recentAlerts} onSelect={openAlert} title="Recent Ingested Alerts" />
     </div>
   );
 }
