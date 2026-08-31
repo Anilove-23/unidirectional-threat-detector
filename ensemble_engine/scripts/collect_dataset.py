@@ -56,7 +56,17 @@ def main():
     parser.add_argument("--redis-host", default="127.0.0.1")
     parser.add_argument("--redis-port", type=int, default=6379)
     parser.add_argument("--channel", default="flow.raw")
+    parser.add_argument("--dst-port", type=int, default=None,
+                         help="Only log flows whose five_tuple.dst_port matches this "
+                              "(e.g. 443 for c2_beacon_gen, 53 for dns_tunnel_gen). "
+                              "Sharply reduces contamination from unrelated loopback "
+                              "traffic (browsers, package managers, etc.) during collection.")
     args = parser.parse_args()
+
+    # Redis pub/sub traffic between main.py and this script's own subscriber
+    # travels over loopback too, and would otherwise get swept up and
+    # mislabeled with whatever --label is active. Always exclude it.
+    EXCLUDED_PORTS = {args.redis_port}
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -83,6 +93,7 @@ def main():
 
     start_time = time.time()
     count = 0
+    skipped = 0
 
     try:
         with open(output_path, "a", encoding="utf-8") as f:
@@ -99,20 +110,39 @@ def main():
                     print("[!] Skipped malformed message (not valid JSON)")
                     continue
 
+                five_tuple = flow_obj.get("five_tuple", {})
+                src_port = five_tuple.get("src_port")
+                dst_port = five_tuple.get("dst_port")
+
+                # Exclude Redis's own pub/sub traffic in EITHER direction.
+                # On a unidirectional sensor, request (dst=6379) and reply
+                # (src=6379) show up as separate flows, so both must be checked.
+                if src_port in EXCLUDED_PORTS or dst_port in EXCLUDED_PORTS:
+                    skipped += 1
+                    continue
+
+                # Optional: only keep flows actually going to the generator's
+                # target port, further reducing noise from unrelated loopback
+                # traffic (browsers, package managers, other local services).
+                if args.dst_port is not None and dst_port != args.dst_port:
+                    skipped += 1
+                    continue
+
                 flow_obj["collected_label"] = args.label
                 f.write(json.dumps(flow_obj) + "\n")
                 f.flush()
                 count += 1
 
-                five_tuple = flow_obj.get("five_tuple", {})
-                print(f"  [{count}] {five_tuple.get('src_ip')}:{five_tuple.get('src_port')} "
-                      f"-> {five_tuple.get('dst_ip')}:{five_tuple.get('dst_port')} "
+                print(f"  [{count}] {five_tuple.get('src_ip')}:{src_port} "
+                      f"-> {five_tuple.get('dst_ip')}:{dst_port} "
                       f"({five_tuple.get('protocol')})  pkts={flow_obj.get('total_packets')}")
 
     except KeyboardInterrupt:
+
         pass
 
     print(f"\n[+] Done. Collected {count} flows labeled '{args.label}' -> {output_path}")
+    print(f"[+] Skipped {skipped} flows (Redis control traffic / port filter)")
 
 
 if __name__ == "__main__":
