@@ -234,6 +234,7 @@ def main():
     parser.add_argument("--scenario", default="all", choices=["all", "c2", "ddos", "scan", "dns", "dga", "exfil", "benign"])
     parser.add_argument("--interval", type=float, default=1.5, help="Seconds between flows")
     parser.add_argument("--count", type=int, default=0, help="Number of flows to send (0 = infinite)")
+    parser.add_argument("--continuous", action="store_true", help="Run continuously (same as --count 0)")
     args = parser.parse_args()
 
     scenarios = ["c2", "ddos", "scan", "dns", "dga", "exfil", "benign"] if args.scenario == "all" else [args.scenario]
