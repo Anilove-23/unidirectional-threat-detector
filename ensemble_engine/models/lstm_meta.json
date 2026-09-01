@@ -1,0 +1,13 @@
+{
+  "seq_len": 50,
+  "hidden_size": 16,
+  "size_mean": 67.72010040283203,
+  "size_std": 31.83110809326172,
+  "iat_mean": 1.7698474039207213e-05,
+  "iat_std": 9.369858889840543e-05,
+  "best_epoch": 69,
+  "best_val_f1": 0.8571428571428571,
+  "test_accuracy": 0.9629629629629629,
+  "test_precision": 0.8571428571428571,
+  "test_recall": 0.6
+}

@@ -5,16 +5,16 @@ SIH26145, and owns the final ensemble scoring that produces the alert
 published to Redis `alert.new`.
 
 ## Status
-🚧 Scaffolding — no trained models yet.
+✅ Complete — models are trained and live ensemble scoring is implemented.
 
-## Planned components
+## Implemented components
 - Isolation Forest + Autoencoder — zero-day / unseen-threat anomaly scoring
 - PyTorch LSTM — low-and-slow Botnet C2 beaconing detection from
   packet_sizes / inter_arrival_times sequences
 - JA3/JA4 + cipher-suite-ordering features from FlowObject.tls_meta
 - Ensemble scoring — fuses Person 1's supervised probabilities
   (xgboost_train/scripts/infer.py) with anomaly + sequence scores into
-  one confidence_score and threat_class per flow
+  one confidence_score and threat_class per flow (via `ensemble.py` and `live_ensemble.py`)
 
 ## Input
 Subscribes to Redis channel `flow.raw` (FlowObject v1.0.0 —

@@ -1,6 +1,6 @@
 {
   "input_dim": 37,
-  "reconstruction_error_threshold": 1.5841057300567627,
+  "reconstruction_error_threshold": 1.1769506931304932,
   "feature_columns": [
     "duration_s",
     "total_packets",
@@ -39,5 +39,7 @@
     "tls_is_tls13",
     "dns_query_length",
     "dns_query_entropy"
-  ]
+  ],
+  "iso_score_p1": 0.35682381505018035,
+  "iso_score_p99": 0.7388958944054208
 }
