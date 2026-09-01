@@ -72,7 +72,7 @@ def main():
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     try:
-        r = redis.Redis(host=args.redis_host, port=args.redis_port, decode_responses=True)
+        r = redis.Redis(host=args.redis_host, port=args.redis_port, decode_responses=True, protocol=2)
         r.ping()
     except redis.ConnectionError:
         print(f"[-] Could not connect to Redis at {args.redis_host}:{args.redis_port}")

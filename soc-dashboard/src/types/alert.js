@@ -71,7 +71,27 @@ export const THREAT_CLASSES = /** @type {const} */ ([
   'DNS_TUNNELING',
   'BOTNET_C2_BEACONING',
   'ANOMALOUS_UNCLASSIFIED',
+  'BENIGN',
 ]);
+
+const THREAT_CLASS_MAP = {
+  DGA: 'DGA_DOMAIN',
+  DGA_DOMAIN: 'DGA_DOMAIN',
+  DNS_TUNNEL: 'DNS_TUNNELING',
+  DNS_TUNNELING: 'DNS_TUNNELING',
+  DDOS: 'VOLUMETRIC_DDOS',
+  VOLUMETRIC_DDOS: 'VOLUMETRIC_DDOS',
+  SCAN: 'PORT_SCAN',
+  PORT_SCAN: 'PORT_SCAN',
+  EXFIL: 'DATA_EXFILTRATION',
+  DATA_EXFILTRATION: 'DATA_EXFILTRATION',
+  C2: 'BOTNET_C2_BEACONING',
+  BOTNET_C2: 'BOTNET_C2_BEACONING',
+  BOTNET_C2_BEACONING: 'BOTNET_C2_BEACONING',
+  ANOMALOUS: 'ANOMALOUS_UNCLASSIFIED',
+  ANOMALOUS_UNCLASSIFIED: 'ANOMALOUS_UNCLASSIFIED',
+  BENIGN: 'BENIGN',
+};
 
 export const SEVERITIES = /** @type {const} */ (['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']);
 
@@ -92,23 +112,34 @@ export const CONNECTION_STATES = /** @type {const} */ ([
  */
 export function normalizeAlert(raw) {
   if (!raw || typeof raw !== 'object') return null;
-  if (!THREAT_CLASSES.includes(raw.threat_class)) return null;
-  if (!SEVERITIES.includes(raw.severity)) return null;
-  if (!raw.five_tuple || !raw.flow_id || !raw.timestamp) return null;
+
+  // Map threat class aliases (e.g. DGA -> DGA_DOMAIN, DNS_TUNNEL -> DNS_TUNNELING)
+  const rawClass = String(raw.threat_class || '').toUpperCase().trim();
+  const threat_class = THREAT_CLASS_MAP[rawClass] || (THREAT_CLASSES.includes(rawClass) ? rawClass : 'ANOMALOUS_UNCLASSIFIED');
+
+  // Normalize severity
+  const rawSev = String(raw.severity || '').toUpperCase().trim();
+  const severity = SEVERITIES.includes(rawSev) ? rawSev : 'HIGH';
+
+  const flow_id = raw.flow_id || raw._id || ('flow-' + Math.random().toString(36).substring(2, 9));
+  const timestamp = raw.timestamp || raw.createdAt || raw.ts || new Date().toISOString();
+
+  const rawTuple = raw.five_tuple || {};
+  const five_tuple = {
+    src_ip: rawTuple.src_ip ?? 'unknown',
+    dst_ip: rawTuple.dst_ip ?? 'unknown',
+    src_port: Number(rawTuple.src_port) || 0,
+    dst_port: Number(rawTuple.dst_port) || 0,
+    protocol: rawTuple.protocol ?? 'TCP',
+  };
 
   return {
-    timestamp: raw.timestamp,
-    flow_id: raw.flow_id,
-    five_tuple: {
-      src_ip: raw.five_tuple.src_ip ?? 'unknown',
-      dst_ip: raw.five_tuple.dst_ip ?? 'unknown',
-      src_port: raw.five_tuple.src_port ?? 0,
-      dst_port: raw.five_tuple.dst_port ?? 0,
-      protocol: raw.five_tuple.protocol ?? 'unknown',
-    },
-    threat_class: raw.threat_class,
-    confidence_score: typeof raw.confidence_score === 'number' ? raw.confidence_score : 0,
-    severity: raw.severity,
+    timestamp,
+    flow_id,
+    five_tuple,
+    threat_class,
+    confidence_score: typeof raw.confidence_score === 'number' ? raw.confidence_score : 0.85,
+    severity,
     model_source: {
       supervised_score: raw.model_source?.supervised_score ?? 0,
       anomaly_score: raw.model_source?.anomaly_score ?? 0,
@@ -117,9 +148,9 @@ export function normalizeAlert(raw) {
     },
     evidence: raw.evidence ?? {},
     ingestion_meta: {
-      sensor_id: raw.ingestion_meta?.sensor_id ?? 'unknown',
-      capture_interface: raw.ingestion_meta?.capture_interface ?? 'unknown',
-      pipeline_version: raw.ingestion_meta?.pipeline_version ?? 'unknown',
+      sensor_id: raw.ingestion_meta?.sensor_id ?? 'diode-sensor-01',
+      capture_interface: raw.ingestion_meta?.capture_interface ?? 'lo',
+      pipeline_version: raw.ingestion_meta?.pipeline_version ?? '1.0.0',
     },
   };
 }

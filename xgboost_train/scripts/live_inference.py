@@ -32,7 +32,7 @@ def main():
     
     # Connect to Person 3's Redis queue
     try:
-        r = redis.Redis(host='127.0.0.1', port=6379, decode_responses=True)
+        r = redis.Redis(host='127.0.0.1', port=6379, decode_responses=True, protocol=2)
         r.ping()
         print("[+] Redis connection successful.")
     except redis.ConnectionError:
@@ -48,7 +48,13 @@ def main():
     try:
         for message in pubsub.listen():
             if message['type'] == 'message':
-                flow_obj = json.loads(message['data'])
+                try:
+                    flow_obj = json.loads(message['data'])
+                except (json.JSONDecodeError, TypeError):
+                    continue
+                
+                if not isinstance(flow_obj, dict) or "flow_id" not in flow_obj:
+                    continue
                 
                 print(f"\n[+] Received FlowObject ID: {flow_obj.get('flow_id')}")
                 

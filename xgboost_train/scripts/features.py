@@ -90,12 +90,23 @@ def extract_flow_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
     # -- Map FlowObject format to CICIDS format if live ingestion ----------------
+    if "five_tuple" in df.columns:
+        df["Src Port"] = df["five_tuple"].apply(lambda t: t.get("src_port", 0) if isinstance(t, dict) else 0)
+        df["Dst Port"] = df["five_tuple"].apply(lambda t: t.get("dst_port", 0) if isinstance(t, dict) else 0)
+    elif "src_port" in df.columns and "dst_port" in df.columns:
+        df["Src Port"] = df["src_port"]
+        df["Dst Port"] = df["dst_port"]
+
     if "duration_s" in df.columns:
         df["Flow Duration"] = df["duration_s"] * 1e6
+        df["Total TCP Flow Time"] = df["Flow Duration"]
     if "total_packets" in df.columns:
         df["Total Fwd Packet"] = df["total_packets"]
+        df["Subflow Fwd Packets"] = df["total_packets"]
+        df["Fwd Act Data Pkts"] = df["total_packets"]
     if "bytes_in" in df.columns:
         df["Total Length of Fwd Packet"] = df["bytes_in"]
+        df["Subflow Fwd Bytes"] = df["bytes_in"]
 
     # -- Parse list columns if present (FlowObject format) -------------------
     if "packet_sizes" in df.columns:
@@ -103,39 +114,64 @@ def extract_flow_features(df: pd.DataFrame) -> pd.DataFrame:
             lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
         )
         df["Fwd Packet Length Mean"] = parsed_sizes.apply(lambda lst: float(np.mean(lst)) if lst else 0.0)
-        df["Fwd Packet Length Std"] = parsed_sizes.apply(lambda lst: float(np.std(lst)) if lst else 0.0)
-        df["Fwd Packet Length Max"] = parsed_sizes.apply(lambda lst: float(np.max(lst)) if lst else 0.0)
-        df["Fwd Packet Length Min"] = parsed_sizes.apply(lambda lst: float(np.min(lst)) if lst else 0.0)
+        df["Fwd Packet Length Std"]  = parsed_sizes.apply(lambda lst: float(np.std(lst)) if lst else 0.0)
+        df["Fwd Packet Length Max"]  = parsed_sizes.apply(lambda lst: float(np.max(lst)) if lst else 0.0)
+        df["Fwd Packet Length Min"]  = parsed_sizes.apply(lambda lst: float(np.min(lst)) if lst else 0.0)
+        df["Packet Length Mean"]     = df["Fwd Packet Length Mean"]
+        df["Packet Length Std"]      = df["Fwd Packet Length Std"]
+        df["Packet Length Max"]      = df["Fwd Packet Length Max"]
+        df["Packet Length Min"]      = df["Fwd Packet Length Min"]
+        df["Packet Length Variance"] = df["Fwd Packet Length Std"] ** 2
+        df["Average Packet Size"]    = df["Fwd Packet Length Mean"]
+        df["Fwd Segment Size Avg"]   = df["Fwd Packet Length Mean"]
+        df["Fwd Seg Size Min"]       = df["Fwd Packet Length Min"]
 
     if "inter_arrival_times" in df.columns:
         parsed_iats = df["inter_arrival_times"].apply(
             lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
         )
-        # Convert seconds to microseconds for CICIDS match
         df["Flow IAT Mean"] = parsed_iats.apply(lambda lst: float(np.mean(lst)) * 1e6 if lst else 0.0)
-        df["Flow IAT Std"] = parsed_iats.apply(lambda lst: float(np.std(lst)) * 1e6 if lst else 0.0)
-        df["Flow IAT Max"] = parsed_iats.apply(lambda lst: float(np.max(lst)) * 1e6 if lst else 0.0)
-        df["Flow IAT Min"] = parsed_iats.apply(lambda lst: float(np.min(lst)) * 1e6 if lst else 0.0)
+        df["Flow IAT Std"]  = parsed_iats.apply(lambda lst: float(np.std(lst)) * 1e6 if lst else 0.0)
+        df["Flow IAT Max"]  = parsed_iats.apply(lambda lst: float(np.max(lst)) * 1e6 if lst else 0.0)
+        df["Flow IAT Min"]  = parsed_iats.apply(lambda lst: float(np.min(lst)) * 1e6 if lst else 0.0)
+        df["Fwd IAT Mean"]  = df["Flow IAT Mean"]
+        df["Fwd IAT Std"]   = df["Flow IAT Std"]
+        df["Fwd IAT Max"]   = df["Flow IAT Max"]
+        df["Fwd IAT Min"]   = df["Flow IAT Min"]
+        df["Fwd IAT Total"] = parsed_iats.apply(lambda lst: float(np.sum(lst)) * 1e6 if lst else 0.0)
 
     # -- Rate features from FlowObject base columns (if present) -------------
     if {"bytes_in", "duration_s", "total_packets"}.issubset(df.columns):
         dur = df["duration_s"].clip(lower=0.001)
         df["Flow Bytes/s"]   = df["bytes_in"]     / dur
         df["Flow Packets/s"] = df["total_packets"] / dur
+        df["Fwd Packets/s"]  = df["Flow Packets/s"]
         
     # -- TCP Flags from FlowObject -------------------------------------------
     if "tcp_flags_seen" in df.columns:
         parsed_flags = df["tcp_flags_seen"].apply(
             lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
         )
-        df["FIN Flag Count"] = parsed_flags.apply(lambda x: 1 if "F" in x else 0)
-        df["SYN Flag Count"] = parsed_flags.apply(lambda x: 1 if "S" in x else 0)
-        df["RST Flag Count"] = parsed_flags.apply(lambda x: 1 if "R" in x else 0)
-        df["PSH Flag Count"] = parsed_flags.apply(lambda x: 1 if "P" in x else 0)
-        df["ACK Flag Count"] = parsed_flags.apply(lambda x: 1 if "A" in x else 0)
-        df["URG Flag Count"] = parsed_flags.apply(lambda x: 1 if "U" in x else 0)
-        df["CWR Flag Count"] = parsed_flags.apply(lambda x: 1 if "C" in x else 0)
-        df["ECE Flag Count"] = parsed_flags.apply(lambda x: 1 if "E" in x else 0)
+        df["FIN Flag Count"] = parsed_flags.apply(lambda x: x.count("F") if isinstance(x, list) else (1 if "F" in str(x) else 0))
+        df["SYN Flag Count"] = parsed_flags.apply(lambda x: x.count("S") if isinstance(x, list) else (1 if "S" in str(x) else 0))
+        df["RST Flag Count"] = parsed_flags.apply(lambda x: x.count("R") if isinstance(x, list) else (1 if "R" in str(x) else 0))
+        df["PSH Flag Count"] = parsed_flags.apply(lambda x: x.count("P") if isinstance(x, list) else (1 if "P" in str(x) else 0))
+        df["ACK Flag Count"] = parsed_flags.apply(lambda x: x.count("A") if isinstance(x, list) else (1 if "A" in str(x) else 0))
+        df["URG Flag Count"] = parsed_flags.apply(lambda x: x.count("U") if isinstance(x, list) else (1 if "U" in str(x) else 0))
+        df["CWR Flag Count"] = parsed_flags.apply(lambda x: x.count("C") if isinstance(x, list) else (1 if "C" in str(x) else 0))
+        df["ECE Flag Count"] = parsed_flags.apply(lambda x: x.count("E") if isinstance(x, list) else (1 if "E" in str(x) else 0))
+        df["Fwd PSH Flags"]  = df["PSH Flag Count"]
+        df["Fwd URG Flags"]  = df["URG Flag Count"]
+        df["Fwd RST Flags"]  = df["RST Flag Count"]
+
+    # -- TCP protocol standard defaults (only when missing in live inference) --
+    if "duration_s" in df.columns:
+        if "Fwd Seg Size Min" not in df.columns: df["Fwd Seg Size Min"] = 20.0
+        if "Fwd Header Length" not in df.columns: df["Fwd Header Length"] = df["Total Fwd Packet"] * 20.0
+        if "FWD Init Win Bytes" not in df.columns: df["FWD Init Win Bytes"] = 8192.0
+        if "ICMP Code" not in df.columns: df["ICMP Code"] = -1.0
+        if "ICMP Type" not in df.columns: df["ICMP Type"] = -1.0
+        if "Down/Up Ratio" not in df.columns: df["Down/Up Ratio"] = 1.0
 
     # -- Drop non-feature columns --------------------------------------------
     df = df.drop(columns=[c for c in _FLOW_DROP_COLS if c in df.columns], errors="ignore")

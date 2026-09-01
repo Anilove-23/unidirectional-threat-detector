@@ -69,6 +69,11 @@ async function handleAlertMessage(rawMessage) {
   try {
     const alertData = JSON.parse(rawMessage);
 
+    // Ensure timestamp exists
+    if (!alertData.timestamp) {
+      alertData.timestamp = new Date().toISOString();
+    }
+
     // Validate payload against alertSchema.json
     const valid = validateAlert(alertData);
     if (!valid) {

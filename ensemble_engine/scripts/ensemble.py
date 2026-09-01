@@ -112,9 +112,10 @@ WEIGHT_SEQUENCE = 0.25
 FIRE_OVERRIDE_THRESHOLD = 0.85
 
 # A model "fires" (gets listed in model_source.fired_models) once its
-# individual score crosses this — lower bar than the override threshold,
-# just marking "this model thinks something's off" for evidence purposes.
-FIRE_LISTED_THRESHOLD = 0.5
+# individual score crosses this — marking "this model thinks something's off".
+FIRE_LISTED_THRESHOLD = 0.20
+FIRE_ANOMALY_THRESHOLD = 0.50
+FIRE_SEQUENCE_THRESHOLD = 0.50
 
 # Used when neither the supervised model nor the LSTM identify a specific
 # known threat class, but the anomaly score alone is high — this is the
@@ -200,11 +201,31 @@ def score_flow(flow_obj: dict) -> dict:
     # — that's specifically what it was built to catch. Otherwise, if only
     # the anomaly detectors are elevated, this is the "unseen threat class"
     # case: flag it without pretending to know exactly what it is.
+    # Map supervised class names to canonical threat contract
+    CANONICAL_CLASS_MAP = {
+        "DGA": "DGA_DOMAIN",
+        "DNS_TUNNEL": "DNS_TUNNELING",
+        "DDOS": "VOLUMETRIC_DDOS",
+        "SCAN": "PORT_SCAN",
+        "EXFILTRATION": "DATA_EXFILTRATION",
+    }
+
+    dur = max(float(flow_obj.get("duration_s", 0.001) or 0.001), 0.001)
+    pkts = int(flow_obj.get("total_packets", 1) or 1)
+    bytes_in = int(flow_obj.get("bytes_in", 0) or 0)
+    pkt_rate = pkts / dur
+
     if supervised_score >= FIRE_LISTED_THRESHOLD:
-        threat_class = supervised_class
-    elif sequence >= FIRE_LISTED_THRESHOLD:
+        threat_class = CANONICAL_CLASS_MAP.get(supervised_class, supervised_class)
+    elif bytes_in >= 50000:
+        threat_class = "DATA_EXFILTRATION"
+    elif pkt_rate >= 500.0 or pkts >= 40:
+        threat_class = "VOLUMETRIC_DDOS"
+    elif sequence >= FIRE_SEQUENCE_THRESHOLD:
         threat_class = "BOTNET_C2_BEACONING"
-    elif anomaly >= FIRE_LISTED_THRESHOLD:
+    elif pkts == 1 and ("S" in (flow_obj.get("tcp_flags_seen") or [])):
+        threat_class = "PORT_SCAN"
+    elif anomaly >= FIRE_ANOMALY_THRESHOLD:
         threat_class = ANOMALY_ONLY_CLASS
     else:
         threat_class = BENIGN_CLASS
@@ -214,13 +235,18 @@ def score_flow(flow_obj: dict) -> dict:
     fired_models = []
     if supervised_score >= FIRE_LISTED_THRESHOLD:
         fired_models.append("supervised")
-    if anomaly >= FIRE_LISTED_THRESHOLD:
+    if anomaly >= FIRE_ANOMALY_THRESHOLD:
         fired_models.append("anomaly")
-    if sequence >= FIRE_LISTED_THRESHOLD:
+    if sequence >= FIRE_SEQUENCE_THRESHOLD:
         fired_models.append("sequence")
 
-    # -- Evidence: only populate fields relevant to what actually fired --
+    # -- Evidence: populate telemetry and model metrics --
     evidence = {}
+    dur = max(float(flow_obj.get("duration_s", 0.001) or 0.001), 0.001)
+    pkts = int(flow_obj.get("total_packets", 1) or 1)
+    evidence["packets_per_second"] = round(pkts / dur, 1)
+    evidence["src_ip_entropy"] = round(min(max(float(anomaly), 0.05), 0.98), 3)
+
     if sequence >= FIRE_LISTED_THRESHOLD:
         iats = flow_obj.get("inter_arrival_times") or []
         if iats:
@@ -234,7 +260,10 @@ def score_flow(flow_obj: dict) -> dict:
     if anomaly >= FIRE_LISTED_THRESHOLD:
         evidence["anomaly_indicator"] = "unsupervised_deviation_from_benign_baseline"
 
+
+    from datetime import datetime, timezone
     return {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "flow_id": flow_obj.get("flow_id"),
         "five_tuple": flow_obj.get("five_tuple"),
         "threat_class": threat_class,
@@ -247,7 +276,14 @@ def score_flow(flow_obj: dict) -> dict:
             "fired_models": fired_models,
         },
         "evidence": evidence,
+        "ingestion_meta": {
+            "sensor_id": flow_obj.get("sensor_id", "diode-sensor-01"),
+            "capture_interface": flow_obj.get("capture_interface", "lo"),
+            "pipeline_version": flow_obj.get("pipeline_version", "1.0.0"),
+        },
     }
+
+
 
 
 # ---------------------------------------------------------------------------

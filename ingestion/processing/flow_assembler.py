@@ -288,7 +288,7 @@ class FlowAssembler:
     def _start_sweeper(self) -> threading.Thread:
         def sweep():
             while True:
-                time.sleep(10)
+                time.sleep(2)
                 now = time.time()
                 expired_keys = []
                 with self._lock:

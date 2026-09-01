@@ -28,7 +28,21 @@ export function useWebSocket() {
     serviceRef.current = service;
 
     // Seed the dashboard so it isn't empty on first paint in mock mode.
-    if (USE_MOCK) setAlerts(generateSeedAlerts());
+    if (USE_MOCK) {
+      setAlerts(generateSeedAlerts());
+    } else {
+      // In live mode, fetch persisted alerts from backend on mount
+      fetch('/api/alerts?limit=100')
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+        .then((json) => {
+          if (json?.data?.alerts && Array.isArray(json.data.alerts)) {
+            setAlerts(json.data.alerts);
+          }
+        })
+        .catch((err) => {
+          console.warn('[Dashboard] Could not fetch initial alerts from /api/alerts:', err);
+        });
+    }
 
     const offStatus = service.on('status', setConnectionStatus);
     const offMessage = service.on('message', addAlert);

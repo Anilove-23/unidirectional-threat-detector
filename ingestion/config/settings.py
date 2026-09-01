@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     zeek_scripts_dir: str = Field("ingestion/capture/config", alias="ZEEK_SCRIPTS_DIR")
 
     # ── Flow assembly ──────────────────────────────────────────────────────────
-    flow_idle_timeout_s: int = Field(120, alias="FLOW_IDLE_TIMEOUT_S")
+    flow_idle_timeout_s: int = Field(5, alias="FLOW_IDLE_TIMEOUT_S")
     flow_max_packets: int = Field(10000, alias="FLOW_MAX_PACKETS")
 
     # ── Sensor identity ────────────────────────────────────────────────────────

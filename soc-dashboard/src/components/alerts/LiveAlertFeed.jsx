@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 import AlertRow from './AlertRow';
 import EmptyState from '../common/EmptyState';
 import { compareBySeverityThenTime } from '../../utils/severityUtils';
+import { useAlertStore } from '../../store/alertStore';
 
 const COLS = [
   'Severity', 'Threat Class', 'Confidence',
@@ -11,7 +12,7 @@ const COLS = [
 export default function LiveAlertFeed({
   alerts,
   onSelect,
-  sortBySeverity = true,
+  sortBySeverity = false,
   title          = 'Live Alert Feed',
   maxHeight      = 'max-h-[440px]',
 }) {
@@ -19,9 +20,22 @@ export default function LiveAlertFeed({
 
   const sorted = useMemo(() => {
     const list = [...alerts];
-    if (sortBySeverity) list.sort(compareBySeverityThenTime);
+    if (sortBySeverity) {
+      list.sort(compareBySeverityThenTime);
+    } else {
+      list.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    }
     return list;
   }, [alerts, sortBySeverity]);
+
+  const clearAlerts = useAlertStore((s) => s.clearAlerts);
+
+  async function handleClear() {
+    try {
+      await fetch('/api/alerts', { method: 'DELETE' });
+    } catch (_) {}
+    clearAlerts();
+  }
 
   return (
     <div className="card flex flex-col overflow-hidden">
@@ -33,12 +47,23 @@ export default function LiveAlertFeed({
             {alerts.length}
           </span>
         </div>
-        {sorted.length > 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulseDot shrink-0" />
-            <span className="text-xs font-medium text-signal">Live</span>
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          {sorted.length > 0 && (
+            <button
+              onClick={handleClear}
+              className="text-2xs text-ink-muted hover:text-red-400 transition-colors px-2 py-0.5 rounded bg-surface-2 border border-border"
+              title="Clear all historical alerts"
+            >
+              Clear Feed
+            </button>
+          )}
+          {sorted.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulseDot shrink-0" />
+              <span className="text-xs font-medium text-signal">Live</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Body */}

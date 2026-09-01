@@ -80,4 +80,21 @@ router.get('/:flow_id', async (req, res) => {
   }
 });
 
+/**
+ * @route   DELETE /api/alerts
+ * @desc    Clear all stored alerts
+ */
+router.delete('/', async (req, res) => {
+  try {
+    await AlertModel.clearAll();
+    res.json({
+      status: 'success',
+      message: 'All stored alerts cleared successfully'
+    });
+  } catch (err) {
+    console.error('[API] Error in DELETE /api/alerts:', err.message);
+    res.status(500).json({ status: 'error', message: 'Failed to clear alerts' });
+  }
+});
+
 module.exports = router;

@@ -70,7 +70,10 @@ export class WebSocketService extends Emitter {
       } catch {
         return; // drop malformed frames rather than crash the dashboard
       }
-      const alert = normalizeAlert(parsed);
+      // Backend wraps alerts as {event:'alert', data: alertData}
+      // Unwrap the envelope before normalizing.
+      const payload = parsed?.event === 'alert' ? parsed.data : parsed;
+      const alert = normalizeAlert(payload);
       if (alert) this.emit('message', alert);
     };
 

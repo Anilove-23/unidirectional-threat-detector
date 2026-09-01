@@ -74,7 +74,7 @@ def beacon_loop(
                 p_syn = IP(dst=target)/TCP(sport=sport, dport=port, flags="S")
                 p_data = IP(dst=target)/TCP(sport=sport, dport=port, flags="PA")/Raw(bytes([0xC2] * payload_size))
                 p_fin = IP(dst=target)/TCP(sport=sport, dport=port, flags="FA")
-                send([p_syn, p_data, p_fin], verbose=False)
+                send([p_syn, p_data, p_fin], iface="lo" if target in ("127.0.0.1", "localhost") else None, verbose=False)
                 sent_ok = True
             except Exception as ex:
                 print(f"[c2_beacon] Failed to inject packet: {ex}")

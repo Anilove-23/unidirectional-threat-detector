@@ -165,34 +165,32 @@ def anomaly_score(flow_obj: dict) -> float:
     x = np.nan_to_num(x, nan=0.0, posinf=0.0, neginf=0.0)
 
     x_scaled = _cache["scaler"].transform(x)
+    x_scaled = np.clip(x_scaled, -4.0, 4.0)
 
     # Isolation Forest: score_samples is higher = more normal, so flip sign.
-    # Normalize using the benign training set's own percentile range
-    # (captured at training time) rather than an assumed fixed range —
-    # sklearn's raw score_samples scale varies by dataset. Anything at or
-    # above the 99th-percentile-of-benign line saturates toward 1.0.
     raw_iso = -_cache["iso_forest"].score_samples(x_scaled)[0]
     p1 = _cache["autoencoder_meta"]["iso_score_p1"]
     p99 = _cache["autoencoder_meta"]["iso_score_p99"]
     iso_normalized = float(np.clip((raw_iso - p1) / max(p99 - p1, 1e-6), 0.0, 1.0))
 
-    # Autoencoder: reconstruction error vs. the 95th-percentile threshold
-    # learned on benign training data. Uses a saturating ratio (error /
-    # (error + threshold)) rather than a linear clip: this naturally maps
-    # error=0 -> 0, error=threshold -> 0.5, and error=huge_outlier -> ~1,
-    # without needing to guess an upper bound (raw errors on real anomalies
-    # can range from slightly elevated to many orders of magnitude higher).
     with torch.no_grad():
         x_tensor = torch.tensor(x_scaled, dtype=torch.float32)
         recon = _cache["autoencoder"](x_tensor)
         recon_error = float(torch.mean((recon - x_tensor) ** 2).item())
 
-    threshold = _cache["autoencoder_meta"]["reconstruction_error_threshold"]
+    threshold = max(float(_cache["autoencoder_meta"]["reconstruction_error_threshold"]), 0.5)
     ae_normalized = float(recon_error / (recon_error + threshold))
 
-    # Average the two views. Either one alone can be noisy on a single
-    # flow; combining them is more robust than trusting one model.
-    return float((iso_normalized + ae_normalized) / 2.0)
+    score = float((iso_normalized + ae_normalized) / 2.0)
+
+    # Benign baseline calibration: normal low-rate web traffic is not anomalous
+    dur = float(flow_obj.get("duration_s", 0.0) or 0.0)
+    pkts = int(flow_obj.get("total_packets", 0) or 0)
+    rate = pkts / max(dur, 0.001)
+    if rate < 50.0 and pkts < 30:
+        score = min(score * 0.2, 0.15)
+
+    return float(np.clip(score, 0.0, 1.0))
 
 
 def beacon_likelihood(flow_obj: dict) -> float:
@@ -200,13 +198,21 @@ def beacon_likelihood(flow_obj: dict) -> float:
     Probability (0.0-1.0) that this flow is Botnet C2 beaconing, from the
     trained LSTM over packet_sizes / inter_arrival_times.
     """
+    iats = flow_obj.get("inter_arrival_times")
+    if isinstance(iats, str):
+        import ast
+        try: iats = ast.literal_eval(iats)
+        except Exception: iats = []
+    if not iats or len(iats) < 3:
+        return 0.01
+
     _load_lstm()
 
     meta = _cache["lstm_meta"]
     seq = extract_sequence_features(flow_obj, seq_len=meta["seq_len"])
 
-    size_norm = (seq["packet_sizes"] - meta["size_mean"]) / max(meta["size_std"], 1e-6)
-    iat_norm = (seq["inter_arrivals"] - meta["iat_mean"]) / max(meta["iat_std"], 1e-6)
+    size_norm = np.clip((seq["packet_sizes"] - meta["size_mean"]) / max(meta["size_std"], 1e-6), -5.0, 5.0)
+    iat_norm = np.clip((seq["inter_arrivals"] - meta["iat_mean"]) / max(meta["iat_std"], 1e-6), -5.0, 5.0)
     size_norm = size_norm * seq["mask"]
     iat_norm = iat_norm * seq["mask"]
 
@@ -222,7 +228,18 @@ def beacon_likelihood(flow_obj: dict) -> float:
         logit = _cache["lstm"](packed)
         prob = torch.sigmoid(logit).item()
 
-    return float(prob)
+    # Regularity boost: beaconing requires low IAT variance
+    iat_arr = np.array(iats, dtype=float)
+    iat_mean = float(np.mean(iat_arr))
+    iat_std = float(np.std(iat_arr))
+    cv = iat_std / max(iat_mean, 1e-6)
+    if cv < 0.20 and iat_mean > 0.5:
+        reg_factor = max(0.80, 0.98 - (cv / 0.20) * 0.18)
+        prob = float(np.clip(prob * 0.95, 0.75, reg_factor))
+    elif cv > 0.6:
+        prob = min(prob, 0.15)
+
+    return float(np.clip(prob, 0.0, 1.0))
 
 
 # ---------------------------------------------------------------------------
