@@ -161,6 +161,13 @@ def main():
     )
     iso_forest.fit(X_benign_scaled)
 
+    # Calibration: capture where benign traffic actually falls on the raw
+    # score_samples scale, since that range varies by dataset and can't be
+    # assumed as a fixed constant (e.g. [-0.5, 0.5]) at inference time.
+    raw_iso_benign = -iso_forest.score_samples(X_benign_scaled)
+    iso_score_p1 = float(np.percentile(raw_iso_benign, 1))
+    iso_score_p99 = float(np.percentile(raw_iso_benign, 99))
+
     # -- Autoencoder -----------------------------------------------------
     print("[+] Training Autoencoder...")
     autoencoder, ae_threshold = train_autoencoder(X_benign_scaled, epochs=args.epochs)
@@ -175,6 +182,8 @@ def main():
             "input_dim": len(TABULAR_FEATURE_COLUMNS),
             "reconstruction_error_threshold": ae_threshold,
             "feature_columns": TABULAR_FEATURE_COLUMNS,
+            "iso_score_p1": iso_score_p1,
+            "iso_score_p99": iso_score_p99,
         }, f, indent=2)
 
     print(f"\n[+] Saved artifacts to {MODELS_DIR}/:")
