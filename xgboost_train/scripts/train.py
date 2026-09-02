@@ -84,13 +84,16 @@ FLOW_LABEL_MAP: dict[str, str] = {
 }
 
 # ---------------------------------------------------------------------------
-# Shared XGBoost hyper-parameters
+# Shared XGBoost hyper-parameters (regularized to prevent overfitting)
 # ---------------------------------------------------------------------------
 XGB_PARAMS: dict = dict(
     objective          = "multi:softprob",
-    n_estimators       = 300,
-    max_depth          = 6,
-    learning_rate      = 0.1,
+    n_estimators       = 150,
+    max_depth          = 4,
+    learning_rate      = 0.08,
+    min_child_weight   = 3,
+    reg_alpha          = 0.1,
+    reg_lambda         = 1.0,
     subsample          = 0.8,
     colsample_bytree   = 0.8,
     eval_metric        = "mlogloss",
@@ -141,28 +144,55 @@ def _evaluate(
 def train_flow_model() -> None:
     _banner("MODEL A — Flow Attack Classifier (Person 1)")
 
-    # -- Load ----------------------------------------------------------------
-    df = pd.read_csv(DATA_DIR / "flow_attacks_dataset.csv", low_memory=False)
-    print(f"  Loaded   : {df.shape[0]:,} rows x {df.shape[1]} cols")
+    # -- Load synthetic multi-scale flows (Person 1 FlowObject schema) ----------
+    synth_path = ROOT / "dataset" / "p1_synthetic_evaluation.jsonl"
+    if not synth_path.exists():
+        print(f"[*] Generating synthetic flow dataset at {synth_path}...")
+        import subprocess
+        subprocess.run([sys.executable, str(SCRIPTS_DIR / "generate_p1_dataset.py")], check=True)
 
-    # -- Remap CICIDS labels -> P1 threat classes ----------------------------
-    label_col = "Label" if "Label" in df.columns else "threat_class"
-    df["threat_class"] = df[label_col].str.strip().map(FLOW_LABEL_MAP)
-    before = len(df)
-    df = df.dropna(subset=["threat_class"])   # drop out-of-scope rows
-    print(f"  Remapped : {len(df):,} rows kept ({before - len(df)} out-of-scope dropped)")
-    print(f"  Class dist:\n{df['threat_class'].value_counts().to_string()}")
+    df_synth = pd.read_json(synth_path, lines=True)
+    df_flow = df_synth[df_synth["dns_meta"].isnull() & df_synth["collected_label"].isin([
+        "BENIGN", "VOLUMETRIC_DDOS", "PORT_SCAN", "DATA_EXFILTRATION"
+    ])].copy()
+    print(f"  Loaded Synthetic Flow Objects: {len(df_flow):,} rows")
+
+    # -- Optionally blend with CICIDS flow attacks dataset if available --------
+    cicids_path = DATA_DIR / "flow_attacks_dataset.csv"
+    if cicids_path.exists():
+        print(f"  Loading CICIDS reference data: {cicids_path.name}")
+        df_cic = pd.read_csv(cicids_path, low_memory=False)
+        label_col = "Label" if "Label" in df_cic.columns else "threat_class"
+        df_cic["threat_class"] = df_cic[label_col].str.strip().map(FLOW_LABEL_MAP)
+        df_cic = df_cic.dropna(subset=["threat_class"])
+        # Sample balanced subset from CICIDS to avoid class imbalance
+        sampled_dfs = []
+        for _, group in df_cic.groupby("threat_class"):
+            sampled_dfs.append(group.sample(min(len(group), 2500), random_state=42))
+        df_cic_sampled = pd.concat(sampled_dfs, ignore_index=True)
+        print(f"  Blended CICIDS subset: {len(df_cic_sampled):,} rows")
+        X_cic = extract_flow_features(df_cic_sampled)
+        y_cic = df_cic_sampled["threat_class"].values
+    else:
+        X_cic, y_cic = None, None
+
+    # -- Feature extraction on Flow Objects -----------------------------------
+    X_flow = extract_flow_features(df_flow)
+    y_flow = df_flow["collected_label"].values
+
+    if X_cic is not None:
+        X = pd.concat([X_flow, X_cic], ignore_index=True)
+        y_raw = np.concatenate([y_flow, y_cic])
+    else:
+        X = X_flow
+        y_raw = y_flow
 
     # -- Label encode --------------------------------------------------------
     le_flow = LabelEncoder()
-    y = le_flow.fit_transform(df["threat_class"])
+    y = le_flow.fit_transform(y_raw)
     joblib.dump(le_flow, MODELS_DIR / "flow_label_encoder.pkl")
     print(f"\n  Classes  : {list(le_flow.classes_)}")
     print(f"  Saved    : flow_label_encoder.pkl")
-
-    # -- Feature extraction --------------------------------------------------
-    X = extract_flow_features(df)
-    print(f"  Features : {X.shape[1]} columns after cleaning")
 
     # Persist column list so test scripts can align unseen data exactly
     import json as _json
@@ -194,26 +224,40 @@ def train_flow_model() -> None:
 
 # =============================================================================
 # MODEL B — DNS Lexical Classifier
-# Detects: DGA | DNS_TUNNEL | BENIGN
+# Detects: DGA | DNS_TUNNELING | BENIGN
 # =============================================================================
 
 def train_dns_model() -> None:
     _banner("MODEL B — DNS Lexical Classifier (Person 1)")
 
-    # -- Load ----------------------------------------------------------------
-    df = pd.read_csv(DATA_DIR / "dns_dataset.csv")
-    print(f"  Loaded   : {df.shape[0]:,} rows x {df.shape[1]} cols")
-    print(f"  Class dist:\n{df['threat_class'].value_counts().to_string()}")
+    # -- Load CSV base dataset -----------------------------------------------
+    df_csv = pd.read_csv(DATA_DIR / "dns_dataset.csv")
+    df_csv["threat_class"] = df_csv["threat_class"].str.strip().replace({"DNS_TUNNEL": "DNS_TUNNELING"})
+    print(f"  Loaded CSV : {df_csv.shape[0]:,} rows x {df_csv.shape[1]} cols")
+
+    # -- Load synthetic DNS queries for live generator domain patterns -------
+    synth_path = ROOT / "dataset" / "p1_synthetic_evaluation.jsonl"
+    if synth_path.exists():
+        df_synth = pd.read_json(synth_path, lines=True)
+        df_synth_dns = df_synth[df_synth["dns_meta"].notnull()].copy()
+        df_synth_dns["domain"] = df_synth_dns["dns_meta"].apply(lambda x: x["query_name"])
+        df_synth_dns["threat_class"] = df_synth_dns["collected_label"]
+        df_combined = pd.concat([df_csv[["domain", "threat_class"]], df_synth_dns[["domain", "threat_class"]]], ignore_index=True)
+    else:
+        df_combined = df_csv[["domain", "threat_class"]]
+
+    print(f"  Combined DNS rows: {len(df_combined):,}")
+    print(f"  Class dist:\n{df_combined['threat_class'].value_counts().to_string()}")
 
     # -- Label encode --------------------------------------------------------
     le_dns = LabelEncoder()
-    y = le_dns.fit_transform(df["threat_class"].str.strip())
+    y = le_dns.fit_transform(df_combined["threat_class"])
     joblib.dump(le_dns, MODELS_DIR / "dns_label_encoder.pkl")
     print(f"\n  Classes  : {list(le_dns.classes_)}")
     print(f"  Saved    : dns_label_encoder.pkl")
 
     # -- Feature extraction (fits + saves CountVectorizer) -------------------
-    X, _ = extract_dns_features(df, fit=True)
+    X, _ = extract_dns_features(df_combined, fit=True)
     print(f"  Features : {X.shape[1]} columns")
 
     # -- Split ---------------------------------------------------------------

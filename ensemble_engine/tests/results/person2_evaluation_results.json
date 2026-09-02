@@ -1,0 +1,71 @@
+{
+  "total_flows": 40000,
+  "elapsed_s": 622.55,
+  "per_class": {
+    "BENIGN": {
+      "count": 8000,
+      "anomaly_avg": 0.810136,
+      "anomaly_min": 0.15,
+      "anomaly_max": 0.913201,
+      "anomaly_above_0.5": 6974,
+      "anomaly_above_0.8": 6974,
+      "beacon_avg": 0.957998,
+      "beacon_min": 0.054889,
+      "beacon_max": 0.999959,
+      "beacon_above_0.5": 7790,
+      "beacon_above_0.8": 7720
+    },
+    "BOTNET_C2_BEACONING": {
+      "count": 8000,
+      "anomaly_avg": 0.484984,
+      "anomaly_min": 0.15,
+      "anomaly_max": 0.890551,
+      "anomaly_above_0.5": 3680,
+      "anomaly_above_0.8": 3680,
+      "beacon_avg": 0.909415,
+      "beacon_min": 0.800128,
+      "beacon_max": 0.999996,
+      "beacon_above_0.5": 8000,
+      "beacon_above_0.8": 8000
+    },
+    "DNS_TUNNELING": {
+      "count": 8000,
+      "anomaly_avg": 0.22654,
+      "anomaly_min": 0.133989,
+      "anomaly_max": 0.891713,
+      "anomaly_above_0.5": 849,
+      "anomaly_above_0.8": 821,
+      "beacon_avg": 0.202262,
+      "beacon_min": 0.01,
+      "beacon_max": 0.999993,
+      "beacon_above_0.5": 1431,
+      "beacon_above_0.8": 1069
+    },
+    "TLS_ANOMALY": {
+      "count": 8000,
+      "anomaly_avg": 0.704886,
+      "anomaly_min": 0.15,
+      "anomaly_max": 0.914983,
+      "anomaly_above_0.5": 5946,
+      "anomaly_above_0.8": 5946,
+      "beacon_avg": 0.96862,
+      "beacon_min": 0.15,
+      "beacon_max": 0.999996,
+      "beacon_above_0.5": 7894,
+      "beacon_above_0.8": 7755
+    },
+    "ZERO_DAY_ANOMALOUS": {
+      "count": 8000,
+      "anomaly_avg": 0.663378,
+      "anomaly_min": 0.15,
+      "anomaly_max": 0.897499,
+      "anomaly_above_0.5": 5689,
+      "anomaly_above_0.8": 5689,
+      "beacon_avg": 0.516927,
+      "beacon_min": 0.01,
+      "beacon_max": 0.999997,
+      "beacon_above_0.5": 3780,
+      "beacon_above_0.8": 3631
+    }
+  }
+}

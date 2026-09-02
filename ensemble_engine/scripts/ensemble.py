@@ -201,13 +201,16 @@ def score_flow(flow_obj: dict) -> dict:
     # — that's specifically what it was built to catch. Otherwise, if only
     # the anomaly detectors are elevated, this is the "unseen threat class"
     # case: flag it without pretending to know exactly what it is.
-    # Map supervised class names to canonical threat contract
+    # Map any legacy supervised class names to canonical threat contract names.
+    # NOTE: Person 1's trained models (flow_model + dns_model) already output
+    # the canonical names below. This map only exists as a safety net in case
+    # old model snapshots with legacy label names are loaded.
     CANONICAL_CLASS_MAP = {
-        "DGA": "DGA_DOMAIN",
-        "DNS_TUNNEL": "DNS_TUNNELING",
-        "DDOS": "VOLUMETRIC_DDOS",
-        "SCAN": "PORT_SCAN",
-        "EXFILTRATION": "DATA_EXFILTRATION",
+        "DGA_DOMAIN":      "DGA",             # normalize if old model used DGA_DOMAIN
+        "DNS_TUNNEL":      "DNS_TUNNELING",   # normalize if old model used DNS_TUNNEL
+        "DDOS":            "VOLUMETRIC_DDOS", # normalize if old model used DDOS
+        "SCAN":            "PORT_SCAN",       # normalize if old model used SCAN
+        "EXFILTRATION":    "DATA_EXFILTRATION",
     }
 
     dur = max(float(flow_obj.get("duration_s", 0.001) or 0.001), 0.001)

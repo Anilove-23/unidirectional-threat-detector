@@ -1,0 +1,65 @@
+[
+  {
+    "generator": "benign",
+    "label": "BENIGN",
+    "status": "SUCCESS",
+    "exit_code": 0,
+    "stdout_lines": 4,
+    "timestamp": "2026-08-30T08:26:43.698424Z",
+    "args": "--target 127.0.0.1 --duration 5"
+  },
+  {
+    "generator": "dga",
+    "label": "DGA",
+    "status": "SUCCESS",
+    "exit_code": 0,
+    "stdout_lines": 15,
+    "timestamp": "2026-08-30T08:26:43.698424Z",
+    "args": "--family all --count 100 --duration 5"
+  },
+  {
+    "generator": "c2_beacon",
+    "label": "C2_BEACON",
+    "status": "SUCCESS",
+    "exit_code": 0,
+    "stdout_lines": 8,
+    "timestamp": "2026-08-30T08:26:43.698424Z",
+    "args": "--target 127.0.0.1 --interval 5 --duration 5"
+  },
+  {
+    "generator": "ddos",
+    "label": "DDOS",
+    "status": "PARTIAL",
+    "exit_code": 1,
+    "stdout_lines": 7,
+    "timestamp": "2026-08-30T08:26:43.698424Z",
+    "args": "--target 127.0.0.1 --sub syn_rate --duration 5"
+  },
+  {
+    "generator": "dns_tunnel",
+    "label": "DNS_TUNNEL",
+    "status": "SUCCESS",
+    "exit_code": 0,
+    "stdout_lines": 14,
+    "timestamp": "2026-08-30T08:26:43.698424Z",
+    "args": "--tool python --duration 5"
+  },
+  {
+    "generator": "scan",
+    "label": "SCAN",
+    "status": "PARTIAL",
+    "exit_code": 1,
+    "stdout_lines": 5,
+    "timestamp": "2026-08-30T08:26:43.698424Z",
+    "args": "--target 127.0.0.1 --sub sequential --duration 5"
+  },
+  {
+    "generator": "slowloris",
+    "label": "DATA_EXFILTRATION",
+    "status": "SUCCESS",
+    "exit_code": 0,
+    "stdout_lines": 8,
+    "timestamp": "2026-08-30T08:26:43.698424Z",
+    "args": "--target 127.0.0.1 --connections 50 --duration 5"
+  }
+]

@@ -87,28 +87,76 @@ def extract_flow_features(df: pd.DataFrame) -> pd.DataFrame:
     -------
     pd.DataFrame  — numeric feature matrix, same row order as input.
     """
+UNIVERSAL_FLOW_FEATURES: list[str] = [
+    "Dst Port",
+    "Flow Duration",
+    "Total Fwd Packet",
+    "Total Length of Fwd Packet",
+    "Fwd Packet Length Mean",
+    "Fwd Packet Length Std",
+    "Fwd Packet Length Max",
+    "Fwd Packet Length Min",
+    "Average Packet Size",
+    "Flow Bytes/s",
+    "Flow Packets/s",
+    "Flow IAT Mean",
+    "Flow IAT Std",
+    "Flow IAT Max",
+    "Flow IAT Min",
+    "FIN Flag Count",
+    "SYN Flag Count",
+    "RST Flag Count",
+    "PSH Flag Count",
+    "ACK Flag Count",
+]
+
+
+def extract_flow_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Return a clean, fully-numeric feature matrix from a flow DataFrame.
+
+    Extracts a robust universal feature set (20 informative metrics) that are
+    meaningfully present in both live FlowObjects and offline CSVs:
+      - Service port: Dst Port
+      - Volume & duration: Flow Duration, Total Fwd Packet, Total Length of Fwd Packet
+      - Packet size stats: Mean, Std, Max, Min, Average Packet Size
+      - Rate features: Flow Bytes/s, Flow Packets/s
+      - Inter-arrival times: Mean, Std, Max, Min (in microseconds)
+      - TCP flags: FIN, SYN, RST, PSH, ACK counts
+
+    Constant/dead features (Active/Idle windows, Bulk rates, ICMP codes, etc.)
+    and ephemeral noise (Src Port) are excluded to prevent overfitting.
+    """
     df = df.copy()
 
-    # -- Map FlowObject format to CICIDS format if live ingestion ----------------
+    # -- Map FlowObject format to standard features ----------------------------
     if "five_tuple" in df.columns:
-        df["Src Port"] = df["five_tuple"].apply(lambda t: t.get("src_port", 0) if isinstance(t, dict) else 0)
-        df["Dst Port"] = df["five_tuple"].apply(lambda t: t.get("dst_port", 0) if isinstance(t, dict) else 0)
-    elif "src_port" in df.columns and "dst_port" in df.columns:
-        df["Src Port"] = df["src_port"]
-        df["Dst Port"] = df["dst_port"]
+        df["Dst Port"] = df["five_tuple"].apply(
+            lambda t: float(t.get("dst_port", 0)) if isinstance(t, dict) else 0.0
+        )
+    elif "dst_port" in df.columns:
+        df["Dst Port"] = df["dst_port"].astype(float)
+    elif "Dst Port" not in df.columns:
+        df["Dst Port"] = 0.0
 
     if "duration_s" in df.columns:
-        df["Flow Duration"] = df["duration_s"] * 1e6
-        df["Total TCP Flow Time"] = df["Flow Duration"]
-    if "total_packets" in df.columns:
-        df["Total Fwd Packet"] = df["total_packets"]
-        df["Subflow Fwd Packets"] = df["total_packets"]
-        df["Fwd Act Data Pkts"] = df["total_packets"]
-    if "bytes_in" in df.columns:
-        df["Total Length of Fwd Packet"] = df["bytes_in"]
-        df["Subflow Fwd Bytes"] = df["bytes_in"]
+        df["Flow Duration"] = df["duration_s"].astype(float) * 1e6
+    elif "Flow Duration" not in df.columns:
+        df["Flow Duration"] = 0.0
 
-    # -- Parse list columns if present (FlowObject format) -------------------
+    if "total_packets" in df.columns:
+        df["Total Fwd Packet"] = df["total_packets"].astype(float)
+    elif "Total Fwd Packet" not in df.columns:
+        df["Total Fwd Packet"] = 1.0
+
+    if "bytes_in" in df.columns:
+        df["Total Length of Fwd Packet"] = df["bytes_in"].astype(float)
+    elif "total_bytes" in df.columns:
+        df["Total Length of Fwd Packet"] = df["total_bytes"].astype(float)
+    elif "Total Length of Fwd Packet" not in df.columns:
+        df["Total Length of Fwd Packet"] = 0.0
+
+    # -- Parse packet sizes ----------------------------------------------------
     if "packet_sizes" in df.columns:
         parsed_sizes = df["packet_sizes"].apply(
             lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
@@ -117,15 +165,22 @@ def extract_flow_features(df: pd.DataFrame) -> pd.DataFrame:
         df["Fwd Packet Length Std"]  = parsed_sizes.apply(lambda lst: float(np.std(lst)) if lst else 0.0)
         df["Fwd Packet Length Max"]  = parsed_sizes.apply(lambda lst: float(np.max(lst)) if lst else 0.0)
         df["Fwd Packet Length Min"]  = parsed_sizes.apply(lambda lst: float(np.min(lst)) if lst else 0.0)
-        df["Packet Length Mean"]     = df["Fwd Packet Length Mean"]
-        df["Packet Length Std"]      = df["Fwd Packet Length Std"]
-        df["Packet Length Max"]      = df["Fwd Packet Length Max"]
-        df["Packet Length Min"]      = df["Fwd Packet Length Min"]
-        df["Packet Length Variance"] = df["Fwd Packet Length Std"] ** 2
         df["Average Packet Size"]    = df["Fwd Packet Length Mean"]
-        df["Fwd Segment Size Avg"]   = df["Fwd Packet Length Mean"]
-        df["Fwd Seg Size Min"]       = df["Fwd Packet Length Min"]
+    else:
+        for col in ["Fwd Packet Length Mean", "Fwd Packet Length Std", "Fwd Packet Length Max", "Fwd Packet Length Min"]:
+            if col not in df.columns:
+                df[col] = 0.0
+        if "Average Packet Size" not in df.columns:
+            df["Average Packet Size"] = df["Fwd Packet Length Mean"]
 
+    # Fallback for Average Packet Size if 0 but total packets/bytes available
+    zero_avg = (df["Average Packet Size"] == 0) & (df["Total Fwd Packet"] > 0) & (df["Total Length of Fwd Packet"] > 0)
+    if zero_avg.any():
+        df.loc[zero_avg, "Average Packet Size"] = (
+            df.loc[zero_avg, "Total Length of Fwd Packet"] / df.loc[zero_avg, "Total Fwd Packet"].clip(lower=1.0)
+        )
+
+    # -- Parse inter-arrival times ---------------------------------------------
     if "inter_arrival_times" in df.columns:
         parsed_iats = df["inter_arrival_times"].apply(
             lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
@@ -134,64 +189,58 @@ def extract_flow_features(df: pd.DataFrame) -> pd.DataFrame:
         df["Flow IAT Std"]  = parsed_iats.apply(lambda lst: float(np.std(lst)) * 1e6 if lst else 0.0)
         df["Flow IAT Max"]  = parsed_iats.apply(lambda lst: float(np.max(lst)) * 1e6 if lst else 0.0)
         df["Flow IAT Min"]  = parsed_iats.apply(lambda lst: float(np.min(lst)) * 1e6 if lst else 0.0)
-        df["Fwd IAT Mean"]  = df["Flow IAT Mean"]
-        df["Fwd IAT Std"]   = df["Flow IAT Std"]
-        df["Fwd IAT Max"]   = df["Flow IAT Max"]
-        df["Fwd IAT Min"]   = df["Flow IAT Min"]
-        df["Fwd IAT Total"] = parsed_iats.apply(lambda lst: float(np.sum(lst)) * 1e6 if lst else 0.0)
+    else:
+        for col in ["Flow IAT Mean", "Flow IAT Std", "Flow IAT Max", "Flow IAT Min"]:
+            if col not in df.columns:
+                df[col] = 0.0
 
-    # -- Rate features from FlowObject base columns (if present) -------------
+    # -- Rate features ---------------------------------------------------------
     if {"bytes_in", "duration_s", "total_packets"}.issubset(df.columns):
-        dur = df["duration_s"].clip(lower=0.001)
-        df["Flow Bytes/s"]   = df["bytes_in"]     / dur
-        df["Flow Packets/s"] = df["total_packets"] / dur
-        df["Fwd Packets/s"]  = df["Flow Packets/s"]
-        
-    # -- TCP Flags from FlowObject -------------------------------------------
+        dur = df["duration_s"].astype(float).clip(lower=1e-6)
+        df["Flow Bytes/s"]   = df["bytes_in"].astype(float) / dur
+        df["Flow Packets/s"] = df["total_packets"].astype(float) / dur
+    else:
+        if "Flow Bytes/s" not in df.columns:
+            dur_s = (df["Flow Duration"] / 1e6).clip(lower=1e-6)
+            df["Flow Bytes/s"] = df["Total Length of Fwd Packet"] / dur_s
+        if "Flow Packets/s" not in df.columns:
+            dur_s = (df["Flow Duration"] / 1e6).clip(lower=1e-6)
+            df["Flow Packets/s"] = df["Total Fwd Packet"] / dur_s
+
+    # -- TCP Flags -------------------------------------------------------------
     if "tcp_flags_seen" in df.columns:
         parsed_flags = df["tcp_flags_seen"].apply(
             lambda v: ast.literal_eval(v) if isinstance(v, str) else (v if isinstance(v, list) else [])
         )
-        df["FIN Flag Count"] = parsed_flags.apply(lambda x: x.count("F") if isinstance(x, list) else (1 if "F" in str(x) else 0))
-        df["SYN Flag Count"] = parsed_flags.apply(lambda x: x.count("S") if isinstance(x, list) else (1 if "S" in str(x) else 0))
-        df["RST Flag Count"] = parsed_flags.apply(lambda x: x.count("R") if isinstance(x, list) else (1 if "R" in str(x) else 0))
-        df["PSH Flag Count"] = parsed_flags.apply(lambda x: x.count("P") if isinstance(x, list) else (1 if "P" in str(x) else 0))
-        df["ACK Flag Count"] = parsed_flags.apply(lambda x: x.count("A") if isinstance(x, list) else (1 if "A" in str(x) else 0))
-        df["URG Flag Count"] = parsed_flags.apply(lambda x: x.count("U") if isinstance(x, list) else (1 if "U" in str(x) else 0))
-        df["CWR Flag Count"] = parsed_flags.apply(lambda x: x.count("C") if isinstance(x, list) else (1 if "C" in str(x) else 0))
-        df["ECE Flag Count"] = parsed_flags.apply(lambda x: x.count("E") if isinstance(x, list) else (1 if "E" in str(x) else 0))
-        df["Fwd PSH Flags"]  = df["PSH Flag Count"]
-        df["Fwd URG Flags"]  = df["URG Flag Count"]
-        df["Fwd RST Flags"]  = df["RST Flag Count"]
+        df["FIN Flag Count"] = parsed_flags.apply(lambda x: float(x.count("F") if isinstance(x, list) else (1 if "F" in str(x) else 0)))
+        df["SYN Flag Count"] = parsed_flags.apply(lambda x: float(x.count("S") if isinstance(x, list) else (1 if "S" in str(x) else 0)))
+        df["RST Flag Count"] = parsed_flags.apply(lambda x: float(x.count("R") if isinstance(x, list) else (1 if "R" in str(x) else 0)))
+        df["PSH Flag Count"] = parsed_flags.apply(lambda x: float(x.count("P") if isinstance(x, list) else (1 if "P" in str(x) else 0)))
+        df["ACK Flag Count"] = parsed_flags.apply(lambda x: float(x.count("A") if isinstance(x, list) else (1 if "A" in str(x) else 0)))
+    else:
+        for flag in ["FIN Flag Count", "SYN Flag Count", "RST Flag Count", "PSH Flag Count", "ACK Flag Count"]:
+            if flag not in df.columns:
+                df[flag] = 0.0
 
-    # -- TCP protocol standard defaults (only when missing in live inference) --
-    if "duration_s" in df.columns:
-        if "Fwd Seg Size Min" not in df.columns: df["Fwd Seg Size Min"] = 20.0
-        if "Fwd Header Length" not in df.columns: df["Fwd Header Length"] = df["Total Fwd Packet"] * 20.0
-        if "FWD Init Win Bytes" not in df.columns: df["FWD Init Win Bytes"] = 8192.0
-        if "ICMP Code" not in df.columns: df["ICMP Code"] = -1.0
-        if "ICMP Type" not in df.columns: df["ICMP Type"] = -1.0
-        if "Down/Up Ratio" not in df.columns: df["Down/Up Ratio"] = 1.0
-
-    # -- Drop non-feature columns --------------------------------------------
-    df = df.drop(columns=[c for c in _FLOW_DROP_COLS if c in df.columns], errors="ignore")
-
-    # -- Numeric only --------------------------------------------------------
-    df = df.select_dtypes(include=[np.number])
-
-    # -- Sanitise ------------------------------------------------------------
-    df = df.replace([np.inf, -np.inf], np.nan)
-    df = df.fillna(df.median(numeric_only=True))
-    df = df.fillna(0) # fallback if median is nan
-
-    # -- Align columns to model's exact training signature -------------------
+    # -- Select feature columns ------------------------------------------------
     col_path = MODELS_DIR / "flow_feature_columns.json"
     if col_path.exists():
         import json as _json
-        train_cols = _json.loads(col_path.read_text(encoding="utf-8"))
-        df = df.reindex(columns=train_cols, fill_value=0.0)
+        try:
+            train_cols = _json.loads(col_path.read_text(encoding="utf-8"))
+        except Exception:
+            train_cols = UNIVERSAL_FLOW_FEATURES
+    else:
+        train_cols = UNIVERSAL_FLOW_FEATURES
 
-    return df
+    out_df = df.reindex(columns=train_cols, fill_value=0.0)
+
+    # -- Sanitise numeric values -----------------------------------------------
+    out_df = out_df.apply(pd.to_numeric, errors="coerce")
+    out_df = out_df.replace([np.inf, -np.inf], np.nan)
+    out_df = out_df.fillna(0.0)
+
+    return out_df
 
 
 # ===========================================================================

@@ -117,8 +117,11 @@ def main():
 
             if is_alertable:
                 five_tuple = alert["five_tuple"] or {}
-                print(f"  🚨 [{alert['severity']}] {alert['threat_class']} "
-                      f"(confidence={alert['confidence_score']:.2f})  "
+                true_label = flow_obj.get("collected_label", "UNKNOWN")
+                match_status = "✅" if alert['threat_class'] == true_label else "❌"
+                
+                print(f"  🚨 [{alert['severity']}] {alert['threat_class']} {match_status} "
+                      f"(true: {true_label}, conf={alert['confidence_score']:.2f})  "
                       f"{five_tuple.get('src_ip')}:{five_tuple.get('src_port')} "
                       f"-> {five_tuple.get('dst_ip')}:{five_tuple.get('dst_port')}  "
                       f"[sup={alert['model_source']['supervised_score']:.2f} "
