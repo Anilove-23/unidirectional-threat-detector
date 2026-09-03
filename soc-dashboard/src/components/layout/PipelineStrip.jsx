@@ -17,10 +17,10 @@ export default function PipelineStrip({ pulseKey }) {
 
   return (
     <div className="hidden items-center overflow-hidden lg:flex" aria-hidden="true">
-      <div className="flex items-center gap-1.5 rounded-full border border-border bg-surface-2/60 px-3 py-1">
+      <div className="flex items-center gap-1.5 rounded-full border border-border bg-surface-2/80 px-3.5 py-1">
         {STAGES.map((stage, i) => (
           <div key={stage} className="flex items-center">
-            <span className="mono text-2xs font-semibold tracking-wider text-ink-muted">
+            <span className="mono text-[10px] font-bold tracking-wider text-ink-secondary">
               {stage}
             </span>
             {i < STAGES.length - 1 && (
@@ -28,7 +28,7 @@ export default function PipelineStrip({ pulseKey }) {
                 {pulses.map((p) => (
                   <span
                     key={`${p}-${i}`}
-                    className="absolute left-0 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-signal animate-travel"
+                    className="absolute left-0 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-mint shadow-sm animate-travel"
                   />
                 ))}
               </div>

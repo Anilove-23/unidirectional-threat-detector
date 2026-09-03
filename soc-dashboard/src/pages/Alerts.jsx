@@ -21,7 +21,17 @@ export default function Alerts() {
   }
 
   return (
-    <div className="mx-auto flex max-w-[1600px] flex-col gap-5 px-6 py-6 animate-fadeUp">
+    <div className="mx-auto flex max-w-[1600px] flex-col gap-5 px-4 sm:px-6 py-6 animate-fadeUp">
+      {/* Page Title Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-ink-primary font-sans tracking-tight">Threat Registry</h1>
+          <p className="text-xs sm:text-sm font-medium text-ink-muted mt-1">
+            Filter, analyze, and inspect unidirectional passive detections in real time.
+          </p>
+        </div>
+      </div>
+
       {/* Search & Filters */}
       <AlertFilters
         filters={filters}
@@ -38,7 +48,7 @@ export default function Alerts() {
         alerts={filtered}
         onSelect={openAlert}
         title="Threat Alert Registry"
-        maxHeight="max-h-[calc(100vh-270px)]"
+        maxHeight="max-h-[calc(100vh-320px)]"
       />
 
       <Outlet />

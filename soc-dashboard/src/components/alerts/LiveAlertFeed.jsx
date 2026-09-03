@@ -38,12 +38,12 @@ export default function LiveAlertFeed({
   }
 
   return (
-    <div className="card flex flex-col overflow-hidden">
+    <div className="card flex flex-col overflow-hidden shadow-card">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border/70 bg-surface-0/50 shrink-0">
         <div className="flex items-center gap-3">
-          <h3 className="text-sm font-semibold text-ink-primary">{title}</h3>
-          <span className="rounded-full bg-surface-3 px-2 py-0.5 mono text-2xs text-ink-muted">
+          <h3 className="text-sm font-bold font-sans text-ink-primary tracking-tight">{title}</h3>
+          <span className="rounded-full bg-forest-light border border-forest-border/40 px-2.5 py-0.5 mono text-2xs font-bold text-forest">
             {alerts.length}
           </span>
         </div>
@@ -51,16 +51,16 @@ export default function LiveAlertFeed({
           {sorted.length > 0 && (
             <button
               onClick={handleClear}
-              className="text-2xs text-ink-muted hover:text-red-400 transition-colors px-2 py-0.5 rounded bg-surface-2 border border-border"
+              className="text-2xs font-semibold text-ink-muted hover:text-red-600 hover:bg-red-50 transition-colors px-2.5 py-1 rounded-full bg-surface-2 border border-border"
               title="Clear all historical alerts"
             >
               Clear Feed
             </button>
           )}
           {sorted.length > 0 && (
-            <div className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulseDot shrink-0" />
-              <span className="text-xs font-medium text-signal">Live</span>
+            <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+              <span className="h-2 w-2 rounded-full bg-mint animate-pulseDot shrink-0 shadow-2xs" />
+              <span className="text-xs font-bold text-forest">Live</span>
             </div>
           )}
         </div>
@@ -72,19 +72,19 @@ export default function LiveAlertFeed({
         : (
           <div className={`overflow-auto ${maxHeight}`}>
             <table className="w-full border-collapse">
-              <thead className="sticky top-0 z-10 bg-surface-2">
+              <thead className="sticky top-0 z-10 bg-surface-2/90 backdrop-blur-sm">
                 <tr>
                   {COLS.map((c, i) => (
                     <th
                       key={i}
-                      className="px-4 py-2.5 text-left text-2xs font-semibold uppercase tracking-widest text-ink-muted whitespace-nowrap border-b border-border"
+                      className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-ink-secondary whitespace-nowrap border-b border-border"
                     >
                       {c}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-border/60">
                 {sorted.map((alert) => {
                   const isNew = !seenIds.current.has(alert.flow_id);
                   seenIds.current.add(alert.flow_id);

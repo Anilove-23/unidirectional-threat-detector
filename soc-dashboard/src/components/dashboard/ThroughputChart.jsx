@@ -14,8 +14,12 @@ function buildData(alerts) {
 }
 
 const TIP_STYLE = {
-  background: '#141D2E', border: '1px solid #1E2D45',
-  borderRadius: 6, fontSize: 12, padding: '8px 12px',
+  background: '#FFFFFF',
+  border: '1px solid #E1E8E3',
+  borderRadius: '12px',
+  boxShadow: '0 4px 20px -2px rgba(11, 79, 48, 0.12)',
+  fontSize: 12,
+  padding: '8px 12px',
 };
 
 export default function ThroughputChart({ alerts }) {
@@ -25,19 +29,19 @@ export default function ThroughputChart({ alerts }) {
       {data.length === 0
         ? <EmptyState title="No throughput data yet" description="Populated from evidence.packets_per_second." />
         : (
-          <ResponsiveContainer width="100%" height={210}>
-            <BarChart data={data} margin={{ top: 6, right: 0, left: -28, bottom: 0 }}>
-              <CartesianGrid stroke="#1E2D45" strokeDasharray="2 4" vertical={false} />
-              <XAxis dataKey="t" tick={{ fill: '#4A5A72', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#4A5A72', fontSize: 10 }} axisLine={false} tickLine={false} width={30} />
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={data} margin={{ top: 10, right: 10, left: -24, bottom: 0 }}>
+              <CartesianGrid stroke="#EEF3F0" strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="t" tick={{ fill: '#7A9183', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#7A9183', fontSize: 10 }} axisLine={false} tickLine={false} width={30} />
               <Tooltip
                 contentStyle={TIP_STYLE}
-                labelStyle={{ color: '#8898B0', marginBottom: 4 }}
-                itemStyle={{ color: '#60A5FA', fontWeight: 600 }}
+                labelStyle={{ color: '#496052', fontWeight: 600, marginBottom: 2 }}
+                itemStyle={{ color: '#0B4F30', fontWeight: 700 }}
                 formatter={(v) => [`${v} pps`, '']}
-                cursor={{ fill: 'rgba(30,45,69,0.5)' }}
+                cursor={{ fill: 'rgba(232, 245, 238, 0.6)' }}
               />
-              <Bar dataKey="pps" fill="#3B7ADB" radius={[3, 3, 0, 0]} maxBarSize={20} />
+              <Bar dataKey="pps" fill="#0B4F30" radius={[8, 8, 0, 0]} maxBarSize={22} />
             </BarChart>
           </ResponsiveContainer>
         )}
