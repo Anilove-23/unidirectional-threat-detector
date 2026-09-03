@@ -195,12 +195,17 @@ def score_flow(flow_obj: dict) -> dict:
     confidence_score = float(min(confidence_score, 1.0))
 
     # -- Determine threat_class --
-    # Priority: a confident supervised classification wins (it's the most
-    # specific signal, trained on labeled known-attack patterns). If the
-    # LSTM is the standout signal instead, label it as beaconing explicitly
-    # — that's specifically what it was built to catch. Otherwise, if only
-    # the anomaly detectors are elevated, this is the "unseen threat class"
-    # case: flag it without pretending to know exactly what it is.
+    # Priority order (most specific / highest-quality signal wins):
+    #   1. Supervised classifier (XGBoost): trained on labelled known-attack
+    #      patterns — most specific, use its label when it fires.
+    #   2. LSTM sequence model: specifically built to catch periodic C2
+    #      beaconing patterns that don't show up in per-flow features.
+    #   3. Anomaly models (Isolation Forest + Autoencoder): catch zero-day /
+    #      previously-unseen classes — flag without guessing the exact type.
+    #   4. None fired → BENIGN. Do NOT fall back to hardcoded heuristics
+    #      (e.g. "pkts >= 40 = DDoS") — those produce massive false-positive
+    #      floods on normal traffic and undermine analyst trust.
+    #
     # Map any legacy supervised class names to canonical threat contract names.
     # NOTE: Person 1's trained models (flow_model + dns_model) already output
     # the canonical names below. This map only exists as a safety net in case
@@ -213,24 +218,18 @@ def score_flow(flow_obj: dict) -> dict:
         "EXFILTRATION":    "DATA_EXFILTRATION",
     }
 
-    dur = max(float(flow_obj.get("duration_s", 0.001) or 0.001), 0.001)
-    pkts = int(flow_obj.get("total_packets", 1) or 1)
-    bytes_in = int(flow_obj.get("bytes_in", 0) or 0)
-    pkt_rate = pkts / dur
-
     if supervised_score >= FIRE_LISTED_THRESHOLD:
+        # Supervised model is confident in a specific known attack class.
         threat_class = CANONICAL_CLASS_MAP.get(supervised_class, supervised_class)
-    elif bytes_in >= 50000:
-        threat_class = "DATA_EXFILTRATION"
-    elif pkt_rate >= 500.0 or pkts >= 40:
-        threat_class = "VOLUMETRIC_DDOS"
     elif sequence >= FIRE_SEQUENCE_THRESHOLD:
+        # LSTM detects periodic beaconing even if flow-level features look quiet.
         threat_class = "BOTNET_C2_BEACONING"
-    elif pkts == 1 and ("S" in (flow_obj.get("tcp_flags_seen") or [])):
-        threat_class = "PORT_SCAN"
     elif anomaly >= FIRE_ANOMALY_THRESHOLD:
+        # Anomaly models detect unusual behaviour with no known-class match
+        # (zero-day / unseen threat signature).
         threat_class = ANOMALY_ONLY_CLASS
     else:
+        # No model fired — this is normal traffic.
         threat_class = BENIGN_CLASS
 
     severity = _severity_from_confidence(confidence_score) if threat_class != BENIGN_CLASS else "LOW"
@@ -247,7 +246,9 @@ def score_flow(flow_obj: dict) -> dict:
     evidence = {}
     dur = max(float(flow_obj.get("duration_s", 0.001) or 0.001), 0.001)
     pkts = int(flow_obj.get("total_packets", 1) or 1)
+    bytes_in = int(flow_obj.get("bytes_in", 0) or 0)
     evidence["packets_per_second"] = round(pkts / dur, 1)
+    evidence["bytes_in"] = bytes_in
     evidence["src_ip_entropy"] = round(min(max(float(anomaly), 0.05), 0.98), 3)
 
     if sequence >= FIRE_LISTED_THRESHOLD:
