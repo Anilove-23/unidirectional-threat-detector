@@ -248,12 +248,13 @@ def run_dataset_mode():
   [5] dns_tunnel      — dnscat2 DNS tunnelling
   [6] dga             — DGA domain generation (Conficker + Cryptolocker)
   [7] c2_beacon       — Periodic C2 keep-alive (60 s interval)
+  [8] exfil           — High-volume data exfiltration (raw TCP / large MTU)
   [all] Run all scenarios in sequence
   [q] Back
         """)
         scenario = console.input("  [yellow]Choose scenario:[/yellow] ").strip().lower()
     else:
-        print("\n  Scenarios: benign / ddos / slowloris / port_scan / dns_tunnel / dga / c2_beacon / all / q")
+        print("\n  Scenarios: benign / ddos / slowloris / port_scan / dns_tunnel / dga / c2_beacon / exfil / all / q")
         scenario = input("  Choose: ").strip().lower()
 
     if scenario == "q":
@@ -456,6 +457,8 @@ def _run_generator(scenario: str, target: str, duration: int):
         "dns_tunnel": "dns_tunnel_gen.py",
         "dga":        "dga_gen.py",
         "c2_beacon":  "c2_beacon_gen.py",
+        "exfil":      "exfil_gen.py",
+        "data_exfil": "exfil_gen.py",
     }
 
     scenarios_to_run = list(mapping.items()) if scenario == "all" else \

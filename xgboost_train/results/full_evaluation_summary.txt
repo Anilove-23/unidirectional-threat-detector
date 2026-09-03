@@ -1,0 +1,19 @@
+Test run             : 2026-09-02 19:16:42
+        Flow Dataset Rows    : 1,399,404
+        DNS Dataset Rows     : 0
+
+        === FLOW MODEL (Model A) REPORT ===
+                           precision    recall  f1-score   support
+
+           BENIGN       1.00      1.00      1.00    895836
+DATA_EXFILTRATION       1.00      1.00      1.00    177591
+        PORT_SCAN       1.00      0.99      1.00    230833
+  VOLUMETRIC_DDOS       1.00      1.00      1.00     95144
+
+         accuracy                           1.00   1399404
+        macro avg       1.00      1.00      1.00   1399404
+     weighted avg       1.00      1.00      1.00   1399404
+
+
+        === DNS MODEL (Model B) REPORT ===
+        Not evaluated (DNS dataset missing)

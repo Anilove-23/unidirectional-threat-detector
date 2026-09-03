@@ -1,0 +1,8 @@
+generator,label,status,exit_code,stdout_lines,timestamp,args
+benign,BENIGN,SUCCESS,0,12,2026-08-30T08:31:52.983023Z,--target 127.0.0.1 --duration 30
+dga,DGA,SUCCESS,0,75,2026-08-30T08:31:52.983023Z,--family all --count 100 --duration 30
+c2_beacon,C2_BEACON,SUCCESS,0,13,2026-08-30T08:31:52.983023Z,--target 127.0.0.1 --interval 5 --duration 30
+ddos,DDOS,PARTIAL,1,7,2026-08-30T08:31:52.983023Z,--target 127.0.0.1 --sub syn_rate --duration 30
+dns_tunnel,DNS_TUNNEL,SUCCESS,0,57,2026-08-30T08:31:52.983023Z,--tool python --duration 30
+scan,SCAN,PARTIAL,1,5,2026-08-30T08:31:52.983023Z,--target 127.0.0.1 --sub sequential --duration 30
+slowloris,DATA_EXFILTRATION,SUCCESS,0,8,2026-08-30T08:31:52.983023Z,--target 127.0.0.1 --connections 50 --duration 30
