@@ -190,6 +190,23 @@ def anomaly_score(flow_obj: dict) -> float:
     if rate < 50.0 and pkts < 30:
         score = min(score * 0.2, 0.15)
 
+    # DNS short-flow suppression: UDP queries to well-known resolvers are
+    # almost always benign. The anomaly model has limited DNS training data
+    # and over-flags these. Suppress before the score reaches the alert threshold.
+    five_tuple = flow_obj.get("five_tuple") or {}
+    dst_ip = five_tuple.get("dst_ip", "")
+    protocol = str(five_tuple.get("protocol", "")).upper()
+    dst_port = int(five_tuple.get("dst_port") or 0)
+    KNOWN_RESOLVERS = {"8.8.8.8", "8.8.4.4", "1.1.1.1", "1.0.0.1", "9.9.9.9"}
+    is_dns_flow = (
+        dst_port == 53
+        or (dst_ip in KNOWN_RESOLVERS)
+        or "UDP" in protocol
+        and dst_port == 53
+    )
+    if is_dns_flow and pkts <= 10:
+        score = min(score * 0.25, 0.35)  # keep below FIRE_ANOMALY_THRESHOLD (0.50)
+
     return float(np.clip(score, 0.0, 1.0))
 
 
@@ -228,14 +245,24 @@ def beacon_likelihood(flow_obj: dict) -> float:
         logit = _cache["lstm"](packed)
         prob = torch.sigmoid(logit).item()
 
-    # Regularity boost: beaconing requires low IAT variance
+    # Regularity boost: beaconing requires low IAT variance.
+    # If the IAT coefficient of variation (CV) is very low and the mean IAT
+    # is substantial, this flow is suspiciously clock-like — boost probability.
+    # IMPORTANT: The floor must stay BELOW FIRE_SEQUENCE_THRESHOLD (0.50) so
+    # that regular-but-benign connections (CDN keepalives, browser HTTPS to
+    # Google/Fastly/Microsoft) don't get hard-promoted into the alert zone by
+    # regularity alone. True beacons will already score high from the LSTM
+    # logit itself; this boost is only a mild nudge for borderline cases.
     iat_arr = np.array(iats, dtype=float)
     iat_mean = float(np.mean(iat_arr))
     iat_std = float(np.std(iat_arr))
     cv = iat_std / max(iat_mean, 1e-6)
     if cv < 0.20 and iat_mean > 0.5:
         reg_factor = max(0.80, 0.98 - (cv / 0.20) * 0.18)
-        prob = float(np.clip(prob * 0.95, 0.75, reg_factor))
+        # Floor at 0.45: nudges borderline cases but does NOT cross the 0.50
+        # fire threshold purely from regularity — requires the LSTM to also
+        # see a beacon-like signature to actually alert.
+        prob = float(np.clip(prob * 0.95, 0.45, reg_factor))
     elif cv > 0.6:
         prob = min(prob, 0.15)
 

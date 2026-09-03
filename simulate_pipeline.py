@@ -291,8 +291,21 @@ def generate_flow(scenario: str) -> dict:
             dur = random.uniform(0.2, 2.5)
             pkts = [random.choice([64, 128, 512, 1200, 1400, 80, 220]) for _ in range(min(n_pkts, 15))]
             tb = sum(pkts)
-            base_iat = dur / max(n_pkts - 1, 1)
-            iats = [round(abs(random.gauss(base_iat, base_iat * 0.4)), 3) for _ in range(min(n_pkts - 1, 14))]
+            # Real browser HTTPS traffic is BURSTY, not periodic:
+            # - packets arrive in bursts (request + response + ACKs) separated by think time
+            # - IAT coefficient of variation (std/mean) is typically well above 0.5
+            # - This ensures the LSTM beacon detector cannot confuse this with
+            #   C2 beaconing, which has very low CV (highly regular clock-like timing)
+            n_iats = min(n_pkts - 1, 14)
+            burst_size = random.randint(2, 4)
+            iats = []
+            for i in range(n_iats):
+                if i % burst_size == 0:
+                    # Think time between bursts: hundreds of ms to seconds
+                    iats.append(round(random.uniform(0.15, dur * 0.6), 3))
+                else:
+                    # Within a burst: sub-millisecond to a few ms
+                    iats.append(round(random.uniform(0.001, 0.025), 3))
             return {
                 "schema_version": "1.0.0",
                 "flow_id": flow_id,
