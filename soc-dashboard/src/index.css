@@ -1,87 +1,90 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html { color-scheme: dark; }
+  html { color-scheme: light; }
 
   body {
-    background-color: #0A0D14;
-    color: #E2E8F2;
-    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    background-color: #1C3B2B;
+    background-image: radial-gradient(circle at 50% 0%, #2A543D 0%, #193526 100%);
+    color: #1A2E23;
+    font-family: 'Inter', 'Poppins', ui-sans-serif, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
   }
 
   * { box-sizing: border-box; }
 
   ::selection {
-    background: rgba(59, 122, 219, 0.35);
-    color: #E2E8F2;
+    background: rgba(11, 79, 48, 0.2);
+    color: #0B4F30;
   }
 
   :focus-visible {
-    outline: 2px solid #3B7ADB;
+    outline: 2px solid #0B4F30;
     outline-offset: 2px;
-    border-radius: 3px;
+    border-radius: 4px;
   }
 
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: #1E2D45;
+    background: #CBD5CE;
     border-radius: 99px;
   }
-  ::-webkit-scrollbar-thumb:hover { background: #273750; }
+  ::-webkit-scrollbar-thumb:hover { background: #A3B8AB; }
 }
 
 @layer components {
-  /* Card — the core building block */
+  /* Card — floating 20px rounded container matching Reference A & B */
   .card {
-    background: #0F1623;
-    border: 1px solid #1E2D45;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    background: #FFFFFF;
+    border: 1px solid #E3EBE6;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px -2px rgba(11, 79, 48, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   }
 
   /* Chip — pill filter button */
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 12px;
+    gap: 6px;
+    padding: 6px 14px;
     border-radius: 99px;
-    border: 1px solid #1E2D45;
+    border: 1px solid #E1E8E3;
     font-size: 12px;
     font-weight: 500;
-    color: #8898B0;
+    color: #496052;
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-    background: transparent;
+    transition: all 0.15s ease-in-out;
+    background: #FFFFFF;
   }
   .chip:hover {
-    border-color: #273750;
-    color: #E2E8F2;
+    border-color: #A3D9BC;
+    color: #0B4F30;
+    background: #F4FAF6;
   }
   .chip.active {
-    border-color: #3B7ADB;
-    background: rgba(59, 122, 219, 0.12);
-    color: #60A5FA;
+    border-color: #0B4F30;
+    background: #0B4F30;
+    color: #FFFFFF;
     font-weight: 600;
   }
 
   /* Table row */
   .trow {
-    border-bottom: 1px solid rgba(30, 45, 69, 0.6);
+    border-bottom: 1px solid #EEF3F0;
     cursor: pointer;
-    transition: background 0.1s;
+    transition: background 0.12s ease;
   }
   .trow:last-child { border-bottom: none; }
-  .trow:hover { background: rgba(28, 37, 55, 0.7); }
+  .trow:hover { background: #F4FAF6; }
 
   /* Monospace text */
   .mono { font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace; }

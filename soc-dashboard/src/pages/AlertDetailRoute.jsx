@@ -29,15 +29,15 @@ export default function AlertDetailRoute() {
   if (!selectedAlert) {
     return (
       <div className="mx-auto max-w-lg px-6 py-16 text-center">
-        <p className="text-sm font-medium text-ink-secondary">Alert not found</p>
-        <p className="mt-1 text-xs text-ink-muted">
-          Flow <span className="font-mono">{flowId}</span> is not in the currently retained alert window.
+        <p className="text-base font-bold text-ink-primary font-sans">Alert Not Found</p>
+        <p className="mt-1 text-xs font-medium text-ink-muted">
+          Flow <span className="mono font-bold text-forest">{flowId}</span> is not in the currently retained alert window.
         </p>
         <button
           onClick={() => navigate('/alerts')}
-          className="mt-4 rounded border border-border px-3 py-1.5 text-xs font-medium text-ink-secondary hover:text-ink-primary"
+          className="mt-5 rounded-full border border-forest-border bg-forest px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-forest-hover transition-all"
         >
-          Back to alerts
+          Back to Alerts Registry
         </button>
       </div>
     );

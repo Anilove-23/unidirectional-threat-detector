@@ -25,11 +25,12 @@ function buildSeries(alerts) {
 }
 
 const TIP_STYLE = {
-  background: '#141D2E',
-  border:     '1px solid #1E2D45',
-  borderRadius: 6,
-  fontSize:   12,
-  padding:    '8px 12px',
+  background: '#FFFFFF',
+  border: '1px solid #E1E8E3',
+  borderRadius: '12px',
+  boxShadow: '0 4px 20px -2px rgba(11, 79, 48, 0.12)',
+  fontSize: 12,
+  padding: '8px 12px',
 };
 
 export default function ThreatActivityChart({ alerts }) {
@@ -41,39 +42,39 @@ export default function ThreatActivityChart({ alerts }) {
       {!hasActivity
         ? <EmptyState title="No activity yet" description="Detections appear here as alerts arrive." />
         : (
-          <ResponsiveContainer width="100%" height={210}>
-            <AreaChart data={data} margin={{ top: 6, right: 0, left: -28, bottom: 0 }}>
+          <ResponsiveContainer width="100%" height={220}>
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: -24, bottom: 0 }}>
               <defs>
                 <linearGradient id="grad-activity" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%"   stopColor="#3B7ADB" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="#3B7ADB" stopOpacity={0}   />
+                  <stop offset="0%" stopColor="#10B981" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid stroke="#1E2D45" strokeDasharray="2 4" vertical={false} />
+              <CartesianGrid stroke="#EEF3F0" strokeDasharray="3 3" vertical={false} />
               <XAxis
                 dataKey="t"
-                tick={{ fill: '#4A5A72', fontSize: 10, fontFamily: 'Inter' }}
+                tick={{ fill: '#7A9183', fontSize: 10, fontFamily: 'Inter' }}
                 axisLine={false} tickLine={false} interval={5}
               />
               <YAxis
                 allowDecimals={false}
-                tick={{ fill: '#4A5A72', fontSize: 10, fontFamily: 'Inter' }}
+                tick={{ fill: '#7A9183', fontSize: 10, fontFamily: 'Inter' }}
                 axisLine={false} tickLine={false} width={22}
               />
               <Tooltip
                 contentStyle={TIP_STYLE}
-                labelStyle={{ color: '#8898B0', marginBottom: 4 }}
-                itemStyle={{ color: '#60A5FA', fontWeight: 600 }}
+                labelStyle={{ color: '#496052', fontWeight: 600, marginBottom: 2 }}
+                itemStyle={{ color: '#0B4F30', fontWeight: 700 }}
                 formatter={(v) => [`${v} detections`, '']}
               />
               <Area
                 type="monotone"
                 dataKey="count"
-                stroke="#3B7ADB"
-                strokeWidth={2}
+                stroke="#0B4F30"
+                strokeWidth={2.5}
                 fill="url(#grad-activity)"
                 dot={false}
-                activeDot={{ r: 4, fill: '#3B7ADB', strokeWidth: 0 }}
+                activeDot={{ r: 5, fill: '#10B981', stroke: '#FFFFFF', strokeWidth: 2 }}
               />
             </AreaChart>
           </ResponsiveContainer>
