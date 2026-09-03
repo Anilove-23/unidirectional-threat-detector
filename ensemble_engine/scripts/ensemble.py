@@ -125,6 +125,26 @@ ANOMALY_ONLY_CLASS = "ANOMALOUS_UNCLASSIFIED"
 
 BENIGN_CLASS = "BENIGN"
 
+# Spec item (d): Malware inside encrypted sessions — detected from TLS/QUIC
+# metadata alone (JA3/JA4 fingerprints, packet-size sequences), no decryption.
+MALWARE_ENCRYPTED_TLS_CLASS = "MALWARE_ENCRYPTED_TLS"
+
+# Minimum anomaly score threshold for the TLS malware heuristic to fire.
+# Set deliberately high so benign unusual TLS clients don't false-positive.
+MALWARE_TLS_ANOMALY_THRESHOLD = 0.55
+
+# Published malware-associated JA3 MD5 fingerprints from open threat intel.
+# Sources: Trisul Networks JA3 database, Sslbl.abuse.ch, Salesforce JA3 repo.
+# Only add hashes with very high confidence (C2 frameworks, widespread loaders).
+_KNOWN_MALWARE_JA3: set = {
+    "72a589da586844d7f0818ce684948eea",  # Metasploit Meterpreter
+    "a0e9f5d64349fb13191bc781f81f42e1",  # CobaltStrike default profile
+    "6734f37431670b3ab4292b8f60f29984",  # Emotet loader
+    "eb88d0b3e1961a0562f006e09595ef4a",  # Dridex/TrickBot
+    "de9f102050fbb7f2498f82a6c17e1e77",  # Qakbot
+    "1aa7bf6b3d5745eea9427cec985b1306",  # AsyncRAT
+}
+
 # confidence_score -> severity. Adjust bucket edges to match Section 6 if
 # your spec defines different thresholds.
 SEVERITY_BUCKETS = [
@@ -142,7 +162,7 @@ def _severity_from_confidence(confidence: float) -> str:
     return "LOW"
 
 
-def _top_non_benign(proba: dict) -> tuple[str, float]:
+def _top_non_benign(proba: dict) -> tuple:
     """From a {class: prob} dict, return the highest-probability class that
     isn't BENIGN, and its probability. Returns (BENIGN_CLASS, prob) if
     BENIGN itself is the top class."""
@@ -155,11 +175,77 @@ def _top_non_benign(proba: dict) -> tuple[str, float]:
     return top_class, non_benign[top_class]
 
 
-def score_flow(flow_obj: dict) -> dict:
+def _normalize_tls_meta(tls_meta: dict) -> dict:
+    """
+    Accept both legacy key names (ja3, ja4) and canonical schema key names
+    (ja3_fingerprint, ja4_fingerprint) so old and new flows are both handled.
+    Returns a new dict with canonical names only — never mutates the input.
+    """
+    if not tls_meta:
+        return {}
+    out = dict(tls_meta)
+    # Migrate legacy ja3 -> ja3_fingerprint (prefer the canonical key if both present)
+    if "ja3" in out and "ja3_fingerprint" not in out:
+        out["ja3_fingerprint"] = out.pop("ja3")
+    elif "ja3" in out:
+        out.pop("ja3")
+    # Migrate legacy ja4 -> ja4_fingerprint
+    if "ja4" in out and "ja4_fingerprint" not in out:
+        out["ja4_fingerprint"] = out.pop("ja4")
+    elif "ja4" in out:
+        out.pop("ja4")
+    return out
+
+
+def _is_malware_tls(tls_meta: dict, anomaly: float) -> bool:
+    """
+    Heuristic check for malware-in-encrypted-session (spec item d).
+    Fires when:
+      - The flow uses TLS/QUIC (tls_meta is present), AND
+      - Its JA3 fingerprint matches a known-malware hash, OR
+      - Its JA3 is absent/None (malware often omits SNI and uses null JA3) AND
+        the anomaly score is above the TLS malware threshold.
+
+    No payload decryption is ever performed — this operates on metadata only.
+    """
+    if not tls_meta:
+        return False
+    ja3 = tls_meta.get("ja3_fingerprint")
+    if ja3 and ja3 in _KNOWN_MALWARE_JA3:
+        return True
+    # Secondary signal: no SNI (malware connecting by IP) AND unusual cipher suites
+    sni = tls_meta.get("sni")
+    ciphers = tls_meta.get("cipher_suites") or []
+    # Weak/export cipher suites used by older malware frameworks
+    _WEAK_CIPHERS = {"0x0035", "0x002f", "0x000a", "0xc014", "0x0005"}
+    weak_cipher_hit = bool(set(str(c) for c in ciphers) & _WEAK_CIPHERS)
+    if (not sni) and weak_cipher_hit and anomaly >= MALWARE_TLS_ANOMALY_THRESHOLD:
+        return True
+    return False
+
+
+def score_flow(flow_obj: dict, tracker=None) -> dict:
     """
     Run all three models on a single FlowObject and fuse their outputs
     into the final alert object structure (see module docstring).
+
+    Parameters
+    ----------
+    flow_obj : dict
+        A FlowObject dict from the Redis `flow.raw` channel.
+    tracker : FlowStateTracker | None
+        Optional cross-flow state tracker instance. When supplied, the
+        evidence dict is enriched with real source-IP entropy and port
+        fan-out counts from the sliding window. Pass None to skip
+        (e.g. in unit tests or offline batch scoring).
     """
+    # -- Normalize TLS meta key names (accept both legacy and canonical) --
+    raw_tls_meta = flow_obj.get("tls_meta") or {}
+    tls_meta = _normalize_tls_meta(raw_tls_meta)
+    # Inject normalized tls_meta back for downstream feature extractors
+    if tls_meta != raw_tls_meta:
+        flow_obj = {**flow_obj, "tls_meta": tls_meta}
+
     # -- 1. Supervised score (Person 1) --
     flow_proba = supervised_predict_flow(flow_obj)
     supervised_class, supervised_score = _top_non_benign(flow_proba)
@@ -181,6 +267,9 @@ def score_flow(flow_obj: dict) -> dict:
     # -- 3. Sequence score (this module — LSTM beacon detector) --
     sequence = beacon_likelihood(flow_obj)
 
+    # -- 4. Malware-in-encrypted-TLS heuristic (spec item d) --
+    malware_tls_hit = _is_malware_tls(tls_meta, anomaly)
+
     # -- Fuse into confidence_score --
     weighted_avg = (
         WEIGHT_SUPERVISED * supervised_score
@@ -192,33 +281,33 @@ def score_flow(flow_obj: dict) -> dict:
         confidence_score = max(weighted_avg, max_individual)
     else:
         confidence_score = weighted_avg
+    # Malware TLS hit: floor the confidence at 0.70 (HIGH) — the JA3 match
+    # is strong evidence regardless of what the statistical models say.
+    if malware_tls_hit:
+        confidence_score = max(confidence_score, 0.70)
     confidence_score = float(min(confidence_score, 1.0))
 
     # -- Determine threat_class --
     # Priority order (most specific / highest-quality signal wins):
-    #   1. Supervised classifier (XGBoost): trained on labelled known-attack
-    #      patterns — most specific, use its label when it fires.
-    #   2. LSTM sequence model: specifically built to catch periodic C2
-    #      beaconing patterns that don't show up in per-flow features.
-    #   3. Anomaly models (Isolation Forest + Autoencoder): catch zero-day /
-    #      previously-unseen classes — flag without guessing the exact type.
-    #   4. None fired → BENIGN. Do NOT fall back to hardcoded heuristics
-    #      (e.g. "pkts >= 40 = DDoS") — those produce massive false-positive
-    #      floods on normal traffic and undermine analyst trust.
+    #   1. Malware-TLS heuristic: JA3 hash in known-bad set — most specific.
+    #   2. Supervised classifier (XGBoost): trained on labelled known-attack
+    #      patterns — use its label when it fires and malware-TLS didn't.
+    #   3. LSTM sequence model: catches periodic C2 beaconing.
+    #   4. Anomaly models: catch zero-day / previously-unseen classes.
+    #   5. None fired → BENIGN.
     #
     # Map any legacy supervised class names to canonical threat contract names.
-    # NOTE: Person 1's trained models (flow_model + dns_model) already output
-    # the canonical names below. This map only exists as a safety net in case
-    # old model snapshots with legacy label names are loaded.
     CANONICAL_CLASS_MAP = {
-        "DGA_DOMAIN":      "DGA",             # normalize if old model used DGA_DOMAIN
-        "DNS_TUNNEL":      "DNS_TUNNELING",   # normalize if old model used DNS_TUNNEL
-        "DDOS":            "VOLUMETRIC_DDOS", # normalize if old model used DDOS
-        "SCAN":            "PORT_SCAN",       # normalize if old model used SCAN
+        "DGA_DOMAIN":      "DGA",              # normalize if old model used DGA_DOMAIN
+        "DNS_TUNNEL":      "DNS_TUNNELING",    # normalize if old model used DNS_TUNNEL
+        "DDOS":            "VOLUMETRIC_DDOS",  # normalize if old model used DDOS
+        "SCAN":            "PORT_SCAN",        # normalize if old model used SCAN
         "EXFILTRATION":    "DATA_EXFILTRATION",
     }
 
-    if supervised_score >= FIRE_LISTED_THRESHOLD:
+    if malware_tls_hit:
+        threat_class = MALWARE_ENCRYPTED_TLS_CLASS
+    elif supervised_score >= FIRE_LISTED_THRESHOLD:
         # Supervised model is confident in a specific known attack class.
         threat_class = CANONICAL_CLASS_MAP.get(supervised_class, supervised_class)
     elif sequence >= FIRE_SEQUENCE_THRESHOLD:
@@ -235,6 +324,8 @@ def score_flow(flow_obj: dict) -> dict:
     severity = _severity_from_confidence(confidence_score) if threat_class != BENIGN_CLASS else "LOW"
 
     fired_models = []
+    if malware_tls_hit:
+        fired_models.append("malware_tls_heuristic")
     if supervised_score >= FIRE_LISTED_THRESHOLD:
         fired_models.append("supervised")
     if anomaly >= FIRE_ANOMALY_THRESHOLD:
@@ -244,26 +335,64 @@ def score_flow(flow_obj: dict) -> dict:
 
     # -- Evidence: populate telemetry and model metrics --
     evidence = {}
-    dur = max(float(flow_obj.get("duration_s", 0.001) or 0.001), 0.001)
+    dur  = max(float(flow_obj.get("duration_s", 0.001) or 0.001), 0.001)
     pkts = int(flow_obj.get("total_packets", 1) or 1)
     bytes_in = int(flow_obj.get("bytes_in", 0) or 0)
+
     evidence["packets_per_second"] = round(pkts / dur, 1)
     evidence["bytes_in"] = bytes_in
-    evidence["src_ip_entropy"] = round(min(max(float(anomaly), 0.05), 0.98), 3)
+    evidence["bytes_in_per_packet"] = round(bytes_in / pkts, 1) if pkts else 0.0
 
-    if sequence >= FIRE_LISTED_THRESHOLD:
-        iats = flow_obj.get("inter_arrival_times") or []
-        if iats:
-            evidence["beacon_interval_seconds"] = round(sum(iats) / len(iats), 3)
-    tls_meta = flow_obj.get("tls_meta")
+    # Data exfiltration: large sustained byte-per-packet signals large payload transfer
+    if threat_class == "DATA_EXFILTRATION" or bytes_in > 500_000:
+        evidence["bytes_in_to_packet_ratio"] = round(bytes_in / pkts, 1) if pkts else 0.0
+
+    # Source-IP entropy: use real tracker value when available (sliding-window Shannon
+    # entropy of source-IP distribution targeting the same dst_ip), otherwise fall back
+    # to a proxy derived from the anomaly score.
+    ft = flow_obj.get("five_tuple") or {}
+    dst_ip = ft.get("dst_ip", "")
+    src_ip = ft.get("src_ip", "")
+    if tracker is not None and dst_ip:
+        real_entropy = tracker.get_dst_entropy(dst_ip, window_s=60)
+        evidence["src_ip_entropy"] = real_entropy
+        unique_srcs = tracker.get_unique_source_count(dst_ip, window_s=60)
+        if unique_srcs > 1:
+            evidence["unique_source_ips_60s"] = unique_srcs
+        fan_out = tracker.get_port_fanout(src_ip, window_s=60) if src_ip else 0
+        if fan_out > 5:
+            evidence["port_fanout_60s"] = fan_out
+    else:
+        # Fallback proxy (no tracker): anomaly score correlates with source diversity
+        evidence["src_ip_entropy"] = round(min(max(float(anomaly), 0.05), 0.98), 3)
+
+    # Beacon interval: emit whenever IAT data is present (not just when threshold fires)
+    iats = flow_obj.get("inter_arrival_times") or []
+    if iats:
+        evidence["beacon_interval_seconds"] = round(sum(iats) / len(iats), 3)
+        # Coefficient of variation: low CV (< 0.15) indicates machine-clock-driven beaconing
+        import statistics as _stats
+        if len(iats) > 1:
+            mean_iat = sum(iats) / len(iats)
+            std_iat = _stats.stdev(iats)
+            evidence["iat_coefficient_of_variation"] = round(std_iat / mean_iat, 4) if mean_iat else 0.0
+
+    # TLS metadata evidence
     if tls_meta:
         if tls_meta.get("ja3_fingerprint"):
             evidence["ja3_fingerprint"] = tls_meta["ja3_fingerprint"]
         if tls_meta.get("ja4_fingerprint"):
             evidence["ja4_fingerprint"] = tls_meta["ja4_fingerprint"]
+        if tls_meta.get("sni"):
+            evidence["tls_sni"] = tls_meta["sni"]
+        if malware_tls_hit:
+            evidence["malware_tls_indicator"] = (
+                "ja3_in_known_malware_set" if tls_meta.get("ja3_fingerprint") in _KNOWN_MALWARE_JA3
+                else "no_sni_weak_cipher_suite"
+            )
+
     if anomaly >= FIRE_LISTED_THRESHOLD:
         evidence["anomaly_indicator"] = "unsupervised_deviation_from_benign_baseline"
-
 
     from datetime import datetime, timezone
     return {

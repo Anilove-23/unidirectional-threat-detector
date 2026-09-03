@@ -3,6 +3,7 @@
  * - Card 1: Deep forest green hero card for Total Alerts (Reference A style)
  * - Cards 2-6: Floating white cards with circular accent icon badges (Teal, Orange, Purple, Blue) (Reference B style)
  */
+import { usePipelineStats } from '../../hooks/usePipelineStats';
 
 function StatCardItem({ label, value, isHero = false, badgeColor, icon, trendLabel }) {
   if (isHero) {
@@ -58,8 +59,14 @@ function StatCardItem({ label, value, isHero = false, badgeColor, icon, trendLab
 }
 
 export default function SummaryStats({ stats }) {
+  const { flowsPerSec } = usePipelineStats();
+
+  const flowsDisplay = flowsPerSec !== null
+    ? flowsPerSec.toFixed(1)
+    : '—';
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
       <StatCardItem
         label="Total Alerts"
         value={stats.total}
@@ -119,6 +126,17 @@ export default function SummaryStats({ stats }) {
           </svg>
         }
         trendLabel="Tracked Network Sessions"
+      />
+      <StatCardItem
+        label="Flows / sec"
+        value={flowsDisplay}
+        badgeColor={{ bg: 'bg-emerald-100', text: 'text-emerald-700', valueText: 'text-emerald-700' }}
+        icon={
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        }
+        trendLabel="Real-time Throughput"
       />
     </div>
   );

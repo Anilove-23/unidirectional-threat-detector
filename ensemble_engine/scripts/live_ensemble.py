@@ -5,27 +5,26 @@ Person 2 — Unsupervised & Sequential Deep Learning Engineer
 
 The live production loop: subscribes to Redis channel `flow.raw`
 (Person 3's ingestion output), runs every flow through the fused
-ensemble (ensemble.score_flow — supervised + anomaly + sequence), and
-publishes the resulting alert object to Redis channel `alert.new` for
+ensemble (ensemble.score_flow — supervised + anomaly + sequence + malware-TLS),
+and publishes the resulting alert object to Redis channel `alert.new` for
 Person 4's API layer to consume.
 
-This is the piece that turns everything built in Steps 3-7 (features,
-anomaly models, LSTM, infer.py, ensemble.py) into an actual running
-detector, mirroring xgboost_train/scripts/live_inference.py's pattern.
+Also maintains a FlowStateTracker for cross-flow port fan-out and
+source-IP diversity entropy, and publishes pipeline throughput stats
+to Redis key `pipeline.stats` every STATS_INTERVAL_S seconds.
 
 Usage
 -----
     python ensemble_engine/scripts/live_ensemble.py
 
-Requires: main.py (SIMULATION mode) already running and publishing to
-flow.raw, and all model artifacts already trained (train_anomaly.py,
-train_lstm.py) — this script will error clearly on startup if any are
-missing rather than failing confusingly mid-stream.
+Requires: Redis running, and all model artifacts trained (train_anomaly.py,
+train_lstm.py) — this script will error clearly on startup if any are missing.
 """
 
 from __future__ import annotations
 
 import argparse
+import collections
 import json
 import sys
 import time
@@ -37,6 +36,21 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from ensemble import score_flow, BENIGN_CLASS
+from flow_state_tracker import FlowStateTracker
+
+# How often to publish pipeline.stats to Redis (seconds)
+STATS_INTERVAL_S = 10
+
+# Rolling window for flows/sec measurement (seconds)
+THROUGHPUT_WINDOW_S = 10
+
+
+def _compute_flows_per_sec(timestamps: collections.deque) -> float:
+    """Return flows/sec over the last THROUGHPUT_WINDOW_S seconds."""
+    now = time.time()
+    cutoff = now - THROUGHPUT_WINDOW_S
+    recent = sum(1 for t in timestamps if t >= cutoff)
+    return round(recent / THROUGHPUT_WINDOW_S, 2)
 
 
 def main():
@@ -57,11 +71,10 @@ def main():
         r.ping()
     except redis.ConnectionError:
         print(f"[-] Could not connect to Redis at {args.redis_host}:{args.redis_port}")
-        print("    Make sure ingestion's main.py (SIMULATION mode) is already running.")
+        print("    Make sure Redis is running (docker run -p 6379:6379 redis:7-alpine).")
         sys.exit(1)
 
-    # Fail fast and clearly if models aren't trained yet, rather than
-    # crashing confusingly on the first real flow.
+    # Fail fast and clearly if models aren't trained yet.
     try:
         _ = score_flow({
             "flow_id": "startup-check", "five_tuple": {"src_ip": "0.0.0.0", "dst_ip": "0.0.0.0",
@@ -76,16 +89,24 @@ def main():
         print("    Run train_anomaly.py and train_lstm.py first.")
         sys.exit(1)
 
+    # Cross-flow state tracker — port fan-out + source-IP entropy
+    tracker = FlowStateTracker()
+    print("[+] FlowStateTracker initialized (cross-flow port fan-out + src-IP entropy).")
+
     pubsub = r.pubsub()
     pubsub.subscribe(args.in_channel)
 
     print(f"[+] Subscribed to '{args.in_channel}', publishing alerts to '{args.out_channel}'")
     print("[+] Running — Ctrl+C to stop\n")
 
-    processed = 0
+    processed       = 0
     alerts_published = 0
-    errors = 0
-    start_time = time.time()
+    errors          = 0
+    start_time      = time.time()
+    last_stats_time = start_time
+
+    # Rolling deque of flow timestamps for flows/sec measurement
+    flow_timestamps: collections.deque = collections.deque(maxlen=10_000)
 
     try:
         for message in pubsub.listen():
@@ -99,8 +120,13 @@ def main():
                 errors += 1
                 continue
 
+            # Record into cross-flow tracker BEFORE scoring so entropy/fanout
+            # are populated for this flow's evidence fields.
+            tracker.record(flow_obj)
+            flow_timestamps.append(time.time())
+
             try:
-                alert = score_flow(flow_obj)
+                alert = score_flow(flow_obj, tracker=tracker)
             except Exception as e:
                 # A single bad/unexpected flow should never take the whole
                 # live detector down — log it, count it, keep processing.
@@ -119,7 +145,7 @@ def main():
                 five_tuple = alert["five_tuple"] or {}
                 true_label = flow_obj.get("collected_label", "UNKNOWN")
                 match_status = "✅" if alert['threat_class'] == true_label else "❌"
-                
+
                 print(f"  🚨 [{alert['severity']}] {alert['threat_class']} {match_status} "
                       f"(true: {true_label}, conf={alert['confidence_score']:.2f})  "
                       f"{five_tuple.get('src_ip')}:{five_tuple.get('src_port')} "
@@ -128,7 +154,30 @@ def main():
                       f"anom={alert['model_source']['anomaly_score']:.2f} "
                       f"seq={alert['model_source']['sequence_score']:.2f}]")
             elif args.log_every and processed % args.log_every == 0:
-                print(f"  [{processed}] benign — {five_tuple.get('src_ip') if (five_tuple := alert['five_tuple']) else '?'}")
+                five_tuple = alert["five_tuple"] or {}
+                print(f"  [{processed}] benign — {five_tuple.get('src_ip', '?')}")
+
+            # Publish pipeline stats to Redis every STATS_INTERVAL_S seconds.
+            # Person 4's /api/stats endpoint reads this key.
+            now = time.time()
+            if now - last_stats_time >= STATS_INTERVAL_S:
+                flows_per_sec = _compute_flows_per_sec(flow_timestamps)
+                elapsed = now - start_time
+                alerts_per_min = round(alerts_published / max(elapsed / 60, 0.0167), 1)
+                tracker_state = tracker.stats()
+                stats_payload = json.dumps({
+                    "flows_per_sec": flows_per_sec,
+                    "alerts_per_min": alerts_per_min,
+                    "processed_total": processed,
+                    "alerts_total": alerts_published,
+                    "errors_total": errors,
+                    "uptime_s": round(elapsed, 1),
+                    "tracked_src_ips": tracker_state["tracked_src_ips"],
+                    "tracked_dst_ips": tracker_state["tracked_dst_ips"],
+                    "throughput_window_s": THROUGHPUT_WINDOW_S,
+                })
+                r.set("pipeline.stats", stats_payload, ex=60)  # TTL 60s — stale after 1 min
+                last_stats_time = now
 
     except KeyboardInterrupt:
         pass

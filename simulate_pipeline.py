@@ -70,7 +70,7 @@ def generate_flow(scenario: str) -> dict:
             "packet_sizes": pkts,
             "inter_arrival_times": iats,
             "tcp_flags_seen": ["A", "F", "P", "S"],
-            "tls_meta": {"ja3": "771,4865-4866-4867,0-23-65281,29-23-24,0", "ja4": "t13d1516h2_8daaf6152771_000000000000", "sni": "c2-beacon-channel.xyz", "cipher_suites": ["0x1301", "0x1302"]},
+            "tls_meta": {"ja3_fingerprint": "771,4865-4866-4867,0-23-65281,29-23-24,0", "ja4_fingerprint": "t13d1516h2_8daaf6152771_000000000000", "sni": "c2-beacon-channel.xyz", "cipher_suites": ["0x1301", "0x1302"]},
             "dns_meta": None,
             "zeek_conn_state": "SF",
             "collected_label": "BOTNET_C2_BEACONING"
@@ -245,10 +245,62 @@ def generate_flow(scenario: str) -> dict:
             "packet_sizes": pkts,
             "inter_arrival_times": iats,
             "tcp_flags_seen": ["A", "F", "P", "S"],
-            "tls_meta": {"ja3": "771,4865-4866,0-23,29,0", "ja4": "t13d1516h2_8daaf6152771_000000000000", "sni": "secure-upload.cdn-node.org", "cipher_suites": ["0x1301"]},
+            "tls_meta": {"ja3_fingerprint": "771,4865-4866,0-23,29,0", "ja4_fingerprint": "t13d1516h2_8daaf6152771_000000000000", "sni": "secure-upload.cdn-node.org", "cipher_suites": ["0x1301"]},
             "dns_meta": None,
             "zeek_conn_state": "SF",
             "collected_label": "DATA_EXFILTRATION"
+        }
+
+    elif scenario == "encrypted_malware":
+        # Malware in Encrypted Sessions: suspicious JA3/JA4 fingerprints from known malware loaders.
+        # Detection is purely from TLS metadata — no payload decryption.
+        # JA3 hashes below are from known C2 frameworks (Metasploit, CobaltStrike, Emotet)
+        # published in open threat intel databases.
+        src_ip = f"10.0.{random.randint(3, 9)}.{random.randint(10, 254)}"
+        dst_ip = f"185.{random.randint(200, 255)}.{random.randint(1, 254)}.{random.randint(1, 254)}"
+        sport = random.randint(49152, 65535)
+        dport = random.choice([443, 8443, 4443, 8080])
+        # Malware-associated JA3 hashes (publicly documented):
+        # - 72a589da586844d7f0818ce684948eea  (Metasploit Meterpreter)
+        # - a0e9f5d64349fb13191bc781f81f42e1  (CobaltStrike default)
+        # - 6734f37431670b3ab4292b8f60f29984  (Emotet loader)
+        malware_ja3 = random.choice([
+            "72a589da586844d7f0818ce684948eea",
+            "a0e9f5d64349fb13191bc781f81f42e1",
+            "6734f37431670b3ab4292b8f60f29984",
+        ])
+        # Short, uniform IATs with small packet sizes — loader handshake then waits
+        n_p = random.randint(6, 14)
+        base_iat = random.uniform(0.01, 0.05)
+        iats = [round(base_iat * random.uniform(0.85, 1.15), 4) for _ in range(n_p - 1)]
+        pkt_sizes = [random.choice([64, 74, 78, 128, 256]) for _ in range(n_p)]
+        dur = sum(iats)
+        return {
+            "schema_version": "1.0.0",
+            "flow_id": flow_id,
+            "first_seen": now_iso,
+            "last_seen": now_iso,
+            "five_tuple": {"src_ip": src_ip, "dst_ip": dst_ip, "src_port": sport, "dst_port": dport, "protocol": "TCP/TLS"},
+            "sensor_id": "diode-sensor-01",
+            "capture_interface": "lo",
+            "pipeline_version": "1.0.0",
+            "duration_s": round(dur, 4),
+            "total_packets": n_p,
+            "total_bytes": sum(pkt_sizes),
+            "bytes_in": sum(pkt_sizes),
+            "bytes_out_proxy": 0,
+            "packet_sizes": pkt_sizes,
+            "inter_arrival_times": iats,
+            "tcp_flags_seen": ["S", "A", "P"],
+            "tls_meta": {
+                "ja3_fingerprint": malware_ja3,
+                "ja4_fingerprint": "t13d190900_" + malware_ja3[:12],
+                "sni": None,   # Malware often omits SNI or uses an IP address
+                "cipher_suites": ["0x0035", "0x002f", "0xc014"],  # Weak/odd cipher suite selection
+            },
+            "dns_meta": None,
+            "zeek_conn_state": "SF",
+            "collected_label": "MALWARE_ENCRYPTED_TLS"
         }
 
     else:
@@ -313,6 +365,7 @@ def generate_flow(scenario: str) -> dict:
                 "last_seen": now_iso,
                 "five_tuple": {"src_ip": src_ip, "dst_ip": dst_ip, "src_port": random.randint(40000, 60000), "dst_port": 443, "protocol": "TCP/TLS"},
                 "sensor_id": "diode-sensor-01",
+                "capture_interface": "lo",
                 "pipeline_version": "1.0.0",
                 "duration_s": dur,
                 "total_packets": n_pkts,
@@ -322,7 +375,7 @@ def generate_flow(scenario: str) -> dict:
                 "packet_sizes": pkts,
                 "inter_arrival_times": iats,
                 "tcp_flags_seen": ["A", "F", "P", "S"],
-                "tls_meta": {"ja3": "771,4865-4866-4867,0-23,29,0", "ja4": "t13d1516h2_8daaf6152771_000000000000", "sni": "www.google.com", "cipher_suites": ["0x1301", "0x1302"]},
+                "tls_meta": {"ja3_fingerprint": "771,4865-4866-4867,0-23,29,0", "ja4_fingerprint": "t13d1516h2_8daaf6152771_000000000000", "sni": "www.google.com", "cipher_suites": ["0x1301", "0x1302"]},
                 "dns_meta": None,
                 "zeek_conn_state": "SF",
                 "collected_label": "BENIGN"
@@ -331,14 +384,14 @@ def generate_flow(scenario: str) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description="Live traffic & threat flow injector")
-    parser.add_argument("--scenario", default="all", choices=["all", "c2", "ddos", "scan", "dns", "dga", "exfil", "benign"])
+    parser.add_argument("--scenario", default="all", choices=["all", "c2", "ddos", "scan", "dns", "dga", "exfil", "encrypted_malware", "benign"])
     parser.add_argument("--interval", type=float, default=1.5, help="Seconds between flows")
     parser.add_argument("--count", type=int, default=0, help="Number of flows to send (0 = infinite)")
     parser.add_argument("--continuous", action="store_true", help="Run continuously (same as --count 0)")
     parser.add_argument("--export", type=str, default="", help="Export generated flows to a JSONL file directly instead of Redis")
     args = parser.parse_args()
 
-    scenarios = ["c2", "ddos", "scan", "dns", "dga", "exfil", "benign"] if args.scenario == "all" else [args.scenario]
+    scenarios = ["c2", "ddos", "scan", "dns", "dga", "exfil", "encrypted_malware", "benign"] if args.scenario == "all" else [args.scenario]
 
     # File export mode
     if args.export:

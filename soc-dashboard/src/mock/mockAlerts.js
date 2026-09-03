@@ -246,6 +246,45 @@ export function makeAnomalousAlert(offsetSeconds = 0) {
   };
 }
 
+export function makeMalwareEncryptedTlsAlert(offsetSeconds = 0) {
+  const malwareJa3 = [
+    '72a589da586844d7f0818ce684948eea',  // Metasploit Meterpreter
+    'a0e9f5d64349fb13191bc781f81f42e1',  // CobaltStrike default
+    '6734f37431670b3ab4292b8f60f29984',  // Emotet loader
+  ][Math.floor(Math.random() * 3)];
+  return {
+    timestamp: isoNow(offsetSeconds),
+    flow_id: uuid(),
+    five_tuple: {
+      src_ip: `10.0.${Math.floor(Math.random() * 9) + 1}.${Math.floor(Math.random() * 254) + 1}`,
+      dst_ip: `185.${Math.floor(Math.random() * 55) + 200}.${Math.floor(Math.random() * 254) + 1}.${Math.floor(Math.random() * 254) + 1}`,
+      src_port: Math.floor(Math.random() * 16383) + 49152,
+      dst_port: [443, 8443, 4443][Math.floor(Math.random() * 3)],
+      protocol: 'TCP/TLS',
+    },
+    threat_class: 'MALWARE_ENCRYPTED_TLS',
+    confidence_score: 0.82,
+    severity: 'HIGH',
+    model_source: {
+      supervised_score: 0.15,
+      anomaly_score: 0.73,
+      sequence_score: 0.18,
+      fired_models: ['malware_tls_heuristic', 'anomaly'],
+    },
+    evidence: {
+      ja3_fingerprint: malwareJa3,
+      ja4_fingerprint: 't13d190900_' + malwareJa3.slice(0, 12),
+      tls_sni: null,
+      malware_tls_indicator: 'ja3_in_known_malware_set',
+      packets_per_second: Math.floor(Math.random() * 40) + 8,
+      bytes_in: Math.floor(Math.random() * 8000) + 1200,
+      anomaly_indicator: 'unsupervised_deviation_from_benign_baseline',
+      cipher_suite_order_anomaly: true,
+    },
+    ingestion_meta: baseIngestionMeta(),
+  };
+}
+
 export const MOCK_ALERT_GENERATORS = [
   makeVolumetricDdosAlert,
   makePortScanAlert,
@@ -253,6 +292,7 @@ export const MOCK_ALERT_GENERATORS = [
   makeDgaDomainAlert,
   makeDnsTunnelingAlert,
   makeBotnetC2Alert,
+  makeMalwareEncryptedTlsAlert,
   makeAnomalousAlert,
 ];
 

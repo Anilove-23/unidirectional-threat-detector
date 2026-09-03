@@ -38,7 +38,7 @@ export default function LiveAlertFeed({
   }
 
   return (
-    <div className="card flex flex-col overflow-hidden shadow-card">
+    <div id="live-feed" className="card flex flex-col overflow-hidden shadow-card">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-border/70 bg-surface-0/50 shrink-0">
         <div className="flex items-center gap-3">

@@ -39,6 +39,7 @@ class TLSMeta(BaseModel):
     ja3_raw_string:           Optional[str]       = None   # pre-hash string (Person 2 can inspect or re-hash)
     ja3_fingerprint:          Optional[str]       = None   # MD5 of ja3_raw_string
     ja4_fingerprint:          Optional[str]       = None   # JA4 hash (if computed)
+    sni:                      Optional[str]       = None   # Server Name Indication from Client Hello (plain-text, no decryption)
     record_length:            Optional[int]       = None   # TLS record byte length
     is_quic:                  bool                = False  # True if source was QUIC Initial
 

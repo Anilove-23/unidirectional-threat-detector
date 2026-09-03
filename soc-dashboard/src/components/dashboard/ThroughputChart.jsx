@@ -1,6 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import ChartPanel from './ChartPanel';
 import EmptyState from '../common/EmptyState';
+import { usePipelineStats } from '../../hooks/usePipelineStats';
 
 function buildData(alerts) {
   return alerts
@@ -24,10 +25,26 @@ const TIP_STYLE = {
 
 export default function ThroughputChart({ alerts }) {
   const data = buildData(alerts);
+  const { flowsPerSec, throughputWindow } = usePipelineStats();
+
+  const subtitle = flowsPerSec !== null
+    ? `${flowsPerSec.toFixed(1)} flows/sec (${throughputWindow}s window) · packets/sec on flagged flows`
+    : 'Packets / second on flagged flows';
+
   return (
-    <ChartPanel title="Traffic Throughput" subtitle="Packets / second on flagged flows">
+    <ChartPanel title="Traffic Throughput" subtitle={subtitle}>
+      {/* Live flows/sec badge */}
+      {flowsPerSec !== null && (
+        <div className="flex items-center gap-2 px-1 pb-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-0.5 text-xs font-semibold text-blue-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-400 animate-pulseDot" />
+            {flowsPerSec.toFixed(2)} flows / sec
+          </span>
+        </div>
+      )}
+
       {data.length === 0
-        ? <EmptyState title="No throughput data yet" description="Populated from evidence.packets_per_second." />
+        ? <EmptyState title="No per-alert throughput data yet" description="Populated from evidence.packets_per_second as alerts arrive." />
         : (
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={data} margin={{ top: 10, right: 10, left: -24, bottom: 0 }}>

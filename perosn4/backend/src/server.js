@@ -7,6 +7,7 @@ const { initSubscriber } = require('./redis/subscriber');
 const { initBroadcaster } = require('./websocket/broadcaster');
 const alertRoutes = require('./routes/alerts');
 const healthRoutes = require('./routes/health');
+const statsRoutes  = require('./routes/stats');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 // API Routes
 app.use('/api/alerts', alertRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/stats',  statsRoutes);
 
 // Root route welcome
 app.get('/', (req, res) => {
@@ -35,6 +37,7 @@ app.get('/', (req, res) => {
     documentation: {
       health: '/api/health',
       alerts: '/api/alerts',
+      stats: '/api/stats',
       websocket: '/ws'
     }
   });
