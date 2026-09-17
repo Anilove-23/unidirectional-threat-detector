@@ -92,8 +92,17 @@ function getClientCount() {
   return wss ? wss.clients.size : 0;
 }
 
+function broadcastEvent(event, data) {
+  if (!wss) return;
+  const payload = JSON.stringify({ event, data });
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN && client.bufferedAmount < 1024 * 1024) client.send(payload);
+  });
+}
+
 module.exports = {
   initBroadcaster,
   broadcastAlert,
+  broadcastEvent,
   getClientCount
 };

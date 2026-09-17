@@ -7,7 +7,7 @@ const criticalClass = 'border-l-4 border-l-red-500 bg-red-50/30 font-semibold';
 
 export default function AlertRow({ alert, onClick, isNew }) {
   const isCritical = alert.severity === 'CRITICAL';
-  const conf = Math.round(alert.confidence_score * 100);
+  const conf = typeof alert.confidence_score === 'number' ? Math.round(alert.confidence_score * 100) : null;
 
   return (
     <tr
@@ -22,6 +22,7 @@ export default function AlertRow({ alert, onClick, isNew }) {
       {/* Threat class */}
       <td className="px-4 py-3.5 whitespace-nowrap">
         <ThreatClassBadge threatClass={alert.threat_class} />
+        {alert.decision_state && <div className="text-[10px] text-ink-muted mt-1">{alert.decision_state} {Object.keys(alert.labels || {}).length > 1 ? `+${Object.keys(alert.labels).length - 1} labels` : ''}</div>}
       </td>
 
       {/* Confidence — mini bar + number */}
@@ -30,10 +31,10 @@ export default function AlertRow({ alert, onClick, isNew }) {
           <div className="w-16 h-1.5 rounded-full bg-surface-3 overflow-hidden shrink-0 border border-border/40">
             <div
               className="h-full rounded-full bg-forest"
-              style={{ width: `${conf}%` }}
+              style={{ width: `${conf ?? 0}%` }}
             />
           </div>
-          <span className="mono text-[11px] font-bold text-ink-primary">{conf}%</span>
+          <span className="mono text-[11px] font-bold text-ink-primary">{formatConfidence(alert.confidence_score)}</span>
         </div>
       </td>
 

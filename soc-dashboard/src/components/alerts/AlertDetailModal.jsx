@@ -3,6 +3,7 @@ import SeverityBadge from '../common/SeverityBadge';
 import ThreatClassBadge from '../common/ThreatClassBadge';
 import ModelContribution from './ModelContribution';
 import EvidencePanel from './EvidencePanel';
+import DecisionDetails from './DecisionDetails';
 import { formatTimestamp, formatConfidence } from '../../utils/alertFormatters';
 
 function DataItem({ label, value, mono = true }) {
@@ -76,6 +77,7 @@ export default function AlertDetailModal({ alert, onClose }) {
 
         {/* Content */}
         <div className="max-h-[70vh] space-y-6 overflow-y-auto px-6 py-5">
+          <DecisionDetails alert={alert} />
           <Section title="General Information">
             <dl className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 rounded-2xl border border-border/70 bg-surface-2/60 p-4 shadow-2xs">
               <DataItem label="Confidence" value={formatConfidence(alert.confidence_score)} />

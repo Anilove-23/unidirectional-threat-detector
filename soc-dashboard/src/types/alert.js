@@ -64,6 +64,8 @@
  */
 
 export const THREAT_CLASSES = /** @type {const} */ ([
+  'DDoS', 'DGA', 'DNS_TUNNEL', 'C2_BEACONING', 'BOTNET_HOST',
+  'BOTNET_COORDINATION', 'ENCRYPTED_MALWARE', 'UNCERTAIN',
   'VOLUMETRIC_DDOS',
   'PORT_SCAN',
   'DATA_EXFILTRATION',
@@ -115,6 +117,23 @@ export const CONNECTION_STATES = /** @type {const} */ ([
  */
 export function normalizeAlert(raw) {
   if (!raw || typeof raw !== 'object') return null;
+  if (raw.schema_version === '2.0.0') {
+    if (!raw.decision_id || !raw.entity_keys || !['BENIGN', 'KNOWN_ATTACK', 'UNKNOWN', 'UNCERTAIN'].includes(raw.decision_state)) return null;
+    if (!raw.labels || !raw.uncertainty || !raw.model_versions || !raw.event_time) return null;
+    return {
+      ...raw,
+      flow_id: raw.decision_id,
+      timestamp: raw.event_time,
+      threat_class: raw.primary_class || raw.decision_state,
+      confidence_score: typeof raw.confidence === 'number' && Number.isFinite(raw.confidence) ? raw.confidence : null,
+      severity: SEVERITIES.includes(raw.severity) ? raw.severity : raw.decision_state === 'UNCERTAIN' || raw.decision_state === 'BENIGN' ? 'LOW' : raw.confidence >= .9 ? 'CRITICAL' : 'HIGH',
+      five_tuple: { src_ip: raw.entity_keys.source, dst_ip: raw.entity_keys.destination, src_port: null, dst_port: null, protocol: raw.protocol },
+      model_source: { supervised_score: null, anomaly_score: null, sequence_score: null, fired_models: Object.keys(raw.model_versions) },
+      ingestion_meta: { sensor_id: raw.sensor_id, capture_interface: null, pipeline_version: raw.schema_version },
+    };
+  }
+  if (!raw.flow_id && !raw._id) return null;
+  if (!raw.threat_class || !raw.five_tuple) return null;
 
   // Map threat class aliases (e.g. DGA -> DGA_DOMAIN, DNS_TUNNEL -> DNS_TUNNELING)
   const rawClass = String(raw.threat_class || '').toUpperCase().trim();
@@ -141,12 +160,12 @@ export function normalizeAlert(raw) {
     flow_id,
     five_tuple,
     threat_class,
-    confidence_score: typeof raw.confidence_score === 'number' ? raw.confidence_score : 0.85,
+    confidence_score: typeof raw.confidence_score === 'number' ? raw.confidence_score : null,
     severity,
     model_source: {
-      supervised_score: raw.model_source?.supervised_score ?? 0,
-      anomaly_score: raw.model_source?.anomaly_score ?? 0,
-      sequence_score: raw.model_source?.sequence_score ?? 0,
+      supervised_score: raw.model_source?.supervised_score ?? null,
+      anomaly_score: raw.model_source?.anomaly_score ?? null,
+      sequence_score: raw.model_source?.sequence_score ?? null,
       fired_models: raw.model_source?.fired_models ?? [],
     },
     evidence: raw.evidence ?? {},

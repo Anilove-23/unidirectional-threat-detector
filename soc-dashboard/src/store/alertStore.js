@@ -15,6 +15,12 @@ const initialFilters = {
 
 export const useAlertStore = create((set, get) => ({
   alerts: [],
+  incidents: [],
+  upsertIncident: (incident) => set((state) => {
+    const previous = state.incidents.find(i => i.incident_id === incident.incident_id);
+    if (previous && previous.count > incident.count) return state;
+    return { incidents: [incident, ...state.incidents.filter(i => i.incident_id !== incident.incident_id)].slice(0, 500) };
+  }),
   selectedAlert: null,
   filters: initialFilters,
   searchQuery: '',
@@ -24,7 +30,7 @@ export const useAlertStore = create((set, get) => ({
   // --- alert ingestion -----------------------------------------------
   addAlert: (alert) =>
     set((state) => ({
-      alerts: [alert, ...state.alerts].slice(0, MAX_ALERTS_RETAINED),
+      alerts: [alert, ...state.alerts.filter(a => (a.decision_id || a.flow_id) !== (alert.decision_id || alert.flow_id))].slice(0, MAX_ALERTS_RETAINED),
     })),
 
   setAlerts: (alerts) => set({ alerts: alerts.slice(0, MAX_ALERTS_RETAINED) }),
@@ -67,7 +73,7 @@ export function selectFilteredAlerts(state) {
 
   return state.alerts.filter((a) => {
     if (severity !== 'ALL' && a.severity !== severity) return false;
-    if (threatClass !== 'ALL' && a.threat_class !== threatClass) return false;
+    if (threatClass !== 'ALL' && a.threat_class !== threatClass && !Object.hasOwn(a.labels || {}, threatClass)) return false;
     if (timeRange !== 'all') {
       const ranges = { '5m': 5, '15m': 15, '1h': 60, '24h': 1440 };
       const mins = ranges[timeRange];
@@ -76,7 +82,7 @@ export function selectFilteredAlerts(state) {
       }
     }
     if (q) {
-      const haystack = `${a.five_tuple.src_ip} ${a.five_tuple.dst_ip} ${a.flow_id} ${a.threat_class}`.toLowerCase();
+      const haystack = `${a.five_tuple.src_ip} ${a.five_tuple.dst_ip} ${a.flow_id} ${a.threat_class} ${Object.keys(a.labels || {}).join(' ')} ${a.decision_state || ''}`.toLowerCase();
       if (!haystack.includes(q)) return false;
     }
     return true;
