@@ -23,7 +23,7 @@ export function formatClock(iso) {
 }
 
 export function formatConfidence(score) {
-  return `${Math.round((score ?? 0) * 100)}%`;
+  return typeof score === 'number' && Number.isFinite(score) ? `${Math.round(score * 100)}%` : 'Unavailable';
 }
 
 export function formatFlowId(flowId, length = 8) {
@@ -32,6 +32,8 @@ export function formatFlowId(flowId, length = 8) {
 }
 
 export function formatEvidenceValue(value) {
+  if (value === null || value === undefined) return 'Unavailable';
+  if (typeof value === 'object') return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.join(', ')}]`;
   if (typeof value === 'boolean') return value ? 'True' : 'False';
   if (typeof value === 'number') {

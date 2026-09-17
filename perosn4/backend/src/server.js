@@ -27,6 +27,7 @@ app.use((req, res, next) => {
 app.use('/api/alerts', alertRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/stats',  statsRoutes);
+app.use('/api/v2', require('./routes/v2'));
 
 // Root route welcome
 app.get('/', (req, res) => {

@@ -8,6 +8,7 @@ import ThroughputChart from '../components/dashboard/ThroughputChart';
 import EntropyChart from '../components/dashboard/EntropyChart';
 import DemoControl from '../components/dashboard/DemoControl';
 import LiveAlertFeed from '../components/alerts/LiveAlertFeed';
+import IncidentFeed from '../components/dashboard/IncidentFeed';
 import { useLiveDemo } from '../hooks/useLiveDemo';
 import { exportAlertsToJson } from '../utils/exportUtils';
 
@@ -81,6 +82,7 @@ export default function Dashboard() {
 
       {/* Summary Stats Row */}
       <SummaryStats stats={stats} />
+      <IncidentFeed />
 
       {/* Analytics Charts Grid */}
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">

@@ -4,6 +4,9 @@
  */
 
 export const THREAT_CLASS_LABELS = {
+  DDoS: 'DDoS', DGA: 'DGA', DNS_TUNNEL: 'DNS Tunnel', C2_BEACONING: 'C2 Beaconing',
+  BOTNET_HOST: 'Botnet Host', BOTNET_COORDINATION: 'Botnet Coordination',
+  ENCRYPTED_MALWARE: 'Encrypted Malware', UNCERTAIN: 'Needs Review',
   VOLUMETRIC_DDOS: 'Volumetric DDoS',
   PORT_SCAN: 'Port Scan',
   DATA_EXFILTRATION: 'Data Exfiltration',

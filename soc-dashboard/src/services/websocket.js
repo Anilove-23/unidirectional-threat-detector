@@ -20,7 +20,7 @@ const BASE_BACKOFF_MS = 1000;
 
 class Emitter {
   constructor() {
-    this._listeners = { message: new Set(), status: new Set() };
+    this._listeners = { message: new Set(), status: new Set(), incident: new Set() };
   }
   on(event, cb) {
     this._listeners[event]?.add(cb);
@@ -72,6 +72,11 @@ export class WebSocketService extends Emitter {
       }
       // Backend wraps alerts as {event:'alert', data: alertData}
       // Unwrap the envelope before normalizing.
+      if (parsed?.event === 'incident') {
+        if (parsed.data?.incident_id && Array.isArray(parsed.data.timeline)) this.emit('incident', parsed.data);
+        return;
+      }
+      if (parsed?.event && parsed.event !== 'alert') return;
       const payload = parsed?.event === 'alert' ? parsed.data : parsed;
       const alert = normalizeAlert(payload);
       if (alert) this.emit('message', alert);

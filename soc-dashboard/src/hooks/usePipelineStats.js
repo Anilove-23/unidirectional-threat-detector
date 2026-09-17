@@ -14,7 +14,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 const POLL_INTERVAL_MS = 5_000;
-const API_BASE = import.meta.env.VITE_API_URL || '';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 export function usePipelineStats() {
   const [stats, setStats] = useState(null);
@@ -22,7 +22,7 @@ export function usePipelineStats() {
 
   async function fetchStats() {
     try {
-      const res = await fetch(`${API_BASE}/api/stats`);
+      const res = await fetch(`${API_BASE}/stats`);
       if (!res.ok) return;
       const json = await res.json();
       if (json.status === 'success' && json.data) {
@@ -47,5 +47,9 @@ export function usePipelineStats() {
     trackedSrcIps:   stats?.tracked_src_ips   ?? null,
     throughputWindow: stats?.throughput_window_s ?? 10,
     source:          stats?.source            ?? null,
+    inferenceP95: stats?.inference_p95_ms ?? null,
+    queueLag: stats?.queue_lag ?? null,
+    modelProfile: stats?.model_profile ?? null,
+    driftStatus: stats?.drift_status ?? null,
   };
 }

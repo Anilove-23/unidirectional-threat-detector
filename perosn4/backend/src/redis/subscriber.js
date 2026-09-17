@@ -4,11 +4,38 @@ const addFormats = require('ajv-formats');
 const config = require('../config');
 const alertSchema = require('../schemas/alertSchema.json');
 const AlertModel = require('../db/models/Alert');
-const { broadcastAlert } = require('../websocket/broadcaster');
+const { broadcastAlert, broadcastEvent } = require('../websocket/broadcaster');
+const { ProductStore, decisionAlert } = require('../../../../agent2_detection_product/backend/store.cjs');
+const decisionSchema = require('../../../../agent2_detection_product/contracts/decision/schema.json');
+const incidentSchema = require('../../../../agent2_detection_product/contracts/incident/schema.json');
 
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv);
 const validateAlert = ajv.compile(alertSchema);
+const validateDecision = ajv.compile(decisionSchema);
+const validateIncident = ajv.compile(incidentSchema);
+const productStore = new ProductStore({ journal: process.env.V2_STORE_PATH || null });
+
+async function handleV2Message(channel, message) {
+  const data = JSON.parse(message);
+  const isDecision = channel === 'decision.new';
+  const validate = isDecision ? validateDecision : validateIncident;
+  if (!validate(data)) throw new Error(`Invalid V2 payload: ${ajv.errorsText(validate.errors)}`);
+  if (isDecision && data.decision_state === 'KNOWN_ATTACK' && !Object.hasOwn(data.labels, data.primary_class)) {
+    throw new Error('Primary class must be one of the passing labels');
+  }
+  if (!productStore.put(isDecision ? 'decision' : 'incident', data)) return false;
+  if (isDecision) {
+    if (data.decision_state !== 'BENIGN') {
+      const alert = decisionAlert(data);
+      await AlertModel.saveAlert(alert);
+      broadcastAlert(alert);
+    }
+  } else {
+    broadcastEvent('incident', data);
+  }
+  return true;
+}
 
 let redisSubscriber = null;
 let isConnected = false;
@@ -41,7 +68,7 @@ function initSubscriber() {
 
   // Attempt async connection
   redisSubscriber.connect().then(() => {
-    redisSubscriber.subscribe(config.alertChannel, (err, count) => {
+    redisSubscriber.subscribe(config.alertChannel, 'decision.new', 'incident.update', (err, count) => {
       if (err) {
         console.error(`[Redis Subscriber] Failed to subscribe to channel ${config.alertChannel}:`, err.message);
       } else {
@@ -52,6 +79,9 @@ function initSubscriber() {
     redisSubscriber.on('message', async (channel, message) => {
       if (channel === config.alertChannel) {
         await handleAlertMessage(message);
+      } else {
+        try { await handleV2Message(channel, message); }
+        catch (err) { console.warn('[Redis Subscriber] Rejected V2 message:', err.message); }
       }
     });
   }).catch((err) => {
@@ -78,7 +108,7 @@ async function handleAlertMessage(rawMessage) {
     const valid = validateAlert(alertData);
     if (!valid) {
       console.warn('[Redis Subscriber] Received alert failing schema validation:', validateAlert.errors);
-      // Persist anyway or log validation failure
+      return false;
     }
 
     // 1. Persist to Database
@@ -106,5 +136,7 @@ function getSubscriberStatus() {
 module.exports = {
   initSubscriber,
   handleAlertMessage,
-  getSubscriberStatus
+  getSubscriberStatus,
+  handleV2Message,
+  productStore
 };

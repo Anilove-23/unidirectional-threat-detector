@@ -16,6 +16,7 @@ class AlertModel {
     };
     
     memoryStore.set(alertId, record);
+    while (memoryStore.size > 10000) memoryStore.delete(memoryStore.keys().next().value);
     return record;
   }
 
@@ -57,7 +58,7 @@ class AlertModel {
 
     if (threat_class) {
       const tc = threat_class.toLowerCase();
-      results = results.filter(a => a.threat_class && a.threat_class.toLowerCase() === tc);
+      results = results.filter(a => (a.threat_class && a.threat_class.toLowerCase() === tc) || Object.keys(a.labels || {}).some(label => label.toLowerCase() === tc));
     }
 
     if (severity) {
