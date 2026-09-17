@@ -1,0 +1,96 @@
+{
+  "$defs": {
+    "JsonValue": {}
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0.0",
+      "default": "2.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "event_id": {
+      "minLength": 1,
+      "title": "Event Id",
+      "type": "string"
+    },
+    "specialist": {
+      "minLength": 1,
+      "title": "Specialist",
+      "type": "string"
+    },
+    "probability": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Probability"
+    },
+    "score_present": {
+      "default": false,
+      "title": "Score Present",
+      "type": "boolean"
+    },
+    "applicable": {
+      "default": true,
+      "title": "Applicable",
+      "type": "boolean"
+    },
+    "uncertainty": {
+      "anyOf": [
+        {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Uncertainty"
+    },
+    "inference_ms": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Inference Ms",
+      "type": "number"
+    },
+    "evidence": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Evidence",
+      "type": "object"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "model_version": {
+      "minLength": 1,
+      "title": "Model Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "specialist",
+    "reason_codes",
+    "model_version"
+  ],
+  "title": "SpecialistScore",
+  "type": "object"
+}

@@ -1,0 +1,7 @@
+{
+  "release_id": "agent1-observation-dns-0.1.0",
+  "source_manifest": "../../../../artifacts/release.json",
+  "status": "immutable-source-release",
+  "trained_models": [],
+  "notes": "Agent 1 V2 observation, replay, DNS state, specialist interfaces, and untrained baselines."
+}

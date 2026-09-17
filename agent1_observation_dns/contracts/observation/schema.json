@@ -1,0 +1,288 @@
+{
+  "$defs": {
+    "EntityKeys": {
+      "additionalProperties": false,
+      "properties": {
+        "flow_id": {
+          "minLength": 1,
+          "title": "Flow Id",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "destination": {
+          "minLength": 1,
+          "title": "Destination",
+          "type": "string"
+        }
+      },
+      "required": [
+        "flow_id",
+        "source",
+        "destination"
+      ],
+      "title": "EntityKeys",
+      "type": "object"
+    },
+    "Features": {
+      "additionalProperties": false,
+      "properties": {
+        "flow": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Measurement"
+          },
+          "title": "Flow",
+          "type": "object"
+        },
+        "window": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Measurement"
+          },
+          "title": "Window",
+          "type": "object"
+        },
+        "dns": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Measurement"
+          },
+          "title": "Dns",
+          "type": "object"
+        },
+        "tls": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Measurement"
+          },
+          "title": "Tls",
+          "type": "object"
+        }
+      },
+      "title": "Features",
+      "type": "object"
+    },
+    "History": {
+      "additionalProperties": false,
+      "properties": {
+        "event_count": {
+          "minimum": 0,
+          "title": "Event Count",
+          "type": "integer"
+        },
+        "duration_ms": {
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "number"
+        },
+        "window_complete": {
+          "title": "Window Complete",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "event_count",
+        "duration_ms",
+        "window_complete"
+      ],
+      "title": "History",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "Measurement": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/JsonValue",
+          "default": null
+        },
+        "available": {
+          "default": false,
+          "title": "Available",
+          "type": "boolean"
+        },
+        "applicable": {
+          "default": true,
+          "title": "Applicable",
+          "type": "boolean"
+        },
+        "reason": {
+          "default": "NOT_OBSERVED",
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "title": "Measurement",
+      "type": "object"
+    },
+    "RouteHints": {
+      "additionalProperties": false,
+      "properties": {
+        "dns": {
+          "default": false,
+          "title": "Dns",
+          "type": "boolean"
+        },
+        "tls": {
+          "default": false,
+          "title": "Tls",
+          "type": "boolean"
+        },
+        "flow": {
+          "default": true,
+          "title": "Flow",
+          "type": "boolean"
+        }
+      },
+      "title": "RouteHints",
+      "type": "object"
+    },
+    "Visibility": {
+      "additionalProperties": false,
+      "properties": {
+        "direction_reconstructable": {
+          "default": false,
+          "title": "Direction Reconstructable",
+          "type": "boolean"
+        },
+        "dns_response_visible": {
+          "default": false,
+          "title": "Dns Response Visible",
+          "type": "boolean"
+        },
+        "nxdomain_ratio_available": {
+          "default": false,
+          "title": "Nxdomain Ratio Available",
+          "type": "boolean"
+        },
+        "tls_handshake_visible": {
+          "default": false,
+          "title": "Tls Handshake Visible",
+          "type": "boolean"
+        },
+        "ja4_available": {
+          "default": false,
+          "title": "Ja4 Available",
+          "type": "boolean"
+        },
+        "ja4s_available": {
+          "default": false,
+          "title": "Ja4S Available",
+          "type": "boolean"
+        },
+        "sni_available": {
+          "default": false,
+          "title": "Sni Available",
+          "type": "boolean"
+        },
+        "flow_completion_visible": {
+          "default": false,
+          "title": "Flow Completion Visible",
+          "type": "boolean"
+        },
+        "feature_availability_ratio": {
+          "default": 0,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Feature Availability Ratio",
+          "type": "number"
+        },
+        "reason_codes": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "object"
+        }
+      },
+      "title": "Visibility",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2.0.0",
+      "default": "2.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "event_id": {
+      "minLength": 1,
+      "title": "Event Id",
+      "type": "string"
+    },
+    "sensor_id": {
+      "minLength": 1,
+      "title": "Sensor Id",
+      "type": "string"
+    },
+    "event_time": {
+      "format": "date-time",
+      "title": "Event Time",
+      "type": "string"
+    },
+    "entity_keys": {
+      "$ref": "#/$defs/EntityKeys"
+    },
+    "protocol": {
+      "enum": [
+        "TCP",
+        "UDP",
+        "DNS",
+        "TLS",
+        "QUIC",
+        "OTHER"
+      ],
+      "title": "Protocol",
+      "type": "string"
+    },
+    "features": {
+      "$ref": "#/$defs/Features"
+    },
+    "visibility": {
+      "$ref": "#/$defs/Visibility"
+    },
+    "history": {
+      "$ref": "#/$defs/History"
+    },
+    "route_hints": {
+      "$ref": "#/$defs/RouteHints"
+    },
+    "feature_schema_version": {
+      "const": "2.0.0",
+      "default": "2.0.0",
+      "title": "Feature Schema Version",
+      "type": "string"
+    },
+    "snapshot_kind": {
+      "default": "partial",
+      "enum": [
+        "partial",
+        "final"
+      ],
+      "title": "Snapshot Kind",
+      "type": "string"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "event_id",
+    "sensor_id",
+    "event_time",
+    "entity_keys",
+    "protocol",
+    "features",
+    "visibility",
+    "history",
+    "route_hints"
+  ],
+  "title": "ObservationEnvelope",
+  "type": "object"
+}

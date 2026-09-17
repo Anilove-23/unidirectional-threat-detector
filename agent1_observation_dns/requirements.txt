@@ -1,0 +1,5 @@
+pydantic>=2.9,<3
+dpkt>=1.9.8,<2
+pytest>=8,<10
+
+# Optional training: numpy, torch, xgboost, scikit-learn

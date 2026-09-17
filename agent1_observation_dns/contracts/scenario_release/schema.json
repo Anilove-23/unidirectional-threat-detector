@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "JsonValue": {}
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scenario_id": {
+      "minLength": 1,
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "generator": {
+      "minLength": 1,
+      "title": "Generator",
+      "type": "string"
+    },
+    "family": {
+      "enum": [
+        "BENIGN",
+        "DDOS",
+        "PORT_SCAN",
+        "DGA",
+        "DNS_TUNNEL",
+        "C2",
+        "BOTNET",
+        "ENCRYPTED_MALWARE",
+        "EXFILTRATION"
+      ],
+      "title": "Family",
+      "type": "string"
+    },
+    "seed": {
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "start": {
+      "format": "date-time",
+      "title": "Start",
+      "type": "string"
+    },
+    "end": {
+      "format": "date-time",
+      "title": "End",
+      "type": "string"
+    },
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "destination": {
+      "title": "Destination",
+      "type": "string"
+    },
+    "software_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Software Versions",
+      "type": "object"
+    },
+    "attack_parameters": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Attack Parameters",
+      "type": "object"
+    },
+    "expected_labels": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Expected Labels",
+      "type": "array"
+    },
+    "split_assignment": {
+      "enum": [
+        "train",
+        "validation",
+        "test"
+      ],
+      "title": "Split Assignment",
+      "type": "string"
+    },
+    "split_group": {
+      "minLength": 1,
+      "title": "Split Group",
+      "type": "string"
+    },
+    "tool": {
+      "minLength": 1,
+      "title": "Tool",
+      "type": "string"
+    },
+    "hard_negative_tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Hard Negative Tags",
+      "type": "array"
+    },
+    "feature_snapshots": {
+      "items": {
+        "additionalProperties": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "type": "object"
+      },
+      "title": "Feature Snapshots",
+      "type": "array"
+    },
+    "synthetic": {
+      "default": true,
+      "title": "Synthetic",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "scenario_id",
+    "generator",
+    "family",
+    "seed",
+    "start",
+    "end",
+    "source",
+    "destination",
+    "software_versions",
+    "attack_parameters",
+    "expected_labels",
+    "split_assignment",
+    "split_group",
+    "tool"
+  ],
+  "title": "ScenarioRelease",
+  "type": "object"
+}

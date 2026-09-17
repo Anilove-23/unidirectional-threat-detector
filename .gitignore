@@ -48,3 +48,6 @@ node_modules/
 .env
 
 ingestion/dataset/CICIDS2017_improved
+# Images
+*.jpg
+*.jpeg

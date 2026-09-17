@@ -1,0 +1,18 @@
+{
+  "agent1_version": "0.1.0",
+  "release_id": "agent1-observation-dns-0.1.0",
+  "feature_schema_version": "2.0.0",
+  "contracts": {
+    "observation": "2.0.0",
+    "specialist_score": "2.0.0",
+    "scenario_release": "1.0.0"
+  },
+  "scenario_release_id": "offline-metadata-v1",
+  "package_digest": "source-checkout; compute with the deployment builder",
+  "trained_models": [],
+  "baseline_models": ["dga-lexical-heuristic-1.0.0", "tunnel-lexical-heuristic-1.0.0"],
+  "golden_samples": ["tests/golden/dns_tcp.pcap"],
+  "test_command": "python -m pytest agent1_observation_dns/tests -q -p no:cacheprovider",
+  "test_report": {"passed": 58, "benchmarks_claimed": false},
+  "immutability": "Create a new semver directory for contract or feature meaning changes."
+}

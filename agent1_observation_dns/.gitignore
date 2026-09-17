@@ -1,0 +1,4 @@
+!tests/golden/*.pcap
+.pytest_cache/
+pytest-cache-files-*/
+artifacts/test-tmp/
