@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0-sim-20260918",
+  "seed": 26,
+  "epochs": 8,
+  "trees": 60,
+  "duration_s": 90,
+  "max_rows_per_scenario_class": 180,
+  "threads": 2,
+  "cicids": "/media/ayush/New Volume/project/SIH-26/ingestion/dataset/CICIDS2017_improved",
+  "split_policy": "scenario, run, seed and domain disjoint; same generator algorithms across splits",
+  "cicids_usage": "external test only",
+  "numeric_feature_paths": [
+    "flow.packet_count",
+    "flow.duration_s",
+    "flow.pps",
+    "flow.iat_s_mean",
+    "flow.iat_s_min",
+    "flow.iat_s_max",
+    "flow.psh_count",
+    "flow.urg_count",
+    "flow.rst_count"
+  ]
+}

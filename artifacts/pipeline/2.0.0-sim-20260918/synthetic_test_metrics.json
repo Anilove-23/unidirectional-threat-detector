@@ -1,0 +1,51 @@
+{
+  "samples": 620,
+  "per_label": {
+    "DDoS": {
+      "precision": 1.0,
+      "recall": 0.9944444444444445,
+      "f1": 0.9972144846796658,
+      "fpr": 0.0,
+      "fnr": 0.005555555555555556,
+      "pr_auc": 0.9961597103106538,
+      "roc_auc": 0.9974558080808081,
+      "mcc": 0.9960870787134749,
+      "balanced_accuracy": 0.9972222222222222,
+      "ece": 1.0897790367204378e-05,
+      "brier": 0.001609246015786423
+    },
+    "PORT_SCAN": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "fpr": 0.0,
+      "fnr": 0.0,
+      "pr_auc": 1.0,
+      "roc_auc": 1.0,
+      "mcc": 1.0,
+      "balanced_accuracy": 1.0,
+      "ece": 0.0,
+      "brier": 0.0
+    },
+    "DATA_EXFILTRATION": {
+      "precision": 1.0,
+      "recall": 0.9574468085106383,
+      "f1": 0.9782608695652174,
+      "fpr": 0.0,
+      "fnr": 0.0425531914893617,
+      "pr_auc": 0.9873305549462601,
+      "roc_auc": 0.9989231740373546,
+      "mcc": 0.9767889018318675,
+      "balanced_accuracy": 0.9787234042553192,
+      "ece": 0.0013504863213447313,
+      "brier": 0.002980889184182367
+    }
+  },
+  "scope": "candidate score quality on held-out simulator scenarios; not production decisions",
+  "class_counts": {
+    "BENIGN": 213,
+    "DDoS": 180,
+    "DATA_EXFILTRATION": 47,
+    "PORT_SCAN": 180
+  }
+}

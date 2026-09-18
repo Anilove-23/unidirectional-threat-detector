@@ -28,7 +28,7 @@ export default function ThroughputChart({ alerts }) {
   const { flowsPerSec, throughputWindow } = usePipelineStats();
 
   const subtitle = flowsPerSec !== null
-    ? `${flowsPerSec.toFixed(1)} flows/sec (${throughputWindow}s window) · packets/sec on flagged flows`
+    ? `${flowsPerSec.toFixed(1)} flows/sec (${throughputWindow == null ? 'run average' : `${throughputWindow}s window`}) · packets/sec on flagged flows`
     : 'Packets / second on flagged flows';
 
   return (

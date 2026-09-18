@@ -1,0 +1,167 @@
+{
+  "rows": 2099943,
+  "per_label": {
+    "DDoS": {
+      "precision": 0.0023409370253442163,
+      "recall": 0.024962162616665267,
+      "f1": 0.0042804554404588645,
+      "fpr": 0.5048765487213431,
+      "fnr": 0.9750378373833347,
+      "pr_auc": 0.0479282725724907,
+      "roc_auc": 0.26928251539257336,
+      "mcc": -0.19973751409513224,
+      "balanced_accuracy": 0.2600428069476611,
+      "ece": 0.5545876123179172,
+      "brier": 0.5489664673805237
+    },
+    "PORT_SCAN": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.0,
+      "fnr": 1.0,
+      "pr_auc": 0.10943388865026321,
+      "roc_auc": 0.4033478067100829,
+      "mcc": 0.0,
+      "balanced_accuracy": 0.5,
+      "ece": 0.16803572964749802,
+      "brier": 0.12945765256881714
+    },
+    "DATA_EXFILTRATION": {
+      "status": "not_measurable",
+      "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+    }
+  },
+  "binary_any_attack": {
+    "tp": 214537,
+    "fp": 1117157,
+    "fn": 302868,
+    "tn": 465381,
+    "precision": 0.16110082346244708,
+    "recall": 0.41464036876334787,
+    "f1": 0.2320449040316392,
+    "accuracy": 0.32377926448479794,
+    "fpr": 0.7059274406049018,
+    "definition": "any of the three known heads passes its simulation-selected threshold"
+  },
+  "by_dataset_label": {
+    "BENIGN": {
+      "rows": 1582538,
+      "any_known_alert_rate": 0.7059274406049018
+    },
+    "Botnet": {
+      "rows": 736,
+      "any_known_alert_rate": 1.0
+    },
+    "Botnet - Attempted": {
+      "rows": 4067,
+      "any_known_alert_rate": 0.039586919104991396
+    },
+    "DDoS": {
+      "rows": 95144,
+      "any_known_alert_rate": 0.024962162616665267
+    },
+    "DoS GoldenEye": {
+      "rows": 7567,
+      "any_known_alert_rate": 0.6175498876701467
+    },
+    "DoS GoldenEye - Attempted": {
+      "rows": 80,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Hulk": {
+      "rows": 158468,
+      "any_known_alert_rate": 0.8816101673523993
+    },
+    "DoS Hulk - Attempted": {
+      "rows": 581,
+      "any_known_alert_rate": 0.012048192771084338
+    },
+    "DoS Slowhttptest": {
+      "rows": 1740,
+      "any_known_alert_rate": 0.10517241379310345
+    },
+    "DoS Slowhttptest - Attempted": {
+      "rows": 3364,
+      "any_known_alert_rate": 0.005945303210463734
+    },
+    "DoS Slowloris": {
+      "rows": 3859,
+      "any_known_alert_rate": 0.021767297227260948
+    },
+    "DoS Slowloris - Attempted": {
+      "rows": 1846,
+      "any_known_alert_rate": 0.8856988082340195
+    },
+    "FTP-Patator": {
+      "rows": 3972,
+      "any_known_alert_rate": 1.0
+    },
+    "FTP-Patator - Attempted": {
+      "rows": 12,
+      "any_known_alert_rate": 1.0
+    },
+    "Heartbleed": {
+      "rows": 11,
+      "any_known_alert_rate": 1.0
+    },
+    "Infiltration": {
+      "rows": 36,
+      "any_known_alert_rate": 0.3333333333333333
+    },
+    "Infiltration - Attempted": {
+      "rows": 45,
+      "any_known_alert_rate": 0.044444444444444446
+    },
+    "Infiltration - Portscan": {
+      "rows": 71767,
+      "any_known_alert_rate": 0.7777669402371563
+    },
+    "Portscan": {
+      "rows": 159066,
+      "any_known_alert_rate": 0.0011756126387788717
+    },
+    "SSH-Patator": {
+      "rows": 2961,
+      "any_known_alert_rate": 0.9986491050320837
+    },
+    "SSH-Patator - Attempted": {
+      "rows": 27,
+      "any_known_alert_rate": 0.7037037037037037
+    },
+    "Web Attack - Brute Force": {
+      "rows": 73,
+      "any_known_alert_rate": 0.0273972602739726
+    },
+    "Web Attack - Brute Force - Attempted": {
+      "rows": 1292,
+      "any_known_alert_rate": 0.9992260061919505
+    },
+    "Web Attack - SQL Injection": {
+      "rows": 13,
+      "any_known_alert_rate": 1.0
+    },
+    "Web Attack - SQL Injection - Attempted": {
+      "rows": 5,
+      "any_known_alert_rate": 1.0
+    },
+    "Web Attack - XSS": {
+      "rows": 18,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - XSS - Attempted": {
+      "rows": 655,
+      "any_known_alert_rate": 1.0
+    }
+  },
+  "raw_ddos_auc": 0.4456957403660392,
+  "removed_paths": [
+    "flow.psh_count"
+  ],
+  "removed_context_aliases": [],
+  "thresholds": {
+    "DDoS": 1.0,
+    "PORT_SCAN": 0.85,
+    "DATA_EXFILTRATION": 1.0
+  }
+}

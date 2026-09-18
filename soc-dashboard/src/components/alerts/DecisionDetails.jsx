@@ -9,8 +9,12 @@ export default function DecisionDetails({ alert }) {
   const unavailable = Object.entries(alert.visibility || {}).filter(([, value]) => value === false).map(([key]) => key);
   return <section className="space-y-4" aria-label="V2 decision details">
     <h4 className="font-bold text-forest">{alert.decision_state} · {alert.primary_class || 'No assigned threat class'}</h4>
+    {alert.reason_codes?.includes('POLICY_NOT_VALIDATED') && <p className="rounded-lg bg-amber-50 p-3 text-xs text-amber-900">Candidate model scores are available, but the decision policy has not been validated. This result is abstaining and requires analyst review.</p>}
     <div className="flex flex-wrap gap-2">
       {Object.entries(alert.labels || {}).map(([label, value]) => <span key={label} className="rounded-full px-3 py-1 text-xs bg-forest-light">{label} {formatConfidence(value)}</span>)}
+    </div>
+    <div className="grid gap-3 sm:grid-cols-2">
+      {Object.entries(alert.label_probabilities || {}).map(([label, value]) => <ScoreBar key={label} label={`Model score: ${label}`} value={value} />)}
     </div>
     <div className="grid gap-3 sm:grid-cols-2">
       {Object.entries(alert.uncertainty || {}).map(([label, value]) => <ScoreBar key={label} label={`Uncertainty: ${label.replaceAll('_', ' ')}`} value={value} />)}
@@ -21,7 +25,7 @@ export default function DecisionDetails({ alert }) {
     <p className="text-xs">Drift: {alert.drift_status} · Profile: {alert.model_profile}</p>
     <p className="text-xs">Thresholds: {alert.threshold_version} · Routing: {alert.routing_policy_version}</p>
     <details className="text-xs"><summary className="cursor-pointer font-semibold">Models, thresholds, and routing evidence</summary>
-      <pre className="whitespace-pre-wrap break-all mt-2">{JSON.stringify({ versions: alert.model_versions, thresholds: alert.thresholds, score_presence: alert.score_presence, routes: alert.routing, reason_codes: alert.reason_codes }, null, 2)}</pre>
+      <pre className="whitespace-pre-wrap break-all mt-2">{JSON.stringify({ versions: alert.model_versions, label_probabilities: alert.label_probabilities, evidence: alert.evidence, thresholds: alert.thresholds, score_presence: alert.score_presence, routes: alert.routing, reason_codes: alert.reason_codes }, null, 2)}</pre>
     </details>
     {related.map(incident => <div key={incident.incident_id} className="border-t border-border pt-3 text-xs space-y-2">
       <h5 className="font-bold">Incident {incident.incident_id.slice(0, 12)} · {incident.status} · {incident.count} decisions</h5>

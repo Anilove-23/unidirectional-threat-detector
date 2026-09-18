@@ -52,6 +52,10 @@ class BaseStack:
 
     def outputs(self, envelopes):
         values, masks = self.preprocessor.transform(envelopes)
+        return self.outputs_transformed(values, masks)
+
+    def outputs_transformed(self, values, masks):
+        """Shared inference path for envelopes and bounded CSV batches."""
         embeddings = self.ssl.embed(values, masks)
         auxiliary = self.auxiliary(embeddings)
         scores = self.known.predict(np.column_stack((values, masks, embeddings, auxiliary)))
@@ -68,6 +72,31 @@ class CandidateBundle:
         self.calibrators, self.references, self.version = calibrators, references, version
         self.specialists = []
         self.ood_validated = False
+
+    def predict_probabilities(self, envelopes):
+        predicted = self.meta.predict(self.base.predict(envelopes))
+        return np.column_stack([self.calibrators[label].predict(predicted[:, i]) for i, label in enumerate(LABELS)])
+
+    def predict_forward_matrix(self, raw, *, visibility, event_count, duration_ms):
+        """CSV evaluation using the same frozen transforms and default context.
+
+        The caller supplies columns in base.paths order, with NaN for missing
+        measurements. This does not fit or adapt any part of the model.
+        """
+        raw = np.asarray(raw, dtype=np.float32)
+        mask = np.isfinite(raw).astype(np.float32)
+        values = np.clip(np.where(mask.astype(bool), (raw - self.base.preprocessor.mean) /
+                                  self.base.preprocessor.scale, 0), -20, 20).astype(np.float32)
+        scores, auxiliary = self.base.outputs_transformed(values, mask)
+        ordered = np.sort(scores, axis=1)[:, ::-1]
+        entropy = np.mean(-scores * np.log(np.maximum(scores, 1e-9)) -
+                          (1-scores) * np.log(np.maximum(1-scores, 1e-9)), axis=1)
+        zeros = np.zeros(len(raw))
+        context = np.column_stack((scores, np.ones_like(scores), visibility, event_count, duration_ms,
+                                   zeros, zeros, zeros, zeros, entropy, ordered[:, 0]-ordered[:, 1],
+                                   np.std(scores, axis=1), auxiliary))
+        predicted = self.meta.predict(context)
+        return np.column_stack([self.calibrators[label].predict(predicted[:, i]) for i, label in enumerate(LABELS)])
 
     def score(self, envelope, context):
         features = self.base.predict([envelope])

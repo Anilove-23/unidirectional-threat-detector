@@ -38,13 +38,54 @@ async function handleV2Message(channel, message) {
 }
 
 let redisSubscriber = null;
+let streamReader = null;
 let isConnected = false;
+
+// Replay retained decisions on startup and resume after a disconnected dashboard
+// backend. V2 uses one ordered stream reader so incident close/reopen updates
+// cannot race a second pub/sub delivery of older history.
+async function consumeStreams(client) {
+  const cursors = { 'decision.v2': '0-0', 'incident.v2': '0-0' };
+  while (client.status !== 'end') {
+    try {
+      const batches = await client.xread('BLOCK', 2000, 'COUNT', 250, 'STREAMS', ...Object.keys(cursors), ...Object.values(cursors));
+      for (const [stream, records] of batches || []) {
+        for (const [id, fields] of records) {
+          const payloadIndex = fields.indexOf('payload');
+          try {
+            if (payloadIndex < 0) throw new Error('Missing payload');
+            await handleV2Message(stream === 'decision.v2' ? 'decision.new' : 'incident.update', fields[payloadIndex + 1]);
+          } catch (error) {
+            console.warn(`[Redis Streams] Rejected ${stream}/${id}:`, error.message);
+          }
+          cursors[stream] = id;
+        }
+      }
+    } catch (error) {
+      if (client.status === 'end') break;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+}
+
+function closeSubscriber() {
+  streamReader?.disconnect();
+  redisSubscriber?.disconnect();
+  isConnected = false;
+}
 
 /**
  * Initialize Redis Subscriber listening to "alert.new" channel
  */
 function initSubscriber() {
   console.log(`[Redis Subscriber] Connecting to Redis at ${config.redisUrl}...`);
+  for (const decision of productStore.decisions.values()) {
+    if (decision.decision_state !== 'BENIGN') AlertModel.saveAlert(decisionAlert(decision));
+  }
+
+  streamReader = new Redis(config.redisUrl, { maxRetriesPerRequest: 1 });
+  streamReader.on('error', () => {});
+  consumeStreams(streamReader).catch(error => console.warn('[Redis Streams]', error.message));
 
   redisSubscriber = new Redis(config.redisUrl, {
     retryStrategy(times) {
@@ -65,10 +106,11 @@ function initSubscriber() {
     isConnected = false;
     console.warn('[Redis Subscriber] Redis error (retrying):', err.message);
   });
+  redisSubscriber.on('close', () => { isConnected = false; });
 
   // Attempt async connection
   redisSubscriber.connect().then(() => {
-    redisSubscriber.subscribe(config.alertChannel, 'decision.new', 'incident.update', (err, count) => {
+    redisSubscriber.subscribe(config.alertChannel, (err, count) => {
       if (err) {
         console.error(`[Redis Subscriber] Failed to subscribe to channel ${config.alertChannel}:`, err.message);
       } else {
@@ -79,9 +121,6 @@ function initSubscriber() {
     redisSubscriber.on('message', async (channel, message) => {
       if (channel === config.alertChannel) {
         await handleAlertMessage(message);
-      } else {
-        try { await handleV2Message(channel, message); }
-        catch (err) { console.warn('[Redis Subscriber] Rejected V2 message:', err.message); }
       }
     });
   }).catch((err) => {
@@ -129,7 +168,10 @@ async function handleAlertMessage(rawMessage) {
 function getSubscriberStatus() {
   return {
     isConnected,
-    channel: config.alertChannel
+    channel: config.alertChannel,
+    decision_stream: 'decision.v2',
+    incident_stream: 'incident.v2',
+    stream_recovery: streamReader?.status === 'ready'
   };
 }
 
@@ -138,5 +180,7 @@ module.exports = {
   handleAlertMessage,
   getSubscriberStatus,
   handleV2Message,
-  productStore
+  productStore,
+  consumeStreams,
+  closeSubscriber
 };

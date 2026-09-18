@@ -1,0 +1,48 @@
+{
+  "base_ddos_splits": [
+    {
+      "feature_index": 2,
+      "feature": "flow.pps",
+      "raw_threshold": 10.007305086684932
+    }
+  ],
+  "cohorts": {
+    "benign": {
+      "n": 1582538,
+      "raw_meta_auc_note": "see stage_metrics",
+      "pps": {
+        "n": 1582538,
+        "finite": 1296014,
+        "missing_fraction": 0.18105347233368174,
+        "p01": 0.02869402902200818,
+        "p05": 0.13599960431456565,
+        "q25": 0.9959803223609924,
+        "median": 129.92918395996094,
+        "q75": 666666.6875,
+        "iqr": 666665.6915196776,
+        "p95": 2000000.0,
+        "p99": 2000000.0
+      },
+      "pps_missing_fraction": 0.18105347233368171
+    },
+    "DDoS": {
+      "n": 95144,
+      "raw_meta_auc_note": "see stage_metrics",
+      "pps": {
+        "n": 95144,
+        "finite": 95144,
+        "missing_fraction": 0.0,
+        "p01": 0.3973964369297028,
+        "p05": 0.6343387722969055,
+        "q25": 0.8310777395963669,
+        "median": 1.2059511542320251,
+        "q75": 2.1073585152626038,
+        "iqr": 1.2762807756662369,
+        "p95": 5.997034740447997,
+        "p99": 37.88462005615212
+      },
+      "pps_missing_fraction": 0.0
+    }
+  },
+  "note": "Raw thresholds reverse the frozen z-score transform. Conditions outside +/-20 clipping support share leaves."
+}

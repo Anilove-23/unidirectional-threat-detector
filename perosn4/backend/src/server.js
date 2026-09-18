@@ -28,17 +28,21 @@ app.use('/api/alerts', alertRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/stats',  statsRoutes);
 app.use('/api/v2', require('./routes/v2'));
+app.use('/api/simulation', require('./routes/simulation').router);
 
 // Root route welcome
 app.get('/', (req, res) => {
   res.json({
     name: 'SIH26145 Unidirectional Threat Detector API',
     role: 'Person 4 Express API & Real-Time Streaming Backend',
-    version: '1.0.0',
+    version: '2.0.0',
     documentation: {
       health: '/api/health',
       alerts: '/api/alerts',
       stats: '/api/stats',
+      decisions: '/api/v2/decisions',
+      incidents: '/api/v2/incidents',
+      simulation: '/api/simulation',
       websocket: '/ws'
     }
   });
@@ -83,6 +87,12 @@ if (require.main === module) {
   }
 
   startServer();
+  for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => {
+    require('./routes/simulation').stopSimulation();
+    require('./redis/subscriber').closeSubscriber();
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(0), 2000).unref();
+  });
 }
 
 module.exports = { app, server };

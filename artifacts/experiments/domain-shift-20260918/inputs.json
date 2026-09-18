@@ -1,0 +1,49 @@
+{
+  "release_sha256": "959d7160ebe85e9d5c26d4dedecf64fedca22acacae1a05bc4744d07424d163d",
+  "external": [
+    {
+      "file": "friday.csv",
+      "sha256": "ebd499e6f23bd59f9cb81bec28178491b02b925fa5640a24215c9437d79482d0",
+      "total": 547557,
+      "invalid": 1
+    },
+    {
+      "file": "monday.csv",
+      "sha256": "51fe5dc962626efb4ae70dce0303072fb780da0932822b651202ee9c2fbc1aff",
+      "total": 371624,
+      "invalid": 8
+    },
+    {
+      "file": "thursday.csv",
+      "sha256": "78a4d11eaf473d099e30e71ddb01e0f38218e844c0a9cdd36602145d674af482",
+      "total": 362076,
+      "invalid": 4
+    },
+    {
+      "file": "tuesday.csv",
+      "sha256": "e2a0a5b631dfc6b455cc9f9a88b944110637d70a7f74171473925f76f38b6b0c",
+      "total": 322078,
+      "invalid": 6
+    },
+    {
+      "file": "wednesday.csv",
+      "sha256": "bf46c5f3c792e8817381f724511229569606918eaf07ac986d7a2592b6341bc2",
+      "total": 496641,
+      "invalid": 14
+    }
+  ],
+  "seed": 26,
+  "feature_paths": [
+    "flow.packet_count",
+    "flow.duration_s",
+    "flow.pps",
+    "flow.iat_s_mean",
+    "flow.iat_s_min",
+    "flow.iat_s_max",
+    "flow.psh_count",
+    "flow.urg_count",
+    "flow.rst_count"
+  ],
+  "test_status": "Previously inspected external development benchmark, not a fresh blinded test.",
+  "E_holdout": "All Monday excluded from E evaluation; Monday benign features used for adaptation only."
+}

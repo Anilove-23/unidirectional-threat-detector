@@ -11,8 +11,11 @@ function getRedis() {
       maxRetriesPerRequest: 1,
       enableOfflineQueue: false,
       lazyConnect: true,
+      connectTimeout: 1000,
+      commandTimeout: 1500,
     });
     _redis.connect().catch(() => {});
+    _redis.on('error', () => {});
   }
   return _redis;
 }
@@ -20,7 +23,7 @@ function getRedis() {
 /**
  * @route   GET /api/stats
  * @desc    Live pipeline throughput and health metrics published by the
- *          ML ensemble loop (live_ensemble.py) into Redis key pipeline.stats.
+ *          Agent 2 worker into Redis key pipeline.stats.
  *          Returns the last-known stats snapshot, or sensible defaults when
  *          the ML engine hasn't published yet (e.g. during startup).
  */
@@ -49,10 +52,11 @@ router.get('/', async (req, res) => {
         tracked_src_ips: 0,
         tracked_dst_ips: 0,
         throughput_window_s: 10,
-        source: 'default_no_ml_engine',
+        source: 'waiting_for_agent2',
       };
     } else {
-      stats.source = 'live_ensemble';
+      stats.source = stats.source || (Object.hasOwn(stats, 'model_profile') ? 'agent2_detection_product' : 'live_ensemble');
+      if (stats.source === 'agent2_detection_product') stats.throughput_window_s = null;
     }
 
     res.json({ status: 'success', data: stats });

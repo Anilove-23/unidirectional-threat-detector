@@ -48,6 +48,18 @@ node_modules/
 .env
 
 ingestion/dataset/CICIDS2017_improved
+.venv_linux/
+.runtime/
+artifacts/pipeline/*/simulation/
+artifacts/pipeline/*/agent2_dataset/
+artifacts/pipeline/*/cicids/predictions.csv.gz
+artifacts/experiments/**/*.npy
+artifacts/experiments/**/*.npz
+artifacts/experiments/**/simulation_v3/*.jsonl
+artifacts/experiments/**/matplotlib-cache/
+artifacts/experiments/**/bundle.joblib
+artifacts/experiments/**/policy.json
+artifacts/experiments/**/training_report.json
 # Images
 *.jpg
 *.jpeg

@@ -30,7 +30,8 @@ export const useAlertStore = create((set, get) => ({
   // --- alert ingestion -----------------------------------------------
   addAlert: (alert) =>
     set((state) => ({
-      alerts: [alert, ...state.alerts.filter(a => (a.decision_id || a.flow_id) !== (alert.decision_id || alert.flow_id))].slice(0, MAX_ALERTS_RETAINED),
+      alerts: [alert, ...state.alerts.filter(a => (a.decision_id || a.flow_id) !== (alert.decision_id || alert.flow_id))]
+        .sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp)).slice(0, MAX_ALERTS_RETAINED),
     })),
 
   setAlerts: (alerts) => set({ alerts: alerts.slice(0, MAX_ALERTS_RETAINED) }),

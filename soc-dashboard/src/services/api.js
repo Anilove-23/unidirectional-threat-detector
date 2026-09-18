@@ -3,8 +3,8 @@
  * Exposes methods to fetch paginated alerts, historical searches, single alert details, and pipeline health.
  */
 import { normalizeAlert } from '../types/alert';
+import { API_BASE as API_BASE_URL } from './config';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 /**
  * Fetch paginated list of alerts (newest first)

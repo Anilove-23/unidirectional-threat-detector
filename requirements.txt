@@ -1,0 +1,4 @@
+-r agent1_observation_dns/requirements.txt
+-r agent2_detection_product/requirements.txt
+pandas>=2.2
+scapy>=2.5

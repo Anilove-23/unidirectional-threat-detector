@@ -6,7 +6,13 @@ Cyber Threats in Unidirectional IP Traffic** (NTRO). Built by Person 5
 
 This is a **read-only visualization layer**. It has no controls to block,
 quarantine, reset, or otherwise act on the monitored network — it renders
-alerts produced upstream by the detection pipeline.
+alerts produced upstream by the detection pipeline. In live mode, its local
+simulation control starts and stops an Agent 1 observation producer; Agent 2
+processes those observations through the same worker as live traffic.
+
+The active backend is `perosn4/backend`. See its
+[Agent pipeline integration notes](../perosn4/backend/docs/agent-pipeline.md)
+for runtime endpoints, retained stream recovery, and candidate-policy behavior.
 
 ## Stack
 
@@ -28,9 +34,14 @@ All backend endpoints are environment-driven — nothing is hardcoded in source.
 
 | Variable              | Purpose                                              |
 |------------------------|-------------------------------------------------------|
-| `VITE_API_URL`         | Express backend REST base URL                        |
+| `VITE_API_URL`         | Backend origin or `/api` base (defaults to `/api`)     |
 | `VITE_WS_URL`          | WebSocket endpoint streaming standardized JSON alerts |
 | `VITE_USE_MOCK_DATA`   | `true` = run entirely on local mock data, no socket   |
+
+Vite proxies `/api` and `/ws` to localhost port 4000. When hosting the built
+dashboard, configure equivalent reverse-proxy routes or set explicit backend
+URLs before building. The dashboard refreshes retained alerts and incidents
+whenever its WebSocket reconnects.
 
 ### Switching from mock to the real backend
 

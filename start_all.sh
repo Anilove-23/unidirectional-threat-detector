@@ -1,4 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+PROJECT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+cd "$PROJECT_ROOT"
+PYTHON_EXECUTABLE="${PYTHON_EXECUTABLE:-$PROJECT_ROOT/.venv_linux/bin/python}"
+if [[ ! -x "$PYTHON_EXECUTABLE" ]]; then
+  echo 'Create the Linux environment first: bash setup_linux.sh' >&2
+  exit 1
+fi
+if [[ "${1:-}" == "--stop" ]]; then exec "$PYTHON_EXECUTABLE" pipeline_runtime.py stop; fi
+if [[ "${1:-}" == "--all" ]]; then shift; fi
+exec "$PYTHON_EXECUTABLE" pipeline_runtime.py start "$@"
 # SIH26145 - Threat Detection System Linux Launcher
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

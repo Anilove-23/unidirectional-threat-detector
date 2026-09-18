@@ -9,6 +9,7 @@ import EntropyChart from '../components/dashboard/EntropyChart';
 import DemoControl from '../components/dashboard/DemoControl';
 import LiveAlertFeed from '../components/alerts/LiveAlertFeed';
 import IncidentFeed from '../components/dashboard/IncidentFeed';
+import PipelineControl from '../components/dashboard/PipelineControl';
 import { useLiveDemo } from '../hooks/useLiveDemo';
 import { exportAlertsToJson } from '../utils/exportUtils';
 
@@ -79,6 +80,7 @@ export default function Dashboard() {
       </div>
 
       {USE_MOCK && <DemoControl demo={demo} onStart={start} onStop={stop} />}
+      {!USE_MOCK && <PipelineControl />}
 
       {/* Summary Stats Row */}
       <SummaryStats stats={stats} />

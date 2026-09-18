@@ -1,0 +1,45 @@
+{
+  "metrics": {
+    "additive": {
+      "benign_fpr": 0.046615626291438186,
+      "ddos_f1": 0.0,
+      "ddos_auc": 0.4088608558173978,
+      "scan_f1": 0.0,
+      "scan_recall": 0.0,
+      "scan_fpr_all_non_scan": 0.0
+    },
+    "additive_frozen_scan": {
+      "benign_fpr": 0.08931539084685486,
+      "ddos_f1": 0.0,
+      "ddos_auc": 0.4088608558173978,
+      "scan_f1": 0.8507829927889069,
+      "scan_recall": 0.9946324832238025,
+      "scan_fpr_all_non_scan": 0.04242500441386542
+    },
+    "final_flows_aligned_visibility": {
+      "benign_fpr": 0.008907211074868344,
+      "ddos_f1": 0.0,
+      "ddos_auc": 0.4110609093480194,
+      "scan_f1": 0.8358976455789365,
+      "scan_recall": 0.7527996430319756,
+      "scan_fpr_all_non_scan": 0.005974501233207249
+    },
+    "final_flows_aligned_visibility_frozen_scan": {
+      "benign_fpr": 0.04523303705819386,
+      "ddos_f1": 0.0,
+      "ddos_auc": 0.4110609093480194,
+      "scan_f1": 0.8507829927889069,
+      "scan_recall": 0.9946324832238025,
+      "scan_fpr_all_non_scan": 0.04242500441386542
+    }
+  },
+  "simulation": {
+    "packet_count": 33122,
+    "rows": 1737,
+    "executed_configurations": 60,
+    "cartesian_plan_size": 1152,
+    "full_cartesian_executed": false
+  },
+  "attack_labels_used_for_training": "synthetic only",
+  "limits": "V3 broad support was motivated by A\u2013C external diagnostics. CICIDS is now a development benchmark; a new dataset is required for an unbiased transfer claim. Existing architecture unchanged; window coordination cannot be evaluated from the nine-column adapter."
+}

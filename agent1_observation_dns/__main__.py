@@ -22,6 +22,13 @@ def main():
     scenario.add_argument("--seed", type=int, default=42)
     scenario.add_argument("--family", default="BENIGN")
     scenario.add_argument("--profile", default="dns")
+    scenario_v2 = commands.add_parser("scenario-v2")
+    scenario_v2.add_argument("output")
+    scenario_v2.add_argument("--family", default="benign_mixed")
+    scenario_v2.add_argument("--variant", default="default")
+    scenario_v2.add_argument("--seed", type=int, default=42)
+    scenario_v2.add_argument("--environment", default="environment_A")
+    scenario_v2.add_argument("--split", choices=("train", "validation", "test"), default="train")
     train = commands.add_parser("train")
     train.add_argument("dataset", help="JSONL with explicit partitions and provenance")
     train.add_argument("output")
@@ -56,6 +63,12 @@ def main():
     elif args.command == "scenario":
         from agent1_observation_dns.simulation.scenarios import plan_scenario, release_dataset
         release_dataset([plan_scenario(args.family, args.seed, profile=args.profile)], args.output)
+    elif args.command == "scenario-v2":
+        from agent1_observation_dns.simulation.registry import training_scenario
+        from agent1_observation_dns.simulation.v2_generator import release_scenario
+        spec = training_scenario(args.family, seed=args.seed, variant=args.variant, environment=args.environment,
+                                 split_assignment=args.split)
+        print(json.dumps(release_scenario(spec, args.output), indent=2))
     else:
         from agent1_observation_dns.models.training import train_neural, train_tabular
         with Path(args.dataset).open(encoding="utf-8") as stream:

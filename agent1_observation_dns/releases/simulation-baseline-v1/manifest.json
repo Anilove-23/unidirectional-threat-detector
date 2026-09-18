@@ -1,0 +1,3453 @@
+{
+  "schema_version": "1.0.0",
+  "scenario_id": "0e32b4ee1511f30203fb5c0b",
+  "generator": "offline-metadata-v1",
+  "family": "DGA",
+  "seed": 145,
+  "start": "2026-01-01T00:00:00Z",
+  "end": "2026-01-01T00:00:03.100000Z",
+  "source": "192.0.2.10",
+  "destination": "198.51.100.53",
+  "software_versions": {
+    "agent1": "0.1.0",
+    "python": "3.14.6",
+    "dpkt": "1.9.8"
+  },
+  "attack_parameters": {
+    "packets": 32,
+    "interval_s": 0.1,
+    "profile": "dns"
+  },
+  "expected_labels": [
+    "DGA"
+  ],
+  "split_assignment": "train",
+  "split_group": "offline-metadata-v1:145",
+  "tool": "offline-fixture",
+  "hard_negative_tags": [],
+  "feature_snapshots": [
+    {
+      "schema_version": "2.0.0",
+      "event_id": "b60bc579f29f224ec362c544f4515eb1:1:partial",
+      "sensor_id": "agent1-offline",
+      "event_time": "2026-01-01T00:00:00Z",
+      "entity_keys": {
+        "flow_id": "b60bc579f29f224ec362c544f4515eb1",
+        "source": "192.0.2.10",
+        "destination": "198.51.100.53"
+      },
+      "protocol": "DNS",
+      "features": {
+        "flow": {
+          "duration_s": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "packet_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "byte_count": {
+            "value": 97,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "pps": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "ZERO_OBSERVATION_DURATION"
+          },
+          "bps": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "ZERO_OBSERVATION_DURATION"
+          },
+          "burst_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "idle_s": {
+            "value": 0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "active_s": {
+            "value": 0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_min": {
+            "value": 97,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_max": {
+            "value": 97,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_mean": {
+            "value": 97.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_std": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_cv": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_skew": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "iat_s_min": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "iat_s_max": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "iat_s_mean": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "iat_s_std": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "iat_s_cv": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "iat_s_skew": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "ttl_min": {
+            "value": 64,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_max": {
+            "value": 64,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_mean": {
+            "value": 64.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_std": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_cv": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_skew": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "fin_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "fin_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "syn_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "syn_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "rst_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "rst_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "psh_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "psh_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "ack_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "ack_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "urg_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "urg_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "ece_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "ece_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "cwr_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "cwr_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          }
+        },
+        "window": {
+          "source.1s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.1s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.1s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.1s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.1s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.1s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.5s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.5s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.5s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.5s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.5s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.30s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.30s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.30s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.30s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.30s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.60s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.60s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.60s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.60s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.60s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.300s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.300s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.300s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.300s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.300s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.900s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.900s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.900s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.900s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.900s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.3600s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.3600s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.3600s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.3600s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.3600s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.1s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.1s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.1s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.1s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.1s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.5s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.5s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.5s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.5s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.5s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.30s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.30s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.30s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.30s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.30s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.60s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.60s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.60s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.60s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.60s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.300s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.300s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.300s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.300s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.300s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.900s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.900s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.900s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.900s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.900s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.connection_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.3600s.packet_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.3600s.byte_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.3600s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.unique_domains": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.3600s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.3600s.new_destination_ratio": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.destination_persistence": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.retained_event_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          }
+        },
+        "dns": {
+          "query_name": {
+            "value": "536aal2y76qse3clpvjoglsb.example.test",
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "parent_domain": {
+            "value": "example.test",
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "query_length": {
+            "value": 37,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "entropy": {
+            "value": 4.249729716863357,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "max_label_length": {
+            "value": 24,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "digit_ratio": {
+            "value": 0.1891891891891892,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "is_response": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "query_type": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "query_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "response_count": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "DNS_RESPONSE_NOT_VISIBLE"
+          },
+          "nxdomain_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "DNS_RESPONSE_NOT_VISIBLE"
+          },
+          "subdomain_churn": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "txt_ratio": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "aaaa_ratio": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "query_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_HISTORY"
+          },
+          "iat_mean_s": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_HISTORY"
+          },
+          "packet_size_mean": {
+            "value": 97.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "packet_size_std": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "history_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "sequence": {
+            "value": [
+              [
+                37,
+                4.249729716863357,
+                1,
+                97,
+                null,
+                null
+              ]
+            ],
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "sequence_availability": {
+            "value": [
+              [
+                true,
+                true,
+                true,
+                true,
+                false,
+                false
+              ]
+            ],
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "sequence_reason_codes": {
+            "value": [
+              [
+                "OBSERVED",
+                "OBSERVED",
+                "OBSERVED",
+                "OBSERVED",
+                "FIRST_EVENT",
+                "DNS_RESPONSE_NOT_VISIBLE"
+              ]
+            ],
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "relation_edge_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "relation_sufficient": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          }
+        },
+        "tls": {
+          "hello_type": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "legacy_version": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "cipher_suites": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "extension_types": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "sni": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "SNI_NOT_OBSERVED"
+          },
+          "ja4": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "FINGERPRINT_NOT_IMPLEMENTED"
+          },
+          "ja4s": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "FINGERPRINT_NOT_IMPLEMENTED"
+          }
+        }
+      },
+      "visibility": {
+        "direction_reconstructable": true,
+        "dns_response_visible": false,
+        "nxdomain_ratio_available": false,
+        "tls_handshake_visible": false,
+        "ja4_available": false,
+        "ja4s_available": false,
+        "sni_available": false,
+        "flow_completion_visible": false,
+        "feature_availability_ratio": 0.6585365853658537,
+        "reason_codes": {
+          "direction_reconstructable": "OBSERVED",
+          "dns_response_visible": "NOT_OBSERVED",
+          "nxdomain_ratio_available": "NOT_OBSERVED",
+          "tls_handshake_visible": "NOT_OBSERVED",
+          "ja4_available": "NOT_OBSERVED",
+          "ja4s_available": "NOT_OBSERVED",
+          "sni_available": "NOT_OBSERVED",
+          "flow_completion_visible": "NOT_OBSERVED"
+        }
+      },
+      "history": {
+        "event_count": 1,
+        "duration_ms": 0.0,
+        "window_complete": false
+      },
+      "route_hints": {
+        "dns": true,
+        "tls": false,
+        "flow": true
+      },
+      "feature_schema_version": "2.0.0",
+      "snapshot_kind": "partial",
+      "reason_codes": [
+        "PACKET_UPDATE"
+      ]
+    },
+    {
+      "schema_version": "2.0.0",
+      "event_id": "b60bc579f29f224ec362c544f4515eb1:2:partial",
+      "sensor_id": "agent1-offline",
+      "event_time": "2026-01-01T00:00:00.100000Z",
+      "entity_keys": {
+        "flow_id": "b60bc579f29f224ec362c544f4515eb1",
+        "source": "192.0.2.10",
+        "destination": "198.51.100.53"
+      },
+      "protocol": "DNS",
+      "features": {
+        "flow": {
+          "duration_s": {
+            "value": 0.1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "packet_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "byte_count": {
+            "value": 194,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "pps": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "bps": {
+            "value": 15520.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "burst_count": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "idle_s": {
+            "value": 0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "active_s": {
+            "value": 0.1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_min": {
+            "value": 97,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_max": {
+            "value": 97,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_mean": {
+            "value": 97.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_std": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_cv": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "size_skew": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "iat_s_min": {
+            "value": 0.1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "iat_s_max": {
+            "value": 0.1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "iat_s_mean": {
+            "value": 0.1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "iat_s_std": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "iat_s_cv": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "iat_s_skew": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "ttl_min": {
+            "value": 64,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_max": {
+            "value": 64,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_mean": {
+            "value": 64.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_std": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_cv": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "ttl_skew": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_VARIATION_OR_SAMPLES"
+          },
+          "fin_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "fin_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "syn_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "syn_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "rst_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "rst_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "psh_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "psh_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "ack_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "ack_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "urg_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "urg_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "ece_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "ece_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "cwr_count": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "cwr_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          }
+        },
+        "window": {
+          "source.1s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.1s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.1s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.1s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.5s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.5s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.5s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.30s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.30s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.30s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.60s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.60s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.60s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.300s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.300s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.300s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.900s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.900s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.900s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.3600s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "source.3600s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "source.3600s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.1s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.1s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.1s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.5s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.5s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.5s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.30s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.30s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.30s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.60s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.60s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.60s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.300s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.300s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.300s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.900s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.900s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.900s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.connection_rate": {
+            "value": 10.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.packet_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.byte_rate": {
+            "value": 1940.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.unique_destinations": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.unique_ports": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.unique_domains": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.destination_entropy": {
+            "value": -0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.destination_concentration": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.syn_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.3600s.rst_rate": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "INSUFFICIENT_OBSERVATION"
+          },
+          "destination.3600s.new_destination_ratio": {
+            "value": 0.5,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.destination_persistence": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.complete": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "destination.3600s.retained_event_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          }
+        },
+        "dns": {
+          "query_name": {
+            "value": "649uhpvqtlzmyfkhiv5vs1oi.example.test",
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "parent_domain": {
+            "value": "example.test",
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "query_length": {
+            "value": 37,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "entropy": {
+            "value": 4.4455435681562365,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "max_label_length": {
+            "value": 24,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "digit_ratio": {
+            "value": 0.13513513513513514,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "is_response": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "query_type": {
+            "value": 1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "query_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "response_count": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "DNS_RESPONSE_NOT_VISIBLE"
+          },
+          "nxdomain_ratio": {
+            "value": null,
+            "available": false,
+            "applicable": true,
+            "reason": "DNS_RESPONSE_NOT_VISIBLE"
+          },
+          "subdomain_churn": {
+            "value": 1.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "txt_ratio": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "aaaa_ratio": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "query_rate": {
+            "value": 20.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "iat_mean_s": {
+            "value": 0.1,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "packet_size_mean": {
+            "value": 97.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "packet_size_std": {
+            "value": 0.0,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "history_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "sequence": {
+            "value": [
+              [
+                37,
+                4.249729716863357,
+                1,
+                97,
+                null,
+                null
+              ],
+              [
+                37,
+                4.4455435681562365,
+                1,
+                97,
+                0.1,
+                null
+              ]
+            ],
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "sequence_availability": {
+            "value": [
+              [
+                true,
+                true,
+                true,
+                true,
+                false,
+                false
+              ],
+              [
+                true,
+                true,
+                true,
+                true,
+                true,
+                false
+              ]
+            ],
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "sequence_reason_codes": {
+            "value": [
+              [
+                "OBSERVED",
+                "OBSERVED",
+                "OBSERVED",
+                "OBSERVED",
+                "FIRST_EVENT",
+                "DNS_RESPONSE_NOT_VISIBLE"
+              ],
+              [
+                "OBSERVED",
+                "OBSERVED",
+                "OBSERVED",
+                "OBSERVED",
+                "OBSERVED",
+                "DNS_RESPONSE_NOT_VISIBLE"
+              ]
+            ],
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "relation_edge_count": {
+            "value": 2,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          },
+          "relation_sufficient": {
+            "value": false,
+            "available": true,
+            "applicable": true,
+            "reason": "OBSERVED"
+          }
+        },
+        "tls": {
+          "hello_type": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "legacy_version": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "cipher_suites": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "extension_types": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "NOT_TCP"
+          },
+          "sni": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "SNI_NOT_OBSERVED"
+          },
+          "ja4": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "FINGERPRINT_NOT_IMPLEMENTED"
+          },
+          "ja4s": {
+            "value": null,
+            "available": false,
+            "applicable": false,
+            "reason": "FINGERPRINT_NOT_IMPLEMENTED"
+          }
+        }
+      },
+      "visibility": {
+        "direction_reconstructable": true,
+        "dns_response_visible": false,
+        "nxdomain_ratio_available": false,
+        "tls_handshake_visible": false,
+        "ja4_available": false,
+        "ja4s_available": false,
+        "sni_available": false,
+        "flow_completion_visible": false,
+        "feature_availability_ratio": 0.8658536585365854,
+        "reason_codes": {
+          "direction_reconstructable": "OBSERVED",
+          "dns_response_visible": "NOT_OBSERVED",
+          "nxdomain_ratio_available": "NOT_OBSERVED",
+          "tls_handshake_visible": "NOT_OBSERVED",
+          "ja4_available": "NOT_OBSERVED",
+          "ja4s_available": "NOT_OBSERVED",
+          "sni_available": "NOT_OBSERVED",
+          "flow_completion_visible": "NOT_OBSERVED"
+        }
+      },
+      "history": {
+        "event_count": 2,
+        "duration_ms": 100.0,
+        "window_complete": false
+      },
+      "route_hints": {
+        "dns": true,
+        "tls": false,
+        "flow": true
+      },
+      "feature_schema_version": "2.0.0",
+      "snapshot_kind": "partial",
+      "reason_codes": [
+        "PACKET_UPDATE"
+      ]
+    }
+  ],
+  "synthetic": true
+}

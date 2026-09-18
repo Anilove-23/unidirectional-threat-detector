@@ -1,0 +1,48 @@
+{
+  "architecture": "dga_context_xgb",
+  "trained": true,
+  "model_version": "2.0.0-sim-20260918",
+  "feature_names": [
+    "length",
+    "entropy",
+    "digit_ratio",
+    "label_count",
+    "max_label_length",
+    "hyphen_ratio",
+    "query_count",
+    "response_count",
+    "nxdomain_ratio",
+    "subdomain_churn",
+    "txt_ratio",
+    "aaaa_ratio",
+    "query_rate",
+    "iat_mean_s",
+    "packet_size_mean",
+    "packet_size_std",
+    "query_count_available",
+    "response_count_available",
+    "nxdomain_ratio_available",
+    "subdomain_churn_available",
+    "txt_ratio_available",
+    "aaaa_ratio_available",
+    "query_rate_available",
+    "iat_mean_s_available",
+    "packet_size_mean_available",
+    "packet_size_std_available"
+  ],
+  "seed": 26,
+  "train_rows": 328,
+  "preprocessing_version": "1.0.0",
+  "evaluation": {
+    "validation": {
+      "count": 107,
+      "log_loss": 0.006118876764363645,
+      "brier": 3.965657295041932e-05
+    },
+    "test": {
+      "count": 107,
+      "log_loss": 0.006118876764363645,
+      "brier": 3.965657295041932e-05
+    }
+  }
+}

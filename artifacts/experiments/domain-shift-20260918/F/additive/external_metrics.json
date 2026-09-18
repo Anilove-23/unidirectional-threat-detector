@@ -1,0 +1,162 @@
+{
+  "rows": 2099943,
+  "per_label": {
+    "DDoS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.036839104568587674,
+      "fnr": 1.0,
+      "pr_auc": 0.05122062729413112,
+      "roc_auc": 0.4088608558173978,
+      "mcc": -0.04159260134510646,
+      "balanced_accuracy": 0.4815804477157062,
+      "ece": 0.08462352735806933,
+      "brier": 0.0810181200504303
+    },
+    "PORT_SCAN": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.0,
+      "fnr": 1.0,
+      "pr_auc": 0.10992345982724293,
+      "roc_auc": 0.5,
+      "mcc": 0.0,
+      "balanced_accuracy": 0.5,
+      "ece": 0.10992345982724293,
+      "brier": 0.10992345958948135
+    },
+    "DATA_EXFILTRATION": {
+      "status": "not_measurable",
+      "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+    }
+  },
+  "binary_any_attack": {
+    "tp": 84,
+    "fp": 73771,
+    "fn": 517321,
+    "tn": 1508767,
+    "precision": 0.0011373637533003858,
+    "recall": 0.00016234864371237232,
+    "f1": 0.00028413895748063457,
+    "accuracy": 0.7185199788756171,
+    "fpr": 0.046615626291438186,
+    "definition": "any of the three known heads passes its simulation-selected threshold"
+  },
+  "by_dataset_label": {
+    "BENIGN": {
+      "rows": 1582538,
+      "any_known_alert_rate": 0.046615626291438186
+    },
+    "Botnet": {
+      "rows": 736,
+      "any_known_alert_rate": 0.0
+    },
+    "Botnet - Attempted": {
+      "rows": 4067,
+      "any_known_alert_rate": 0.0
+    },
+    "DDoS": {
+      "rows": 95144,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS GoldenEye": {
+      "rows": 7567,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS GoldenEye - Attempted": {
+      "rows": 80,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Hulk": {
+      "rows": 158468,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Hulk - Attempted": {
+      "rows": 581,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Slowhttptest": {
+      "rows": 1740,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Slowhttptest - Attempted": {
+      "rows": 3364,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Slowloris": {
+      "rows": 3859,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Slowloris - Attempted": {
+      "rows": 1846,
+      "any_known_alert_rate": 0.0
+    },
+    "FTP-Patator": {
+      "rows": 3972,
+      "any_known_alert_rate": 0.0
+    },
+    "FTP-Patator - Attempted": {
+      "rows": 12,
+      "any_known_alert_rate": 0.0
+    },
+    "Heartbleed": {
+      "rows": 11,
+      "any_known_alert_rate": 0.0
+    },
+    "Infiltration": {
+      "rows": 36,
+      "any_known_alert_rate": 0.0
+    },
+    "Infiltration - Attempted": {
+      "rows": 45,
+      "any_known_alert_rate": 0.0
+    },
+    "Infiltration - Portscan": {
+      "rows": 71767,
+      "any_known_alert_rate": 0.001058982540722059
+    },
+    "Portscan": {
+      "rows": 159066,
+      "any_known_alert_rate": 5.029358882476456e-05
+    },
+    "SSH-Patator": {
+      "rows": 2961,
+      "any_known_alert_rate": 0.0
+    },
+    "SSH-Patator - Attempted": {
+      "rows": 27,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - Brute Force": {
+      "rows": 73,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - Brute Force - Attempted": {
+      "rows": 1292,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - SQL Injection": {
+      "rows": 13,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - SQL Injection - Attempted": {
+      "rows": 5,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - XSS": {
+      "rows": 18,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - XSS - Attempted": {
+      "rows": 655,
+      "any_known_alert_rate": 0.0
+    }
+  },
+  "training_counts": {
+    "train": 2903,
+    "validation": 974,
+    "test": 965
+  }
+}

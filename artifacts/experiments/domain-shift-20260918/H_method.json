@@ -1,0 +1,7 @@
+{
+  "populations": "simulation test TP/TN and CICIDS DDoS FN/benign TN; V2 and two V3 bundles",
+  "features": "raw common forward features; KS finite values only, missingness retained in each population",
+  "shap": "exact base DDoS XGBoost TreeSHAP log-odds with additivity available from booster; excludes meta attribution",
+  "orientation": "auc_inverted is diagnostic only; no production score was flipped",
+  "external": "CICIDS is a development benchmark after V3 was motivated by it"
+}

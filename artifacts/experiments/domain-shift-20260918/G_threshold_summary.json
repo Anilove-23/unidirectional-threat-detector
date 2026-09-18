@@ -1,0 +1,28 @@
+{
+  "best_f1_by_variant": [
+    {
+      "variant": "D_all_timing",
+      "threshold": 0.9852607846260071,
+      "ddos_f1": 0.5406462357859675,
+      "ddos_precision": 0.37051291540226483,
+      "ddos_recall": 0.9996846884722106,
+      "ddos_fpr_non_ddos": 0.08060409048488153,
+      "benign_fpr": 0.01203888942951133,
+      "scan_fpr_non_scan": 0.0,
+      "score_99_9": 0.9955434203147888
+    },
+    {
+      "variant": "V2",
+      "threshold": 0.0,
+      "ddos_f1": 0.08668813582331816,
+      "ddos_precision": 0.04530789645242752,
+      "ddos_recall": 1.0,
+      "ddos_fpr_non_ddos": 1.0,
+      "benign_fpr": 1.0,
+      "scan_fpr_non_scan": 0.0,
+      "score_99_9": 0.9953634738922119
+    }
+  ],
+  "thresholds_meeting_1pct_fpr_85pct_recall": [],
+  "note": "thresholds are diagnostic selections on the external benchmark and must not be used to claim an approved release"
+}

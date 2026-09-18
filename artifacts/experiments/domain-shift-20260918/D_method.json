@@ -1,0 +1,8 @@
+{
+  "training": "whole unchanged V2 stack retrained, 8 epochs, 60 trees, 3 group OOF folds, same simulation partitions",
+  "thresholds": "reselected only on unchanged simulation validation, 1% FPR/85% recall gates; failed gates remain reported",
+  "external": "all 2,099,943 valid rows each variant",
+  "protocol": "no numeric protocol in V2; remove all three flag values/masks and fix visibility context to 1",
+  "alias_control": "duration and packet_count also removed from meta history context; timing group removes duration/pps/all IAT",
+  "interpretation": "retraining/OOF/feature interaction experiment; not inference-time zeroing"
+}

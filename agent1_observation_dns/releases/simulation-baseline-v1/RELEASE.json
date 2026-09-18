@@ -1,0 +1,30 @@
+{
+  "release_id": "simulation-baseline-v1",
+  "status": "immutable-baseline-definition",
+  "simulator_version": "offline-metadata-v1",
+  "git_commit": "3d0eb259574681378d33a6c18ec12748d714b0fa",
+  "feature_schema_version": "2.0.0",
+  "observation_schema_version": "2.0.0",
+  "scenario": {
+    "family": "DGA",
+    "profile": "dns",
+    "seed": 145,
+    "packets": 32,
+    "interval_s": 0.1,
+    "expected_pcap_bytes": 3640,
+    "expected_observations": 33,
+    "pcap_file": "capture.pcap",
+    "pcap_sha256": "d210fdcc08911f58723ece0f6c59da24d0d78508646b5759778b989d3927ae7e",
+    "observations_file": "observations.jsonl",
+    "observations_sha256": "4f9c99e5b7d7a869effcccea9529b28100604df7e8283edb6cbf382075cf32c1",
+    "manifest_file": "manifest.json"
+  },
+  "determinism": {
+    "replay_observation_count": 33,
+    "replay_observations_equal": true,
+    "observation_sha256": "4f9c99e5b7d7a869effcccea9529b28100604df7e8283edb6cbf382075cf32c1"
+  },
+  "test_command": ".venv/Scripts/python.exe -m pytest agent1_observation_dns/tests -q",
+  "agent1_tests_passed": 58,
+  "notes": "Regenerate with the scenario CLI; this definition remains immutable unless the schema major version changes."
+}

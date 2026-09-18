@@ -1,0 +1,26 @@
+{
+  "base": {
+    "benign_fpr": 0.0,
+    "ddos_f1": 0.0,
+    "ddos_auc": 0.258978217469381,
+    "scan_f1": 0.0,
+    "scan_recall": 0.0,
+    "scan_fpr_all_non_scan": 0.0
+  },
+  "meta_raw": {
+    "benign_fpr": 0.0,
+    "ddos_f1": 0.0,
+    "ddos_auc": 0.4137724644625253,
+    "scan_f1": 0.0,
+    "scan_recall": 0.0,
+    "scan_fpr_all_non_scan": 0.0
+  },
+  "calibrated": {
+    "benign_fpr": 0.7019913581853958,
+    "ddos_f1": 0.004298257814708297,
+    "ddos_auc": 0.20014780583766434,
+    "scan_f1": 0.8507829927889069,
+    "scan_recall": 0.9946324832238025,
+    "scan_fpr_all_non_scan": 0.04242500441386542
+  }
+}

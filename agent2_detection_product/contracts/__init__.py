@@ -91,7 +91,17 @@ def feature(envelope, path):
     value = envelope["features"].get(group, {}).get(key)
     masks = envelope.get("feature_availability", {})
     visibility = envelope["visibility"]
-    available = masks.get(path, True) and visibility.get(f"{key}_available", True)
+    # Agent 1 deliberately emits Measurement wrappers.  Unwrap them here at
+    # the consumer boundary while retaining availability/applicability/reason
+    # metadata for adapters and diagnostics.  An observed zero remains present.
+    measurement = value if isinstance(value, dict) and "value" in value else None
+    if measurement is not None:
+        applicable = bool(measurement.get("applicable", True))
+        available = bool(measurement.get("available", measurement.get("value") is not None)) and applicable
+        value = measurement.get("value")
+    else:
+        available = masks.get(path, True)
+    available = available and masks.get(path, True) and visibility.get(f"{key}_available", True)
     if key in {"nxdomain_ratio", "response_count", "rcode"}:
         available = available and visibility.get("dns_response_visible", False)
     if key in {"ja4", "ja4s", "sni"}:
