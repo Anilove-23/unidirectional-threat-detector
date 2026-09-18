@@ -1,0 +1,857 @@
+{
+  "status": "candidate",
+  "simulation": {
+    "release_id": "simulation",
+    "simulation_version": "2.0.0",
+    "feature_version": "2.0.0",
+    "observation_schema": "2.0.0",
+    "scenario_count": 30,
+    "pcap_count": 30,
+    "observation_count": 12750,
+    "seed_policy": "explicit ScenarioSpec seed",
+    "train_groups": [
+      "benign_mixed:train_run0",
+      "benign_mixed:train_run1",
+      "benign_mixed:train_run2",
+      "ddos:train_run0",
+      "ddos:train_run1",
+      "ddos:train_run2",
+      "dga:train_run0",
+      "dga:train_run1",
+      "dga:train_run2",
+      "dns_tunnel:train_run0",
+      "dns_tunnel:train_run1",
+      "dns_tunnel:train_run2",
+      "exfiltration:train_run0",
+      "exfiltration:train_run1",
+      "exfiltration:train_run2",
+      "port_scan:train_run0",
+      "port_scan:train_run1",
+      "port_scan:train_run2"
+    ],
+    "val_groups": [
+      "benign_mixed:validation_run0",
+      "ddos:validation_run0",
+      "dga:validation_run0",
+      "dns_tunnel:validation_run0",
+      "exfiltration:validation_run0",
+      "port_scan:validation_run0"
+    ],
+    "test_groups": [
+      "benign_mixed:test_run0",
+      "ddos:test_run0",
+      "dga:test_run0",
+      "dns_tunnel:test_run0",
+      "exfiltration:test_run0",
+      "port_scan:test_run0"
+    ],
+    "index_sha256": "18fbedd9d39bbf8562a201acf1f6024fc27e1812671692d2e0ea7eaa22d2f058",
+    "checksums_sha256": "289f92e46d9e2ca4da696db349cb5df5b5426803a979926a494a3bea16b3af33",
+    "created_at": "2026-09-17T21:17:13.538858Z",
+    "training_started": false
+  },
+  "agent1": {
+    "dga_context_xgb": {
+      "architecture": "dga_context_xgb",
+      "trained": true,
+      "model_version": "2.0.0-sim-20260918",
+      "feature_names": [
+        "length",
+        "entropy",
+        "digit_ratio",
+        "label_count",
+        "max_label_length",
+        "hyphen_ratio",
+        "query_count",
+        "response_count",
+        "nxdomain_ratio",
+        "subdomain_churn",
+        "txt_ratio",
+        "aaaa_ratio",
+        "query_rate",
+        "iat_mean_s",
+        "packet_size_mean",
+        "packet_size_std",
+        "query_count_available",
+        "response_count_available",
+        "nxdomain_ratio_available",
+        "subdomain_churn_available",
+        "txt_ratio_available",
+        "aaaa_ratio_available",
+        "query_rate_available",
+        "iat_mean_s_available",
+        "packet_size_mean_available",
+        "packet_size_std_available"
+      ],
+      "seed": 26,
+      "train_rows": 328,
+      "preprocessing_version": "1.0.0",
+      "evaluation": {
+        "validation": {
+          "count": 107,
+          "log_loss": 0.006118876764363645,
+          "brier": 3.965657295041932e-05
+        },
+        "test": {
+          "count": 107,
+          "log_loss": 0.006118876764363645,
+          "brier": 3.965657295041932e-05
+        }
+      }
+    },
+    "dga_char_attention": {
+      "architecture": "dga_char_attention",
+      "trained": true,
+      "model_version": "2.0.0-sim-20260918",
+      "preprocessing_version": "1.0.0",
+      "seed": 26,
+      "train_rows": 328,
+      "epochs": 8,
+      "evaluation": {
+        "validation": {
+          "count": 107,
+          "log_loss": 0.5038192462488936,
+          "brier": 0.15198476096562413
+        },
+        "test": {
+          "count": 107,
+          "log_loss": 0.5737772835981942,
+          "brier": 0.1993895015764673
+        }
+      }
+    },
+    "dns_tunnel_fast_gbdt": {
+      "architecture": "dns_tunnel_fast_gbdt",
+      "trained": true,
+      "model_version": "2.0.0-sim-20260918",
+      "feature_names": [
+        "length",
+        "entropy",
+        "digit_ratio",
+        "label_count",
+        "max_label_length",
+        "hyphen_ratio",
+        "query_count",
+        "response_count",
+        "nxdomain_ratio",
+        "subdomain_churn",
+        "txt_ratio",
+        "aaaa_ratio",
+        "query_rate",
+        "iat_mean_s",
+        "packet_size_mean",
+        "packet_size_std",
+        "query_count_available",
+        "response_count_available",
+        "nxdomain_ratio_available",
+        "subdomain_churn_available",
+        "txt_ratio_available",
+        "aaaa_ratio_available",
+        "query_rate_available",
+        "iat_mean_s_available",
+        "packet_size_mean_available",
+        "packet_size_std_available"
+      ],
+      "seed": 26,
+      "train_rows": 328,
+      "preprocessing_version": "1.0.0",
+      "evaluation": {
+        "validation": {
+          "count": 107,
+          "log_loss": 0.006118876764363645,
+          "brier": 3.965657295041932e-05
+        },
+        "test": {
+          "count": 107,
+          "log_loss": 0.006118876764363645,
+          "brier": 3.965657295041932e-05
+        }
+      }
+    },
+    "dns_tunnel_bytecnn": {
+      "architecture": "dns_tunnel_bytecnn",
+      "trained": true,
+      "model_version": "2.0.0-sim-20260918",
+      "preprocessing_version": "1.0.0",
+      "seed": 26,
+      "train_rows": 328,
+      "epochs": 8,
+      "evaluation": {
+        "validation": {
+          "count": 107,
+          "log_loss": 0.3820622328612702,
+          "brier": 0.11312039535552856
+        },
+        "test": {
+          "count": 107,
+          "log_loss": 0.3875357193597943,
+          "brier": 0.11471347422629241
+        }
+      }
+    },
+    "dns_tunnel_sequence": {
+      "architecture": "dns_tunnel_sequence",
+      "trained": true,
+      "model_version": "2.0.0-sim-20260918",
+      "preprocessing_version": "1.0.0",
+      "seed": 26,
+      "train_rows": 328,
+      "epochs": 8,
+      "evaluation": {
+        "validation": {
+          "count": 107,
+          "log_loss": 0.6187612605799234,
+          "brier": 0.21380714815947577
+        },
+        "test": {
+          "count": 107,
+          "log_loss": 0.6166112332787942,
+          "brier": 0.21282240882584247
+        }
+      }
+    }
+  },
+  "agent2_synthetic": {
+    "DDoS": {
+      "precision": 1.0,
+      "recall": 0.9944444444444445,
+      "f1": 0.9972144846796658,
+      "fpr": 0.0,
+      "fnr": 0.005555555555555556,
+      "pr_auc": 0.9961597103106538,
+      "roc_auc": 0.9974558080808081,
+      "mcc": 0.9960870787134749,
+      "balanced_accuracy": 0.9972222222222222,
+      "ece": 1.0897790367204378e-05,
+      "brier": 0.001609246015786423
+    },
+    "PORT_SCAN": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "fpr": 0.0,
+      "fnr": 0.0,
+      "pr_auc": 1.0,
+      "roc_auc": 1.0,
+      "mcc": 1.0,
+      "balanced_accuracy": 1.0,
+      "ece": 0.0,
+      "brier": 0.0
+    },
+    "DATA_EXFILTRATION": {
+      "precision": 1.0,
+      "recall": 0.9574468085106383,
+      "f1": 0.9782608695652174,
+      "fpr": 0.0,
+      "fnr": 0.0425531914893617,
+      "pr_auc": 0.9873305549462601,
+      "roc_auc": 0.9989231740373546,
+      "mcc": 0.9767889018318675,
+      "balanced_accuracy": 0.9787234042553192,
+      "ece": 0.0013504863213447313,
+      "brier": 0.002980889184182367
+    }
+  },
+  "cicids": {
+    "total_rows": 2099976,
+    "evaluated_rows": 2099943,
+    "invalid_forward_rows": 33,
+    "overall": {
+      "rows": 2099943,
+      "per_label": {
+        "DDoS": {
+          "precision": 0.002349741626531379,
+          "recall": 0.025172370301858236,
+          "f1": 0.004298257814708297,
+          "fpr": 0.5072159353630963,
+          "fnr": 0.9748276296981417,
+          "pr_auc": 0.03561983391584498,
+          "roc_auc": 0.20014780583766434,
+          "mcc": -0.20059529792490385,
+          "balanced_accuracy": 0.258978217469381,
+          "ece": 0.5587990447928702,
+          "brier": 0.5556631088256836
+        },
+        "PORT_SCAN": {
+          "precision": 0.7432848480531967,
+          "recall": 0.9946324832238025,
+          "f1": 0.8507829927889069,
+          "fpr": 0.04242500441386542,
+          "fnr": 0.005367516776197511,
+          "pr_auc": 0.7398852701764982,
+          "roc_auc": 0.9761037394049685,
+          "mcc": 0.84089397698551,
+          "balanced_accuracy": 0.9761037394049685,
+          "ece": 0.03835151716022768,
+          "brier": 0.03835151717066765
+        },
+        "DATA_EXFILTRATION": {
+          "status": "not_measurable",
+          "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+        }
+      },
+      "binary_any_attack": {
+        "tp": 511213,
+        "fp": 1110928,
+        "fn": 6192,
+        "tn": 471610,
+        "precision": 0.31514708030929495,
+        "recall": 0.9880325856920594,
+        "f1": 0.4778705388900262,
+        "accuracy": 0.4680236558801834,
+        "fpr": 0.7019913581853958,
+        "definition": "any of the three known heads passes its simulation-selected threshold"
+      },
+      "by_dataset_label": {
+        "BENIGN": {
+          "rows": 1582538,
+          "any_known_alert_rate": 0.7019913581853958
+        },
+        "Botnet": {
+          "rows": 736,
+          "any_known_alert_rate": 0.998641304347826
+        },
+        "Botnet - Attempted": {
+          "rows": 4067,
+          "any_known_alert_rate": 1.0
+        },
+        "DDoS": {
+          "rows": 95144,
+          "any_known_alert_rate": 1.0
+        },
+        "DoS GoldenEye": {
+          "rows": 7567,
+          "any_known_alert_rate": 0.7987313334214352
+        },
+        "DoS GoldenEye - Attempted": {
+          "rows": 80,
+          "any_known_alert_rate": 1.0
+        },
+        "DoS Hulk": {
+          "rows": 158468,
+          "any_known_alert_rate": 0.99983592902037
+        },
+        "DoS Hulk - Attempted": {
+          "rows": 581,
+          "any_known_alert_rate": 1.0
+        },
+        "DoS Slowhttptest": {
+          "rows": 1740,
+          "any_known_alert_rate": 0.4011494252873563
+        },
+        "DoS Slowhttptest - Attempted": {
+          "rows": 3364,
+          "any_known_alert_rate": 1.0
+        },
+        "DoS Slowloris": {
+          "rows": 3859,
+          "any_known_alert_rate": 0.09458408914226483
+        },
+        "DoS Slowloris - Attempted": {
+          "rows": 1846,
+          "any_known_alert_rate": 0.9994582881906826
+        },
+        "FTP-Patator": {
+          "rows": 3972,
+          "any_known_alert_rate": 1.0
+        },
+        "FTP-Patator - Attempted": {
+          "rows": 12,
+          "any_known_alert_rate": 1.0
+        },
+        "Heartbleed": {
+          "rows": 11,
+          "any_known_alert_rate": 1.0
+        },
+        "Infiltration": {
+          "rows": 36,
+          "any_known_alert_rate": 0.8611111111111112
+        },
+        "Infiltration - Attempted": {
+          "rows": 45,
+          "any_known_alert_rate": 1.0
+        },
+        "Infiltration - Portscan": {
+          "rows": 71767,
+          "any_known_alert_rate": 0.9990942912480667
+        },
+        "Portscan": {
+          "rows": 159066,
+          "any_known_alert_rate": 0.9998302591377164
+        },
+        "SSH-Patator": {
+          "rows": 2961,
+          "any_known_alert_rate": 0.9993245525160419
+        },
+        "SSH-Patator - Attempted": {
+          "rows": 27,
+          "any_known_alert_rate": 1.0
+        },
+        "Web Attack - Brute Force": {
+          "rows": 73,
+          "any_known_alert_rate": 1.0
+        },
+        "Web Attack - Brute Force - Attempted": {
+          "rows": 1292,
+          "any_known_alert_rate": 1.0
+        },
+        "Web Attack - SQL Injection": {
+          "rows": 13,
+          "any_known_alert_rate": 0.5384615384615384
+        },
+        "Web Attack - SQL Injection - Attempted": {
+          "rows": 5,
+          "any_known_alert_rate": 1.0
+        },
+        "Web Attack - XSS": {
+          "rows": 18,
+          "any_known_alert_rate": 1.0
+        },
+        "Web Attack - XSS - Attempted": {
+          "rows": 655,
+          "any_known_alert_rate": 1.0
+        }
+      }
+    },
+    "by_file": {
+      "friday.csv": {
+        "rows": 547556,
+        "per_label": {
+          "DDoS": {
+            "precision": 0.015465681684629244,
+            "recall": 0.025172370301858236,
+            "f1": 0.019159770082759008,
+            "fpr": 0.3370025551930541,
+            "fnr": 0.9748276296981417,
+            "pr_auc": 0.13745836792537308,
+            "roc_auc": 0.22318582212303925,
+            "mcc": -0.2623486876633575,
+            "balanced_accuracy": 0.3440849075544021,
+            "ece": 0.4683280392679503,
+            "brier": 0.4663119614124298
+          },
+          "PORT_SCAN": {
+            "precision": 0.9115937788639714,
+            "recall": 0.9989501213332831,
+            "f1": 0.9532748406449194,
+            "fpr": 0.039666400679554174,
+            "fnr": 0.0010498786667169603,
+            "pr_auc": 0.910941707638389,
+            "roc_auc": 0.9796418603268645,
+            "mcc": 0.9349052703321761,
+            "balanced_accuracy": 0.9796418603268644,
+            "ece": 0.028448231779032662,
+            "brier": 0.028448231518268585
+          },
+          "DATA_EXFILTRATION": {
+            "status": "not_measurable",
+            "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+          }
+        },
+        "binary_any_attack": {
+          "tp": 258985,
+          "fp": 201921,
+          "fn": 28,
+          "tn": 86622,
+          "precision": 0.5619041626709134,
+          "recall": 0.9998918973178953,
+          "f1": 0.7194837196962436,
+          "accuracy": 0.6311811029374165,
+          "fpr": 0.6997951778417775,
+          "definition": "any of the three known heads passes its simulation-selected threshold"
+        },
+        "by_dataset_label": {
+          "BENIGN": {
+            "rows": 288543,
+            "any_known_alert_rate": 0.6997951778417775
+          },
+          "Botnet": {
+            "rows": 736,
+            "any_known_alert_rate": 0.998641304347826
+          },
+          "Botnet - Attempted": {
+            "rows": 4067,
+            "any_known_alert_rate": 1.0
+          },
+          "DDoS": {
+            "rows": 95144,
+            "any_known_alert_rate": 1.0
+          },
+          "Portscan": {
+            "rows": 159066,
+            "any_known_alert_rate": 0.9998302591377164
+          }
+        },
+        "total_rows": 547557,
+        "invalid_forward_rows": 1,
+        "file_bytes": 285188226,
+        "sha256": "ebd499e6f23bd59f9cb81bec28178491b02b925fa5640a24215c9437d79482d0"
+      },
+      "monday.csv": {
+        "rows": 371616,
+        "per_label": {
+          "DDoS": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "fpr": 0.5285751959011453,
+            "fnr": null,
+            "pr_auc": null,
+            "roc_auc": null,
+            "mcc": null,
+            "balanced_accuracy": null,
+            "ece": 0.5672497216200791,
+            "brier": 0.5614742636680603
+          },
+          "PORT_SCAN": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "fpr": 0.0380742486868165,
+            "fnr": null,
+            "pr_auc": null,
+            "roc_auc": null,
+            "mcc": null,
+            "balanced_accuracy": null,
+            "ece": 0.0380742486868165,
+            "brier": 0.038074247539043427
+          },
+          "DATA_EXFILTRATION": {
+            "status": "not_measurable",
+            "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+          }
+        },
+        "binary_any_attack": {
+          "tp": 0,
+          "fp": 263888,
+          "fn": 0,
+          "tn": 107728,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "accuracy": 0.2898906398002239,
+          "fpr": 0.7101093601997761,
+          "definition": "any of the three known heads passes its simulation-selected threshold"
+        },
+        "by_dataset_label": {
+          "BENIGN": {
+            "rows": 371616,
+            "any_known_alert_rate": 0.7101093601997761
+          }
+        },
+        "total_rows": 371624,
+        "invalid_forward_rows": 8,
+        "file_bytes": 207875155,
+        "sha256": "51fe5dc962626efb4ae70dce0303072fb780da0932822b651202ee9c2fbc1aff"
+      },
+      "thursday.csv": {
+        "rows": 362072,
+        "per_label": {
+          "DDoS": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "fpr": 0.5570991405024415,
+            "fnr": null,
+            "pr_auc": null,
+            "roc_auc": null,
+            "mcc": null,
+            "balanced_accuracy": null,
+            "ece": 0.5942929012085655,
+            "brier": 0.5887591242790222
+          },
+          "PORT_SCAN": {
+            "precision": 0.8214426808579861,
+            "recall": 0.9850627725834994,
+            "f1": 0.8958429692895475,
+            "fpr": 0.05293398322453971,
+            "fnr": 0.01493722741650062,
+            "pr_auc": 0.8121333418153558,
+            "roc_auc": 0.9660643946794799,
+            "mcc": 0.8729662425044297,
+            "balanced_accuracy": 0.9660643946794798,
+            "ece": 0.04540257186415961,
+            "brier": 0.04540257155895233
+          },
+          "DATA_EXFILTRATION": {
+            "status": "not_measurable",
+            "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+          }
+        },
+        "binary_any_attack": {
+          "tp": 73828,
+          "fp": 200691,
+          "fn": 76,
+          "tn": 87477,
+          "precision": 0.2689358477919561,
+          "recall": 0.9989716388828751,
+          "f1": 0.4237837341392503,
+          "accuracy": 0.4455053138602267,
+          "fpr": 0.6964374947947031,
+          "definition": "any of the three known heads passes its simulation-selected threshold"
+        },
+        "by_dataset_label": {
+          "BENIGN": {
+            "rows": 288168,
+            "any_known_alert_rate": 0.6964374947947031
+          },
+          "Infiltration": {
+            "rows": 36,
+            "any_known_alert_rate": 0.8611111111111112
+          },
+          "Infiltration - Attempted": {
+            "rows": 45,
+            "any_known_alert_rate": 1.0
+          },
+          "Infiltration - Portscan": {
+            "rows": 71767,
+            "any_known_alert_rate": 0.9990942912480667
+          },
+          "Web Attack - Brute Force": {
+            "rows": 73,
+            "any_known_alert_rate": 1.0
+          },
+          "Web Attack - Brute Force - Attempted": {
+            "rows": 1292,
+            "any_known_alert_rate": 1.0
+          },
+          "Web Attack - SQL Injection": {
+            "rows": 13,
+            "any_known_alert_rate": 0.5384615384615384
+          },
+          "Web Attack - SQL Injection - Attempted": {
+            "rows": 5,
+            "any_known_alert_rate": 1.0
+          },
+          "Web Attack - XSS": {
+            "rows": 18,
+            "any_known_alert_rate": 1.0
+          },
+          "Web Attack - XSS - Attempted": {
+            "rows": 655,
+            "any_known_alert_rate": 1.0
+          }
+        },
+        "total_rows": 362076,
+        "invalid_forward_rows": 4,
+        "file_bytes": 189519159,
+        "sha256": "78a4d11eaf473d099e30e71ddb01e0f38218e844c0a9cdd36602145d674af482"
+      },
+      "tuesday.csv": {
+        "rows": 322072,
+        "per_label": {
+          "DDoS": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "fpr": 0.5057347425420403,
+            "fnr": null,
+            "pr_auc": null,
+            "roc_auc": null,
+            "mcc": null,
+            "balanced_accuracy": null,
+            "ece": 0.547058788222654,
+            "brier": 0.5409061312675476
+          },
+          "PORT_SCAN": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "fpr": 0.044328597332273525,
+            "fnr": null,
+            "pr_auc": null,
+            "roc_auc": null,
+            "mcc": null,
+            "balanced_accuracy": null,
+            "ece": 0.044328597332273525,
+            "brier": 0.04432859644293785
+          },
+          "DATA_EXFILTRATION": {
+            "status": "not_measurable",
+            "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+          }
+        },
+        "binary_any_attack": {
+          "tp": 6970,
+          "fp": 219472,
+          "fn": 2,
+          "tn": 95628,
+          "precision": 0.03078050891619046,
+          "recall": 0.9997131382673551,
+          "f1": 0.05972221032157454,
+          "accuracy": 0.31855609925730893,
+          "fpr": 0.696515391939067,
+          "definition": "any of the three known heads passes its simulation-selected threshold"
+        },
+        "by_dataset_label": {
+          "BENIGN": {
+            "rows": 315100,
+            "any_known_alert_rate": 0.696515391939067
+          },
+          "FTP-Patator": {
+            "rows": 3972,
+            "any_known_alert_rate": 1.0
+          },
+          "FTP-Patator - Attempted": {
+            "rows": 12,
+            "any_known_alert_rate": 1.0
+          },
+          "SSH-Patator": {
+            "rows": 2961,
+            "any_known_alert_rate": 0.9993245525160419
+          },
+          "SSH-Patator - Attempted": {
+            "rows": 27,
+            "any_known_alert_rate": 1.0
+          }
+        },
+        "total_rows": 322078,
+        "invalid_forward_rows": 6,
+        "file_bytes": 178397720,
+        "sha256": "e2a0a5b631dfc6b455cc9f9a88b944110637d70a7f74171473925f76f38b6b0c"
+      },
+      "wednesday.csv": {
+        "rows": 496627,
+        "per_label": {
+          "DDoS": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "fpr": 0.6108850304151808,
+            "fnr": null,
+            "pr_auc": null,
+            "roc_auc": null,
+            "mcc": null,
+            "balanced_accuracy": null,
+            "ece": 0.6396399627377167,
+            "brier": 0.6352699398994446
+          },
+          "PORT_SCAN": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "fpr": 0.04046094956577069,
+            "fnr": null,
+            "pr_auc": null,
+            "roc_auc": null,
+            "mcc": null,
+            "balanced_accuracy": null,
+            "ece": 0.04046094956577069,
+            "brier": 0.04046094790101051
+          },
+          "DATA_EXFILTRATION": {
+            "status": "not_measurable",
+            "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+          }
+        },
+        "binary_any_attack": {
+          "tp": 171430,
+          "fp": 224956,
+          "fn": 6086,
+          "tn": 94155,
+          "precision": 0.4324824791995681,
+          "recall": 0.9657157664661213,
+          "f1": 0.597419071548801,
+          "accuracy": 0.53477760975541,
+          "fpr": 0.7049459279059638,
+          "definition": "any of the three known heads passes its simulation-selected threshold"
+        },
+        "by_dataset_label": {
+          "BENIGN": {
+            "rows": 319111,
+            "any_known_alert_rate": 0.7049459279059638
+          },
+          "DoS GoldenEye": {
+            "rows": 7567,
+            "any_known_alert_rate": 0.7987313334214352
+          },
+          "DoS GoldenEye - Attempted": {
+            "rows": 80,
+            "any_known_alert_rate": 1.0
+          },
+          "DoS Hulk": {
+            "rows": 158468,
+            "any_known_alert_rate": 0.99983592902037
+          },
+          "DoS Hulk - Attempted": {
+            "rows": 581,
+            "any_known_alert_rate": 1.0
+          },
+          "DoS Slowhttptest": {
+            "rows": 1740,
+            "any_known_alert_rate": 0.4011494252873563
+          },
+          "DoS Slowhttptest - Attempted": {
+            "rows": 3364,
+            "any_known_alert_rate": 1.0
+          },
+          "DoS Slowloris": {
+            "rows": 3859,
+            "any_known_alert_rate": 0.09458408914226483
+          },
+          "DoS Slowloris - Attempted": {
+            "rows": 1846,
+            "any_known_alert_rate": 0.9994582881906826
+          },
+          "Heartbleed": {
+            "rows": 11,
+            "any_known_alert_rate": 1.0
+          }
+        },
+        "total_rows": 496641,
+        "invalid_forward_rows": 14,
+        "file_bytes": 291290505,
+        "sha256": "bf46c5f3c792e8817381f724511229569606918eaf07ac986d7a2592b6341bc2"
+      }
+    },
+    "thresholds": {
+      "DDoS": 1.0,
+      "PORT_SCAN": 1.0,
+      "DATA_EXFILTRATION": 1.0
+    },
+    "feature_paths": [
+      "flow.packet_count",
+      "flow.duration_s",
+      "flow.pps",
+      "flow.iat_s_mean",
+      "flow.iat_s_min",
+      "flow.iat_s_max",
+      "flow.psh_count",
+      "flow.urg_count",
+      "flow.rst_count"
+    ],
+    "source_columns": [
+      "Total Fwd Packet",
+      "Fwd IAT Total",
+      "Fwd IAT Mean",
+      "Fwd IAT Min",
+      "Fwd IAT Max",
+      "Fwd PSH Flags",
+      "Fwd URG Flags",
+      "Fwd RST Flags",
+      "Protocol"
+    ],
+    "training_data": "simulation only",
+    "fitting_on_cicids": false,
+    "candidate_only": true,
+    "predictions": "predictions.csv.gz",
+    "limitations": [
+      "Scores on forward CSV summaries, not packet replay or final production decisions.",
+      "Full Flow Duration, reverse columns, combined rates, IPs, IDs, ports, timestamps and labels are excluded from model features.",
+      "Forward IAT Total supplies duration; IAT microseconds are converted to seconds.",
+      "Wire-byte statistics are excluded because CSV packet lengths use a different layer.",
+      "Visibility ratio covers only the mapped forward subset and differs from live full-envelope visibility.",
+      "DNS/TLS/window history is absent; Agent 1 DNS models are not measurable on these CSVs.",
+      "DDoS/PortScan are matched to corresponding dataset names; other attacks remain other attacks.",
+      "External test data is never used for training, calibration or selecting thresholds."
+    ]
+  },
+  "limitations": [
+    "Synthetic generation is compact and idealized; held-out seeds are not held-out attack mechanisms.",
+    "Agent 2 baseline learns DDoS, PORT_SCAN and DATA_EXFILTRATION only.",
+    "Agent 1 DNS branches cannot be tested on CICIDS flow CSVs without DNS queries.",
+    "GraphSAGE, temporal C2, botnet, encrypted-malware and OOD production gates remain unvalidated.",
+    "Candidate scores are not approved production decisions; threshold failures remain reported."
+  ],
+  "completed_at": "2026-09-17T21:19:05.181101+00:00"
+}

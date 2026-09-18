@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const STAGES = ['INGESTION', 'FEATURES', 'MODELS', 'ENSEMBLE', 'ALERT'];
+const STAGES = ['AGENT 1', 'OBSERVATIONS', 'AGENT 2', 'DECISIONS', 'INCIDENTS'];
 
 export default function PipelineStrip({ pulseKey }) {
   const [pulses, setPulses] = useState([]);

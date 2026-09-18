@@ -1,0 +1,5 @@
+{
+  "tree": "XGBoost exact TreeSHAP, raw log-odds, additivity verified",
+  "end_to_end": "32 random-order interventional Shapley paths on pre-isotonic DDoS probability, 128 records/population; additivity verified",
+  "limits": "Latent SHAP is not original-feature SHAP. Raw interventional combinations may violate IAT relationships; use D retraining for corroboration."
+}

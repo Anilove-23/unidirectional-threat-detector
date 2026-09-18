@@ -66,9 +66,9 @@ def _labels_for(manifest, event_time):
     return normalized
 
 
-def _record(observation, manifest, observation_file, manifest_file, *, observation_line, phase_id="scenario"):
+def _record(observation, manifest, observation_file, manifest_file, *, observation_line, phase_id="scenario", event_labels=None):
     event_time = _parse_time(observation["event_time"])
-    labels = _labels_for(manifest, event_time)
+    labels = _labels_for(manifest, event_time) if event_labels is None else tuple(event_labels)
     matched_phases = _matching_phases(manifest, event_time)
     phase = matched_phases[0] if matched_phases else None
     if phase is not None:
@@ -125,6 +125,16 @@ def build_training_index(release_root, *, output_root=None):
         observation_ref = observation_path.relative_to(root).as_posix()
         source_digests[manifest_ref] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
         source_digests[observation_ref] = hashlib.sha256(observation_path.read_bytes()).hexdigest()
+        truth = None
+        if manifest.get("ground_truth_file"):
+            truth_path = (manifest_path.parent / manifest["ground_truth_file"]).resolve()
+            if not truth_path.is_relative_to(manifest_path.parent.resolve()):
+                raise ValueError("ground truth path escapes scenario")
+            truth_digest = hashlib.sha256(truth_path.read_bytes()).hexdigest()
+            if truth_digest != manifest.get("ground_truth_sha256"):
+                raise ValueError("ground truth digest mismatch")
+            truth = json.loads(truth_path.read_text(encoding="utf-8"))
+            source_digests[truth_path.relative_to(root).as_posix()] = truth_digest
         with observation_path.open(encoding="utf-8") as stream:
             for line_number, line in enumerate(stream, 1):
                 if not line.strip():
@@ -134,7 +144,8 @@ def build_training_index(release_root, *, output_root=None):
                     adapted = adapt_observation(raw)
                 except (json.JSONDecodeError, ContractError, ValueError) as exc:
                     raise ValueError(f"invalid observation {observation_ref}:{line_number}: {exc}") from exc
-                records.append(_record(adapted.raw, manifest, observation_ref, manifest_ref, observation_line=line_number))
+                records.append(_record(adapted.raw, manifest, observation_ref, manifest_ref, observation_line=line_number,
+                                       event_labels=truth[raw["event_id"]] if truth is not None else None))
     records.sort(key=lambda row: (row["event_time"], row["scenario_id"], row["observation_id"]))
     ids = [row["observation_id"] for row in records]
     if len(ids) != len(set(ids)):
@@ -173,7 +184,9 @@ def resolve_training_index(index_root, index):
         path = (root / record["observation_file"]).resolve()
         if not path.is_relative_to(root) or not path.is_file():
             raise FileNotFoundError(path)
-        lines = cache.setdefault(path, path.read_text(encoding="utf-8").splitlines())
+        if path not in cache:
+            cache[path] = path.read_text(encoding="utf-8").splitlines()
+        lines = cache[path]
         line_number = record["observation_line"]
         if line_number > len(lines):
             raise ValueError(f"observation line outside file: {path}:{line_number}")

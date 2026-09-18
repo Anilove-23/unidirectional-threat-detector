@@ -1,0 +1,34 @@
+{
+  "V2_same_Tue_Fri": {
+    "benign_fpr": 0.6995000503748383,
+    "ddos_f1": 0.005217989973615926,
+    "ddos_auc": 0.19866218653272083,
+    "scan_f1": 0.8736869143319221,
+    "scan_recall": 0.9946324832238025,
+    "scan_fpr_all_non_scan": 0.043504681821763556
+  },
+  "SSL_AE_benign_adaptation": {
+    "benign_fpr": 0.6211234084441443,
+    "ddos_f1": 0.001986754137296486,
+    "ddos_auc": 0.4195840637407153,
+    "scan_f1": 0.8736869143319221,
+    "scan_recall": 0.9946324832238025,
+    "scan_fpr_all_non_scan": 0.043504681821763556
+  },
+  "frozen_V2_benign_raw_quantile": {
+    "benign_fpr": 0.0,
+    "ddos_f1": 0.0,
+    "ddos_auc": 0.4201517810444493,
+    "scan_f1": 0.0,
+    "scan_recall": 0.0,
+    "scan_fpr_all_non_scan": 0.0
+  },
+  "adapted_benign_raw_quantile": {
+    "benign_fpr": 0.0,
+    "ddos_f1": 0.0,
+    "ddos_auc": 0.41988025429488296,
+    "scan_f1": 0.0,
+    "scan_recall": 0.0,
+    "scan_fpr_all_non_scan": 0.0
+  }
+}

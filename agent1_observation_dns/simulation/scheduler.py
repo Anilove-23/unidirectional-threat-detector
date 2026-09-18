@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import random
 
 from .spec import ScenarioSpec
@@ -94,4 +94,7 @@ def schedule(spec: ScenarioSpec):
             for index, client in enumerate(clients[:2]):
                 for timestamp in _periodic(rng, attack_end, 3 if "low" not in profile else 45, .5, attack_start + index):
                     events.append(TrafficEvent(timestamp, client, c2_nodes[0], "TCP", 443, profile, labels, 1200 if "low" not in profile else 240, f"exfil-{index}"))
-    return sorted(events, key=lambda event: (event.timestamp_s, event.source, event.destination, event.profile))
+    # Seed-specific sessions also keep generated domain corpora disjoint across
+    # scenario partitions without exposing seed/provenance as numeric features.
+    return [replace(event, session_id=f"{event.session_id}-{spec.seed}") for event in
+            sorted(events, key=lambda event: (event.timestamp_s, event.source, event.destination, event.profile))]

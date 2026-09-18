@@ -23,21 +23,31 @@ def _packet(event: TrafficEvent, timestamp_ns: int, sequence: int):
     # dpkt's expected four-byte representation for deterministic fixture data.
     import ipaddress
     source, destination = ipaddress.ip_address(event.source), ipaddress.ip_address(event.destination)
+    # A session keeps its five-tuple so the observer can measure durations,
+    # inter-arrival times and packet counts instead of one-packet fragments.
+    source_port = 32768 + int(hashlib.sha256(event.session_id.encode()).hexdigest()[:8], 16) % 28000
     if event.protocol == "DNS":
         suffix = "example.test"
         label = hashlib.sha256(f"{event.session_id}:{sequence}:{event.timestamp_s}".encode()).hexdigest()[:24]
-        name = f"{label}.{suffix}"
+        if event.profile == "dns_normal":
+            service = ("www", "mail", "api", "updates", "cdn")[sequence % 5]
+            name = f"{service}.service-{event.session_id.split('-')[-1]}.{suffix}"
+        elif "tunnel" in event.profile:
+            encoded = hashlib.sha256(f"payload:{event.session_id}:{sequence}".encode()).hexdigest()
+            name = f"{encoded[:56]}.{label}.{suffix}"
+        else:
+            name = f"{label}.{suffix}"
         dns = dpkt.dns.DNS(id=sequence % 65536, qd=[dpkt.dns.DNS.Q(name=name, type=1)])
-        transport = dpkt.udp.UDP(sport=40000 + sequence % 1000, dport=53, data=bytes(dns))
+        transport = dpkt.udp.UDP(sport=source_port, dport=53, data=bytes(dns))
         transport.ulen = len(transport)
         protocol, payload = 17, transport
     elif event.protocol in {"UDP"}:
-        transport = dpkt.udp.UDP(sport=40000 + sequence % 1000, dport=event.destination_port, data=b"\0" * event.payload_size)
+        transport = dpkt.udp.UDP(sport=source_port, dport=event.destination_port, data=b"\0" * event.payload_size)
         transport.ulen = len(transport)
         protocol, payload = 17, transport
     else:
         flags = dpkt.tcp.TH_SYN if "scan" in event.profile or "ddos" in event.profile else dpkt.tcp.TH_ACK | dpkt.tcp.TH_PUSH
-        transport = dpkt.tcp.TCP(sport=40000 + sequence % 1000, dport=event.destination_port, flags=flags, seq=sequence, data=b"\0" * event.payload_size)
+        transport = dpkt.tcp.TCP(sport=source_port, dport=event.destination_port, flags=flags, seq=sequence, data=b"\0" * event.payload_size)
         protocol, payload = 6, transport
     if source.version != destination.version:
         raise ValueError("mixed address families are not supported in one packet")
@@ -78,8 +88,23 @@ def release_scenario(spec: ScenarioSpec, output_root):
     root.mkdir(parents=True)
     pcap_path = root / "capture.pcap"
     frames = write_pcap(generate_frames(spec), pcap_path)
-    config = Settings(sensor_id=f"sensor-{spec.environment}")
-    observations = list(ObservationPipeline(config).run(frames))
+    config = Settings(sensor_id=f"sensor-{spec.environment}-{spec.scenario_id}")
+    pipeline = ObservationPipeline(config)
+    observations, truth, flow_labels = [], {}, {}
+    for intent, frame in zip(schedule(spec), frames):
+        emitted = pipeline.process(frame)
+        if emitted:
+            flow_labels[emitted[-1].entity_keys.flow_id] = list(intent.labels)
+        for event in emitted:
+            observations.append(event)
+            truth[event.event_id] = flow_labels[event.entity_keys.flow_id]
+    for flow, reason in pipeline.flows.flush():
+        event = pipeline.envelope(flow, final=True, reason=reason)
+        observations.append(event)
+        truth[event.event_id] = flow_labels[flow.flow_id]
+    # Labels live exclusively in a sidecar, never in observer/model features.
+    truth_path = root / "ground_truth.json"
+    truth_path.write_text(json.dumps(truth, sort_keys=True) + "\n", encoding="utf-8")
     observations_path = root / "observations.jsonl"
     with observations_path.open("x", encoding="utf-8") as stream:
         for event in observations:
@@ -97,6 +122,8 @@ def release_scenario(spec: ScenarioSpec, output_root):
         "topology": spec.topology.name, "phases": phases, "benign_profiles": list(spec.benign_profiles),
         "attack_profiles": list(spec.attack_profiles), "holdout_tags": list(spec.holdout_tags),
         "ground_truth_verified": True, "packet_count": len(frames), "observation_count": len(observations),
+        "ground_truth_file": truth_path.name,
+        "ground_truth_sha256": hashlib.sha256(truth_path.read_bytes()).hexdigest(),
         "source_sha256": hashlib.sha256(pcap_path.read_bytes()).hexdigest(),
         "observation_sha256": hashlib.sha256(observations_path.read_bytes()).hexdigest(),
         "quality": {"duration_s": spec.duration_s, "packets": len(frames), "observations": len(observations),

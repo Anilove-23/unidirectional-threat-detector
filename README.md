@@ -1,5 +1,18 @@
 # SIH26145 - Unidirectional Threat Detector
 
+The active implementation is the Agent 1 → Agent 2 pipeline. The older
+ingestion, ensemble, and XGBoost components are preserved under
+`archive/legacy/`; `ingestion/dataset/CICIDS2017_improved` remains the external
+evaluation dataset.
+
+On Linux, create or refresh the isolated environment and install all Python
+and Node dependencies with `bash setup_linux.sh`. Train candidate models with
+`.venv_linux/bin/python train_pipeline.py --output artifacts/pipeline/2.0.0-simulation`.
+Start the backend, Agent 2 worker, dashboard, and offline simulator together
+with `bash start_all.sh --sim`; stop only those child services with
+`bash start_all.sh --stop`. Candidate policies intentionally report
+`UNCERTAIN` until independently validated.
+
 A modular, real-time Network Threat Detection system utilizing ensemble machine learning to identify both known attack signatures and novel zero-day anomalies in unidirectional network streams. This system is designed around a microservice-like architecture spanning data ingestion, supervised modeling, unsupervised/sequential modeling, backend APIs, and a real-time SOC dashboard.
 
 ---
@@ -53,52 +66,27 @@ graph TD
 
 ## 🚀 How to Start the Project
 
-To run the complete system end-to-end, you need to spin up all components. You will need **four separate terminal windows** (or a multiplexer like tmux). 
+The current launcher starts Redis (when it is not already running), the Agent 2
+stream worker, backend, dashboard, and the offline simulator in one supervised
+process tree.
 
 ### Prerequisites
 - Python 3.10+
 - Node.js 18+ and `npm`
 - **Redis Server** running locally (test with `redis-cli ping` expecting `PONG`)
 
-### Step 1: Start the Backend Server (Terminal 1)
-The Person 4 Express backend serves the API and the WebSocket that the frontend connects to.
 ```bash
-cd perosn4/backend
-npm install
-npm start
+bash setup_linux.sh
+bash start_all.sh --sim
 ```
-*Runs on `http://localhost:4000`*
+Open `http://localhost:5173`. Stop the supervised process tree with
+`bash start_all.sh --stop`. For passive receive-only capture, use
+`bash start_all.sh --interface <monitor-interface>`; the interface must already
+be configured by the operator.
 
-### Step 2: Start the SOC Dashboard (Terminal 2)
-The frontend UI that connects to the backend WebSocket.
-```bash
-cd soc-dashboard
-npm install
-npm run dev
-```
-*Runs on `http://localhost:5173`*
-
-### Step 3: Start the Ensemble Engine Detector (Terminal 3)
-This is the "Brain" of the system. It listens for raw flows, scores them using the ML models, and pushes alerts.
-```bash
-# From the repository root
-source .venv_linux/bin/activate
-python ensemble_engine/scripts/live_ensemble.py
-```
-*(Leave this running. It will wait silently until flows appear on the Redis channel)*
-
-### Step 4: Start the Flow Simulator (Terminal 4)
-Generate live network traffic spanning all threat scenarios to test the system.
-```bash
-# From the repository root
-source .venv_linux/bin/activate
-python simulate_pipeline.py --scenario all --interval 1.5 --continuous
-```
-
-Once the simulator starts pushing data, you will immediately see:
-- Terminal 3 logging detections (`🚨 [CRITICAL] VOLUMETRIC_DDOS...`)
-- Terminal 1 logging WebSocket broadcasts.
-- The SOC Dashboard (`http://localhost:5173`) lighting up with new alerts!
+The simulator generates packets locally and publishes observations to Redis;
+it does not transmit attack traffic. The dashboard shows model evidence while
+the candidate policy is unapproved, so decisions may remain `UNCERTAIN`.
 
 ---
 
@@ -118,7 +106,6 @@ Once the simulator starts pushing data, you will immediately see:
 The repository includes dedicated test scripts that bypass stale data sets and evaluate the ML models on **live** simulated traffic to ensure there is no data leakage or overfitting.
 
 ```bash
-# From the repository root
-./.venv_linux/bin/python xgboost_train/tests/test_live_simulation.py --n-flows 300
+./.venv_linux/bin/python -m pytest -q agent1_observation_dns/tests agent2_detection_product/tests
 ```
 *This generates 300 fresh flows per class on-the-fly and scores them, generating a full classification report (F1-score >= 0.90 required).*

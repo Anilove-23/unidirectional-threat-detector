@@ -52,6 +52,13 @@ def test_v2_release_has_phase_labels_and_index(tmp_path):
     assert any(not record["labels"]["MALICIOUS"] for record in index["records"] if record["event_time"] < manifest["phases"][0]["start"])
     assert any(record["phase_id"] == "attack" for record in index["records"] if record["labels"]["DGA"])
     assert any(record["labels"]["DGA"] for record in index["records"] if record["event_time"] >= manifest["phases"][0]["start"])
+    # Mixed background remains benign inside an attack phase.
+    assert any(not record["labels"]["MALICIOUS"] for record in index["records"]
+               if manifest["phases"][0]["start"] <= record["event_time"] <= manifest["phases"][0]["end"])
+    observations = [json.loads(line) for line in (root / "observations.jsonl").read_text().splitlines()]
+    assert max(event["features"]["flow"]["packet_count"]["value"] for event in observations) > 1
+    names = [event["features"]["dns"].get("query_name", {}).get("value", "") for event in observations]
+    assert any("service-" in name for name in names)
 
 
 def test_release_builder_is_immutable_and_records_checksums(tmp_path):

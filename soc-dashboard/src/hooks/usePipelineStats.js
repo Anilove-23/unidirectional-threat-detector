@@ -12,9 +12,9 @@
  *   const { flowsPerSec, alertsPerMin, processedTotal, uptime } = usePipelineStats();
  */
 import { useState, useEffect, useRef } from 'react';
+import { API_BASE } from '../services/config';
 
 const POLL_INTERVAL_MS = 5_000;
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 export function usePipelineStats() {
   const [stats, setStats] = useState(null);
@@ -23,13 +23,13 @@ export function usePipelineStats() {
   async function fetchStats() {
     try {
       const res = await fetch(`${API_BASE}/stats`);
-      if (!res.ok) return;
+      if (!res.ok) { setStats(null); return; }
       const json = await res.json();
       if (json.status === 'success' && json.data) {
         setStats(json.data);
       }
     } catch (_) {
-      // Backend not reachable — keep previous value, retry next interval
+      setStats(null);
     }
   }
 
@@ -45,7 +45,7 @@ export function usePipelineStats() {
     processedTotal:  stats?.processed_total   ?? null,
     uptimeS:         stats?.uptime_s          ?? null,
     trackedSrcIps:   stats?.tracked_src_ips   ?? null,
-    throughputWindow: stats?.throughput_window_s ?? 10,
+    throughputWindow: stats?.throughput_window_s ?? null,
     source:          stats?.source            ?? null,
     inferenceP95: stats?.inference_p95_ms ?? null,
     queueLag: stats?.queue_lag ?? null,

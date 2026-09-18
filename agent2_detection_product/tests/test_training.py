@@ -31,6 +31,13 @@ def test_complete_fold_training_serialization_and_inference(tmp_path):
     assert len(output["scores"]) == 3
     assert all(0 <= s["probability"] <= 1 for s in output["scores"])
     assert not output["ood"]["calibrated"]
+    envs = [row["observation"] for row in rows("validation", 1)]
+    raw = restored.base.preprocessor.raw(envs)
+    batch = restored.predict_forward_matrix(raw,
+        visibility=np.asarray([env["visibility"]["feature_availability_ratio"] for env in envs]),
+        event_count=np.asarray([env["history"]["event_count"] for env in envs]),
+        duration_ms=np.asarray([env["history"]["duration_ms"] for env in envs]))
+    np.testing.assert_allclose(batch, restored.predict_probabilities(envs), atol=1e-7)
 
 
 def test_release_rejects_tampering_and_unapproved_candidate(tmp_path):

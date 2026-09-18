@@ -1,0 +1,162 @@
+{
+  "rows": 2099943,
+  "per_label": {
+    "DDoS": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.003608341783889557,
+      "fnr": 1.0,
+      "pr_auc": 0.04530789645242752,
+      "roc_auc": 0.4110609093480194,
+      "mcc": -0.01280825943052392,
+      "balanced_accuracy": 0.4981958291080552,
+      "ece": 0.10881797755633668,
+      "brier": 0.08082326501607895
+    },
+    "PORT_SCAN": {
+      "precision": 0.9396176015745817,
+      "recall": 0.7527996430319756,
+      "f1": 0.8358976455789365,
+      "fpr": 0.005974501233207249,
+      "fnr": 0.2472003569680245,
+      "pr_auc": 0.7345169135603609,
+      "roc_auc": 0.8734125708993842,
+      "mcc": 0.8243037470161538,
+      "balanced_accuracy": 0.8734125708993842,
+      "ece": 0.027616820553136103,
+      "brier": 0.03217202052474022
+    },
+    "DATA_EXFILTRATION": {
+      "status": "not_measurable",
+      "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+    }
+  },
+  "binary_any_attack": {
+    "tp": 178083,
+    "fp": 14096,
+    "fn": 339322,
+    "tn": 1568442,
+    "precision": 0.9266517153278975,
+    "recall": 0.3441849228360762,
+    "f1": 0.5019363458026112,
+    "accuracy": 0.8317011461739676,
+    "fpr": 0.008907211074868344,
+    "definition": "any of the three known heads passes its simulation-selected threshold"
+  },
+  "by_dataset_label": {
+    "BENIGN": {
+      "rows": 1582538,
+      "any_known_alert_rate": 0.008907211074868344
+    },
+    "Botnet": {
+      "rows": 736,
+      "any_known_alert_rate": 0.0
+    },
+    "Botnet - Attempted": {
+      "rows": 4067,
+      "any_known_alert_rate": 0.9604130808950087
+    },
+    "DDoS": {
+      "rows": 95144,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS GoldenEye": {
+      "rows": 7567,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS GoldenEye - Attempted": {
+      "rows": 80,
+      "any_known_alert_rate": 0.975
+    },
+    "DoS Hulk": {
+      "rows": 158468,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Hulk - Attempted": {
+      "rows": 581,
+      "any_known_alert_rate": 0.25817555938037867
+    },
+    "DoS Slowhttptest": {
+      "rows": 1740,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Slowhttptest - Attempted": {
+      "rows": 3364,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Slowloris": {
+      "rows": 3859,
+      "any_known_alert_rate": 0.0
+    },
+    "DoS Slowloris - Attempted": {
+      "rows": 1846,
+      "any_known_alert_rate": 0.0
+    },
+    "FTP-Patator": {
+      "rows": 3972,
+      "any_known_alert_rate": 0.0
+    },
+    "FTP-Patator - Attempted": {
+      "rows": 12,
+      "any_known_alert_rate": 0.9166666666666666
+    },
+    "Heartbleed": {
+      "rows": 11,
+      "any_known_alert_rate": 0.0
+    },
+    "Infiltration": {
+      "rows": 36,
+      "any_known_alert_rate": 0.1111111111111111
+    },
+    "Infiltration - Attempted": {
+      "rows": 45,
+      "any_known_alert_rate": 0.8888888888888888
+    },
+    "Infiltration - Portscan": {
+      "rows": 71767,
+      "any_known_alert_rate": 0.22311090055317903
+    },
+    "Portscan": {
+      "rows": 159066,
+      "any_known_alert_rate": 0.99250625526511
+    },
+    "SSH-Patator": {
+      "rows": 2961,
+      "any_known_alert_rate": 0.0
+    },
+    "SSH-Patator - Attempted": {
+      "rows": 27,
+      "any_known_alert_rate": 0.2962962962962963
+    },
+    "Web Attack - Brute Force": {
+      "rows": 73,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - Brute Force - Attempted": {
+      "rows": 1292,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - SQL Injection": {
+      "rows": 13,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - SQL Injection - Attempted": {
+      "rows": 5,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - XSS": {
+      "rows": 18,
+      "any_known_alert_rate": 0.0
+    },
+    "Web Attack - XSS - Attempted": {
+      "rows": 655,
+      "any_known_alert_rate": 0.0
+    }
+  },
+  "training_counts": {
+    "train": 1607,
+    "validation": 544,
+    "test": 532
+  }
+}
