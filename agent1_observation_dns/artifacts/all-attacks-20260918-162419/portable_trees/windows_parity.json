@@ -1,0 +1,32 @@
+[
+  {
+    "model": "0",
+    "max_absolute_difference": 0.0,
+    "passed": true
+  },
+  {
+    "model": "1",
+    "max_absolute_difference": 0.0,
+    "passed": true
+  },
+  {
+    "model": "2",
+    "max_absolute_difference": 0.0,
+    "passed": true
+  },
+  {
+    "model": "3",
+    "max_absolute_difference": 0.0,
+    "passed": true
+  },
+  {
+    "model": "4",
+    "max_absolute_difference": 0.0,
+    "passed": true
+  },
+  {
+    "model": "5",
+    "max_absolute_difference": 0.0,
+    "passed": true
+  }
+]

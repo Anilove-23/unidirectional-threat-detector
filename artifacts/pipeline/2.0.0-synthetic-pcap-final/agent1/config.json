@@ -1,0 +1,9 @@
+{
+  "model_paths": {
+    "dga_context_xgb": "artifacts/pipeline/2.0.0-retrain-real/agent1/dga_context_xgb.json",
+    "dga_char_attention": "artifacts/pipeline/2.0.0-retrain-real/agent1/dga_char_attention.pt",
+    "dns_tunnel_fast_gbdt": "artifacts/pipeline/2.0.0-retrain-real/agent1/dns_tunnel_fast_gbdt.json",
+    "dns_tunnel_bytecnn": "artifacts/pipeline/2.0.0-retrain-real/agent1/dns_tunnel_bytecnn.pt",
+    "dns_tunnel_sequence": "artifacts/pipeline/2.0.0-retrain-real/agent1/dns_tunnel_sequence.pt"
+  }
+}

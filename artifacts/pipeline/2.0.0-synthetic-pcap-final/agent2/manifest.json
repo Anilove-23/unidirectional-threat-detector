@@ -1,0 +1,13 @@
+{
+  "schema_version": "2.0.0",
+  "version": "2.0.0-retrain-real",
+  "status": "candidate",
+  "bundle": "bundle.joblib",
+  "policy": "policy.json",
+  "dataset_index_sha256": "22cdb50faa8f342e6eacce285ce1ea7f8ec4a1201f3c90bb6fd690d0e1d7e90e",
+  "artifacts": {
+    "bundle.joblib": "52ec4cb68fb4ae5ceedcf3d018206efce88d632d7b664d9c20234f415cb23d0f",
+    "policy.json": "0928c59e35414d9a3e68065f6aa9359647a63710515160d3d186e9bbbbe2d8d9",
+    "training_report.json": "72dc65f0ce923ba291ba2ccd3294f2b59b38aa0be8369333cc8e0f578f58d1b0"
+  }
+}

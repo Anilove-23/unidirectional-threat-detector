@@ -125,6 +125,21 @@ def run(args):
     for row in rows:
         row["group_id"] = row["generator_family"].split("_run")[1]
         row["group_id"] = f"{row['split']}-run{row['group_id']}"
+
+    # --v3: merge V3 Cartesian DDoS rows for broader DDoS coverage
+    v3_manifest = None
+    if getattr(args, "v3", False):
+        from agent1_observation_dns.simulation.v3_generator import generate as v3_generate
+        v3_output = output / "simulation" / "v3"
+        print("Generating V3 Cartesian DDoS scenarios (12 configs x 5 splits)...", flush=True)
+        v3_rows, v3_manifest = v3_generate(v3_output, seed=26)
+        for row in v3_rows:
+            row.setdefault("group_id", f"{row['split']}-v3")
+            row.setdefault("generator_family", "simulation_v3")
+            row.setdefault("verified", True)
+        rows = rows + v3_rows
+        print(f"  Merged {len(v3_rows)} V3 rows; total now {len(rows)}", flush=True)
+
     print(f"Generated {len(rows)} observations; training five Agent 1 DNS branches...", flush=True)
     dns_reports, model_paths = {}, {}
     for label, architectures in (("DGA", ("dga_context_xgb", "dga_char_attention")),
@@ -181,13 +196,40 @@ def run(args):
     print("Testing frozen Agent 2 candidate on every CICIDS CSV row...", flush=True)
     from agent2_detection_product.evaluation.cicids import evaluate
     external = evaluate(bundle, policy, args.cicids, output / "cicids", batch_size=args.batch_size)
+
+    # --specialists: train all four specialist models and include in summary
+    specialist_report = None
+    if getattr(args, "specialists", False):
+        print("\nTraining specialist models (C2, Botnet, EncryptedMalware, GraphSAGE)...", flush=True)
+        import train_specialists as ts
+        sp_args = argparse.Namespace(
+            output=output / "specialists",
+            version=version,
+            epochs=args.epochs,
+            trees=args.trees,
+            threads=args.threads,
+        )
+        ts.run(sp_args)
+        sp_manifest = output / "specialists" / "manifest.json"
+        if sp_manifest.exists():
+            specialist_report = json.loads(sp_manifest.read_text())
+
+    limitations = [
+        "Synthetic generation is compact and idealized; held-out seeds are not held-out attack mechanisms.",
+        "Agent 2 baseline learns DDoS, PORT_SCAN and DATA_EXFILTRATION only.",
+        "Agent 1 DNS branches cannot be tested on CICIDS flow CSVs without DNS queries.",
+        "Candidate scores are not approved production decisions; threshold failures remain reported.",
+    ]
+    if not getattr(args, "specialists", False):
+        limitations.append("Specialist models (C2/Botnet/EncryptedMalware/GraphSAGE) not trained -- use --specialists.")
+    if not getattr(args, "v3", False):
+        limitations.append("V3 Cartesian DDoS rows not merged -- use --v3 for broader DDoS coverage.")
+
     summary = {"status": "candidate", "simulation": simulation, "agent1": dns_reports,
                "agent2_synthetic": synthetic_metrics, "cicids": external,
-               "limitations": ["Synthetic generation is compact and idealized; held-out seeds are not held-out attack mechanisms.",
-                               "Agent 2 baseline learns DDoS, PORT_SCAN and DATA_EXFILTRATION only.",
-                               "Agent 1 DNS branches cannot be tested on CICIDS flow CSVs without DNS queries.",
-                               "GraphSAGE, temporal C2, botnet, encrypted-malware and OOD production gates remain unvalidated.",
-                               "Candidate scores are not approved production decisions; threshold failures remain reported."],
+               "specialists": specialist_report,
+               "v3_merged": bool(getattr(args, "v3", False)),
+               "limitations": limitations,
                "completed_at": datetime.now(timezone.utc).isoformat()}
     write_json(output / "summary.json", summary)
     portable = lambda path: path.relative_to(Path.cwd()).as_posix() if path.is_relative_to(Path.cwd()) else str(path)
@@ -209,6 +251,10 @@ def main():
     parser.add_argument("--max-rows", type=int, default=180)
     parser.add_argument("--threads", type=int, default=2)
     parser.add_argument("--batch-size", type=int, default=8192)
+    parser.add_argument("--specialists", action="store_true",
+                        help="Also train C2, Botnet, EncryptedMalware and DNS GraphSAGE specialists")
+    parser.add_argument("--v3", action="store_true",
+                        help="Merge V3 Cartesian DDoS scenarios into Agent 2 training rows")
     args = parser.parse_args()
     if min(args.epochs, args.trees, args.duration, args.max_rows, args.threads, args.batch_size) <= 0:
         parser.error("numeric settings must be positive")

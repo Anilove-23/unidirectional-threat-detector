@@ -47,7 +47,13 @@ Thumbs.db
 node_modules/
 .env
 
-ingestion/dataset/CICIDS2017_improved
+ingestion/dataset/CICIDS2017_improved/
+ingestion/dataset/CICIDS2017*/
+ingestion/dataset/*.csv
+ingestion/dataset/*.zip
+.tmp_cicids_download/
+*.pcapng
+
 .venv_linux/
 .runtime/
 artifacts/pipeline/*/simulation/
@@ -60,6 +66,13 @@ artifacts/experiments/**/matplotlib-cache/
 artifacts/experiments/**/bundle.joblib
 artifacts/experiments/**/policy.json
 artifacts/experiments/**/training_report.json
+
+# Agent 1 artifacts datasets & build folders
+agent1_observation_dns/artifacts/*/scenarios/
+agent1_observation_dns/artifacts/linux-model-loader/
+linux-model-loader/
+
 # Images
 *.jpg
 *.jpeg
+

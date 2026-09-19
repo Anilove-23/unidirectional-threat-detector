@@ -1,0 +1,190 @@
+{
+  "total_rows": 5000,
+  "evaluated_rows": 5000,
+  "invalid_forward_rows": 0,
+  "overall": {
+    "rows": 5000,
+    "per_label": {
+      "DDoS": {
+        "precision": 0.2685464921114468,
+        "recall": 1.0,
+        "f1": 0.42339243186028047,
+        "fpr": 0.5188095238095238,
+        "fnr": 0.0,
+        "pr_auc": 0.2685464921114468,
+        "roc_auc": 0.7405952380952381,
+        "mcc": 0.3594746366830197,
+        "balanced_accuracy": 0.7405952380952381,
+        "ece": 0.7157157202525994,
+        "brier": 0.6678511500358582
+      },
+      "PORT_SCAN": {
+        "precision": 0.37555555555555553,
+        "recall": 0.24142857142857144,
+        "f1": 0.29391304347826086,
+        "fpr": 0.06534883720930233,
+        "fnr": 0.7585714285714286,
+        "pr_auc": 0.19686984126984125,
+        "roc_auc": 0.5880398671096347,
+        "mcc": 0.21349153833527731,
+        "balanced_accuracy": 0.5880398671096345,
+        "ece": 0.1624,
+        "brier": 0.1624000072479248
+      },
+      "DATA_EXFILTRATION": {
+        "status": "not_measurable",
+        "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+      }
+    },
+    "binary_any_attack": {
+      "tp": 1939,
+      "fp": 2668,
+      "fn": 61,
+      "tn": 332,
+      "precision": 0.42088126763620576,
+      "recall": 0.9695,
+      "f1": 0.5869532314212199,
+      "accuracy": 0.4542,
+      "fpr": 0.8893333333333333,
+      "definition": "any of the three known heads passes its simulation-selected threshold"
+    },
+    "by_dataset_label": {
+      "BENIGN": {
+        "rows": 3000,
+        "any_known_alert_rate": 0.8893333333333333
+      },
+      "DDoS": {
+        "rows": 800,
+        "any_known_alert_rate": 1.0
+      },
+      "Infiltration": {
+        "rows": 200,
+        "any_known_alert_rate": 0.88
+      },
+      "PortScan": {
+        "rows": 700,
+        "any_known_alert_rate": 1.0
+      },
+      "Web Attack - Brute Force": {
+        "rows": 300,
+        "any_known_alert_rate": 0.8766666666666667
+      }
+    }
+  },
+  "by_file": {
+    "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv": {
+      "rows": 5000,
+      "per_label": {
+        "DDoS": {
+          "precision": 0.2685464921114468,
+          "recall": 1.0,
+          "f1": 0.42339243186028047,
+          "fpr": 0.5188095238095238,
+          "fnr": 0.0,
+          "pr_auc": 0.2685464921114468,
+          "roc_auc": 0.7405952380952381,
+          "mcc": 0.3594746366830197,
+          "balanced_accuracy": 0.7405952380952381,
+          "ece": 0.7157157202525994,
+          "brier": 0.6678511500358582
+        },
+        "PORT_SCAN": {
+          "precision": 0.37555555555555553,
+          "recall": 0.24142857142857144,
+          "f1": 0.29391304347826086,
+          "fpr": 0.06534883720930233,
+          "fnr": 0.7585714285714286,
+          "pr_auc": 0.19686984126984125,
+          "roc_auc": 0.5880398671096347,
+          "mcc": 0.21349153833527731,
+          "balanced_accuracy": 0.5880398671096345,
+          "ece": 0.1624,
+          "brier": 0.1624000072479248
+        },
+        "DATA_EXFILTRATION": {
+          "status": "not_measurable",
+          "reason": "NO_MATCHING_GROUND_TRUTH_CLASS"
+        }
+      },
+      "binary_any_attack": {
+        "tp": 1939,
+        "fp": 2668,
+        "fn": 61,
+        "tn": 332,
+        "precision": 0.42088126763620576,
+        "recall": 0.9695,
+        "f1": 0.5869532314212199,
+        "accuracy": 0.4542,
+        "fpr": 0.8893333333333333,
+        "definition": "any of the three known heads passes its simulation-selected threshold"
+      },
+      "by_dataset_label": {
+        "BENIGN": {
+          "rows": 3000,
+          "any_known_alert_rate": 0.8893333333333333
+        },
+        "DDoS": {
+          "rows": 800,
+          "any_known_alert_rate": 1.0
+        },
+        "Infiltration": {
+          "rows": 200,
+          "any_known_alert_rate": 0.88
+        },
+        "PortScan": {
+          "rows": 700,
+          "any_known_alert_rate": 1.0
+        },
+        "Web Attack - Brute Force": {
+          "rows": 300,
+          "any_known_alert_rate": 0.8766666666666667
+        }
+      },
+      "total_rows": 5000,
+      "invalid_forward_rows": 0,
+      "file_bytes": 506374,
+      "sha256": "ada10ff59df1c67f1d91cf921780d1f8719c69ec2f5906ae8c6b8c3c4912817d"
+    }
+  },
+  "thresholds": {
+    "DDoS": 1.0,
+    "PORT_SCAN": 1.0,
+    "DATA_EXFILTRATION": 0.9677419066429138
+  },
+  "feature_paths": [
+    "flow.packet_count",
+    "flow.duration_s",
+    "flow.pps",
+    "flow.iat_s_mean",
+    "flow.iat_s_min",
+    "flow.iat_s_max",
+    "flow.psh_count",
+    "flow.urg_count",
+    "flow.rst_count"
+  ],
+  "source_columns": [
+    "Total Fwd Packet",
+    "Fwd IAT Total",
+    "Fwd IAT Mean",
+    "Fwd IAT Min",
+    "Fwd IAT Max",
+    "Fwd PSH Flags",
+    "Fwd URG Flags",
+    "Fwd RST Flags",
+    "Protocol"
+  ],
+  "training_data": "simulation only",
+  "fitting_on_cicids": false,
+  "candidate_only": true,
+  "predictions": "predictions.csv.gz",
+  "limitations": [
+    "Scores on forward CSV summaries, not packet replay or final production decisions.",
+    "Full Flow Duration, reverse columns, combined rates, IPs, IDs, ports, timestamps and labels are excluded from model features.",
+    "Forward IAT Total supplies duration; IAT microseconds are converted to seconds.",
+    "Wire-byte statistics are excluded because CSV packet lengths use a different layer.",
+    "Visibility ratio covers only the mapped forward subset and differs from live full-envelope visibility.",
+    "DNS/TLS/window history is absent; Agent 1 DNS models are not measurable on these CSVs.",
+    "DDoS/PortScan are matched to corresponding dataset names; other attacks remain other attacks.",
+    "External test data is never used for training, calibration or selecting thresholds."
+  ]
+}

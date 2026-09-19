@@ -18,7 +18,16 @@ class ContinuousTimeHMM:
 
     def transition(self, elapsed):
         a, b = self.rates
-        return expm(np.array([[-a, a], [b, -b]]) * max(float(elapsed), 0))
+        t = max(float(elapsed), 0.0)
+        s = a + b
+        if s <= 1e-12:
+            return np.eye(2)
+        e = np.exp(-s * t)
+        inv_s = 1.0 / s
+        return np.array([
+            [(b + a * e) * inv_s, a * (1.0 - e) * inv_s],
+            [b * (1.0 - e) * inv_s, (a + b * e) * inv_s]
+        ])
 
     def log_likelihood(self, gaps):
         gaps = np.asarray(gaps, dtype=float)

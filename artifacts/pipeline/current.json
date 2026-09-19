@@ -1,6 +1,6 @@
 {
-  "agent1_config": "artifacts/pipeline/2.0.0-sim-20260918/agent1/config.json",
-  "agent2_release": "artifacts/pipeline/2.0.0-sim-20260918/agent2/manifest.json",
-  "summary": "artifacts/pipeline/2.0.0-sim-20260918/summary.json",
+  "agent1_config": "artifacts/pipeline/2.0.0-synthetic-pcap-final/agent1/config.json",
+  "agent2_release": "artifacts/pipeline/2.0.0-synthetic-pcap-final/agent2/manifest.json",
+  "summary": "artifacts/pipeline/2.0.0-synthetic-pcap-final/summary.json",
   "status": "candidate"
 }

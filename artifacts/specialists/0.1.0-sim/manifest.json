@@ -1,0 +1,156 @@
+{
+  "schema_version": "0.1.0",
+  "version": "0.1.0-0.1.0-sim",
+  "status": "candidate",
+  "training_data": "synthetic_simulation_only",
+  "completed_at": "2026-09-18T18:07:01.844816+00:00",
+  "reports": {
+    "c2_beaconing": {
+      "model": "C2_BEACONING",
+      "train_rows": 540,
+      "val_rows": 180,
+      "test_rows": 180,
+      "val": {
+        "tp": 90,
+        "fp": 0,
+        "fn": 0,
+        "tn": 90,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "roc_auc": 1.0
+      },
+      "test": {
+        "tp": 89,
+        "fp": 0,
+        "fn": 1,
+        "tn": 90,
+        "precision": 1.0,
+        "recall": 0.9889,
+        "f1": 0.9944,
+        "roc_auc": 1.0
+      },
+      "cthmm_converged": false,
+      "artifacts": {
+        "cthmm": "458e752c6a15e7640097e4241473bc5b87684c6ae2981a085f686481c8f96c7d",
+        "temporal_gru": "6272060a157b2167612aec7bfe6a9e33b2c2e9c2cefaf28cf1fb7bceeb6af829",
+        "c2_fusion": "68023359a360f5d454a34e0f0c1f0b6e637d196d8b344f11aedba66702170c0f",
+        "c2_calibrator": "02b5c9817bd637bbc7bfecd4be87641660b5fe40e061c5cb84bb5eda911b783e"
+      }
+    },
+    "botnet": {
+      "model": "BOTNET",
+      "train_graphs": 180,
+      "val_graphs": 60,
+      "test_graphs": 60,
+      "val": {
+        "BOTNET_HOST": {
+          "tp": 656,
+          "fp": 7,
+          "fn": 5,
+          "tn": 340,
+          "precision": 0.9894,
+          "recall": 0.9924,
+          "f1": 0.9909,
+          "roc_auc": 0.9901
+        },
+        "BOTNET_COORDINATION": {
+          "tp": 30,
+          "fp": 0,
+          "fn": 0,
+          "tn": 978,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "roc_auc": 1.0
+        }
+      },
+      "test": {
+        "BOTNET_HOST": {
+          "tp": 572,
+          "fp": 7,
+          "fn": 10,
+          "tn": 327,
+          "precision": 0.9879,
+          "recall": 0.9828,
+          "f1": 0.9854,
+          "roc_auc": 0.9907
+        },
+        "BOTNET_COORDINATION": {
+          "tp": 30,
+          "fp": 0,
+          "fn": 0,
+          "tn": 886,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "roc_auc": 1.0
+        }
+      },
+      "artifacts": {
+        "botnet_gnn": "19615882eeba34e74691e2d658b2c7806d564147c65398903fc7c0ef410137d2",
+        "botnet_tree": "225ecee98a7e07ac8a565ae034c87f63a36a3f388ba0e1bc94ca751248ac81ff",
+        "botnet_scaler": "276583c46f53c5e4445f1a42688af6c42cca245b6dbd034ed0f713d02eea4852"
+      }
+    },
+    "encrypted_malware": {
+      "model": "ENCRYPTED_MALWARE",
+      "train_rows": 420,
+      "val_rows": 140,
+      "test_rows": 140,
+      "val": {
+        "tp": 70,
+        "fp": 0,
+        "fn": 0,
+        "tn": 70,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "roc_auc": 1.0
+      },
+      "test": {
+        "tp": 70,
+        "fp": 0,
+        "fn": 0,
+        "tn": 70,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "roc_auc": 1.0
+      },
+      "artifacts": {
+        "encrypted_malware": "04edac74cf5796cd5764250f90275a47b7bba5864437c65ecf160b3e88c4a3a4",
+        "encrypted_calibrator": "1b3539e6d3fbaf2f9b1265c891c178b1b191dbb28036e613c223c2fe410639e7"
+      }
+    },
+    "dns_graphsage": {
+      "model": "DNS_TUNNEL_GRAPHSAGE",
+      "train_graphs": 240,
+      "val_graphs": 80,
+      "test_graphs": 80,
+      "val": {
+        "tp": 40,
+        "fp": 0,
+        "fn": 0,
+        "tn": 40,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "roc_auc": 1.0
+      },
+      "test": {
+        "tp": 40,
+        "fp": 0,
+        "fn": 0,
+        "tn": 40,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "roc_auc": 1.0
+      },
+      "artifacts": {
+        "dns_graphsage": "0ec383e578ebe627e2ed4261f398c5ca6aa5526f0e0afe611bb49e7c613c6460"
+      }
+    }
+  }
+}

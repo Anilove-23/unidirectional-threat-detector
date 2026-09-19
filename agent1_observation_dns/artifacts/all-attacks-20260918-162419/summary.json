@@ -1,0 +1,676 @@
+{
+  "run_directory": "agent1_observation_dns\\artifacts\\all-attacks-20260918-162419",
+  "release": "2.0.0-sim-20260918",
+  "policy_approved": false,
+  "thresholds": {
+    "DDoS": 1.0,
+    "PORT_SCAN": 1.0,
+    "DGA": 0.85,
+    "DNS_TUNNEL": 0.85,
+    "C2_BEACONING": 0.85,
+    "BOTNET_HOST": 0.85,
+    "BOTNET_COORDINATION": 0.85,
+    "ENCRYPTED_MALWARE": 0.85,
+    "DATA_EXFILTRATION": 1.0,
+    "BRUTE_FORCE": 0.85,
+    "WEB_ATTACK": 0.85
+  },
+  "scenario_count": 12,
+  "duration_seconds_per_scenario": 90,
+  "overall": {
+    "observations": 2841,
+    "candidate_exact_label_accuracy": 0.9549454417458642,
+    "candidate_binary_attack_accuracy": 0.9549454417458642,
+    "decision_states": {
+      "UNCERTAIN": 2841
+    },
+    "final_decision_coverage": 0.0,
+    "final_selective_accuracy": null,
+    "benign_observations": 430,
+    "benign_candidate_false_positive_rate": 0.0
+  },
+  "covered_classes_only": {
+    "observations": 2808,
+    "candidate_exact_label_accuracy": 0.9661680911680912,
+    "candidate_binary_attack_accuracy": 0.9661680911680912,
+    "decision_states": {
+      "UNCERTAIN": 2808
+    },
+    "final_decision_coverage": 0.0,
+    "final_selective_accuracy": null,
+    "benign_observations": 430,
+    "benign_candidate_false_positive_rate": 0.0
+  },
+  "final_flow_snapshots": {
+    "observations": 305,
+    "candidate_exact_label_accuracy": 0.940983606557377,
+    "candidate_binary_attack_accuracy": 0.940983606557377,
+    "decision_states": {
+      "UNCERTAIN": 305
+    },
+    "final_decision_coverage": 0.0,
+    "final_selective_accuracy": null,
+    "benign_observations": 168,
+    "benign_candidate_false_positive_rate": 0.0
+  },
+  "per_label": {
+    "BOTNET_COORDINATION": {
+      "status": "MODEL_UNAVAILABLE",
+      "positive_observations": 9,
+      "score_coverage": 0,
+      "recall": null,
+      "precision": null,
+      "f1": null,
+      "accuracy": null
+    },
+    "BOTNET_HOST": {
+      "status": "MODEL_UNAVAILABLE",
+      "positive_observations": 9,
+      "score_coverage": 0,
+      "recall": null,
+      "precision": null,
+      "f1": null,
+      "accuracy": null
+    },
+    "C2_BEACONING": {
+      "status": "MODEL_UNAVAILABLE",
+      "positive_observations": 12,
+      "score_coverage": 0,
+      "recall": null,
+      "precision": null,
+      "f1": null,
+      "accuracy": null
+    },
+    "DATA_EXFILTRATION": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 53,
+      "score_coverage": 1.0,
+      "tp": 45,
+      "fp": 0,
+      "fn": 8,
+      "tn": 2788,
+      "accuracy": 0.9971840901091165,
+      "precision": 1.0,
+      "recall": 0.8490566037735849,
+      "f1": 0.9183673469387755,
+      "false_positive_rate": 0.0
+    },
+    "DDoS": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 2001,
+      "score_coverage": 1.0,
+      "tp": 1998,
+      "fp": 0,
+      "fn": 3,
+      "tn": 840,
+      "accuracy": 0.9989440337909187,
+      "precision": 1.0,
+      "recall": 0.9985007496251874,
+      "f1": 0.9992498124531133,
+      "false_positive_rate": 0.0
+    },
+    "DGA": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 44,
+      "score_coverage": 0.08166138683562126,
+      "tp": 16,
+      "fp": 0,
+      "fn": 28,
+      "tn": 2797,
+      "accuracy": 0.9901443153819077,
+      "precision": 1.0,
+      "recall": 0.36363636363636365,
+      "f1": 0.5333333333333333,
+      "false_positive_rate": 0.0
+    },
+    "DNS_TUNNEL": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 56,
+      "score_coverage": 0.08166138683562126,
+      "tp": 0,
+      "fp": 0,
+      "fn": 56,
+      "tn": 2785,
+      "accuracy": 0.9802886307638156,
+      "precision": 0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.0
+    },
+    "ENCRYPTED_MALWARE": {
+      "status": "MODEL_UNAVAILABLE",
+      "positive_observations": 12,
+      "score_coverage": 0,
+      "recall": null,
+      "precision": null,
+      "f1": null,
+      "accuracy": null
+    },
+    "PORT_SCAN": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 224,
+      "score_coverage": 1.0,
+      "tp": 224,
+      "fp": 0,
+      "fn": 0,
+      "tn": 2617,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positive_rate": 0.0
+    }
+  },
+  "per_label_final_flow": {
+    "BOTNET_COORDINATION": {
+      "status": "MODEL_UNAVAILABLE",
+      "positive_observations": 3,
+      "score_coverage": 0,
+      "recall": null,
+      "precision": null,
+      "f1": null,
+      "accuracy": null
+    },
+    "BOTNET_HOST": {
+      "status": "MODEL_UNAVAILABLE",
+      "positive_observations": 3,
+      "score_coverage": 0,
+      "recall": null,
+      "precision": null,
+      "f1": null,
+      "accuracy": null
+    },
+    "C2_BEACONING": {
+      "status": "MODEL_UNAVAILABLE",
+      "positive_observations": 3,
+      "score_coverage": 0,
+      "recall": null,
+      "precision": null,
+      "f1": null,
+      "accuracy": null
+    },
+    "DATA_EXFILTRATION": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 4,
+      "score_coverage": 1.0,
+      "tp": 2,
+      "fp": 0,
+      "fn": 2,
+      "tn": 301,
+      "accuracy": 0.9934426229508196,
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "false_positive_rate": 0.0
+    },
+    "DDoS": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 3,
+      "score_coverage": 1.0,
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 302,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positive_rate": 0.0
+    },
+    "DGA": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 3,
+      "score_coverage": 0.14754098360655737,
+      "tp": 2,
+      "fp": 0,
+      "fn": 1,
+      "tn": 302,
+      "accuracy": 0.9967213114754099,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "f1": 0.8,
+      "false_positive_rate": 0.0
+    },
+    "DNS_TUNNEL": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 6,
+      "score_coverage": 0.14754098360655737,
+      "tp": 0,
+      "fp": 0,
+      "fn": 6,
+      "tn": 299,
+      "accuracy": 0.980327868852459,
+      "precision": 0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.0
+    },
+    "ENCRYPTED_MALWARE": {
+      "status": "MODEL_UNAVAILABLE",
+      "positive_observations": 3,
+      "score_coverage": 0,
+      "recall": null,
+      "precision": null,
+      "f1": null,
+      "accuracy": null
+    },
+    "PORT_SCAN": {
+      "status": "CANDIDATE_ONLY",
+      "positive_observations": 112,
+      "score_coverage": 1.0,
+      "tp": 112,
+      "fp": 0,
+      "fn": 0,
+      "tn": 193,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positive_rate": 0.0
+    }
+  },
+  "scenarios": [
+    {
+      "family": "benign_mixed",
+      "seed": 2026091800,
+      "packets": 22,
+      "observations": 36,
+      "attack_observations": 0,
+      "candidate_exact_label_accuracy": 1.0,
+      "decision_states": {
+        "UNCERTAIN": 36
+      },
+      "runtime_stats": {
+        "processed_total": 36,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 2.3452625000008993,
+        "flows_per_sec": 15.350094072619246,
+        "inference_p95_ms": 66.55180000052496,
+        "state_sizes": {
+          "c2": 8,
+          "graph_edges": 8,
+          "incidents": 0,
+          "dedupe": 36
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "ddos",
+      "seed": 2026091801,
+      "packets": 2020,
+      "observations": 2038,
+      "attack_observations": 2001,
+      "candidate_exact_label_accuracy": 0.9985279685966634,
+      "decision_states": {
+        "UNCERTAIN": 2038
+      },
+      "runtime_stats": {
+        "processed_total": 2038,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 127.84686449999936,
+        "flows_per_sec": 15.940946287345282,
+        "inference_p95_ms": 57.420100001763785,
+        "state_sizes": {
+          "c2": 9,
+          "graph_edges": 9,
+          "incidents": 0,
+          "dedupe": 2038
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "port_scan",
+      "seed": 2026091802,
+      "packets": 121,
+      "observations": 235,
+      "attack_observations": 200,
+      "candidate_exact_label_accuracy": 1.0,
+      "decision_states": {
+        "UNCERTAIN": 235
+      },
+      "runtime_stats": {
+        "processed_total": 235,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 13.016892800000278,
+        "flows_per_sec": 18.053463573119,
+        "inference_p95_ms": 55.38180000075954,
+        "state_sizes": {
+          "c2": 8,
+          "graph_edges": 8,
+          "incidents": 0,
+          "dedupe": 235
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "slow_scan",
+      "seed": 2026091803,
+      "packets": 34,
+      "observations": 59,
+      "attack_observations": 24,
+      "candidate_exact_label_accuracy": 1.0,
+      "decision_states": {
+        "UNCERTAIN": 59
+      },
+      "runtime_stats": {
+        "processed_total": 59,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 3.1882051000011415,
+        "flows_per_sec": 18.50571031329787,
+        "inference_p95_ms": 55.55139999887615,
+        "state_sizes": {
+          "c2": 8,
+          "graph_edges": 8,
+          "incidents": 0,
+          "dedupe": 59
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "dga",
+      "seed": 2026091804,
+      "packets": 63,
+      "observations": 80,
+      "attack_observations": 44,
+      "candidate_exact_label_accuracy": 0.65,
+      "decision_states": {
+        "UNCERTAIN": 80
+      },
+      "runtime_stats": {
+        "processed_total": 80,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 4.680006599999615,
+        "flows_per_sec": 17.093992987105313,
+        "inference_p95_ms": 55.38889999843377,
+        "state_sizes": {
+          "c2": 8,
+          "graph_edges": 8,
+          "incidents": 0,
+          "dedupe": 80
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "dns_tunnel",
+      "seed": 2026091805,
+      "packets": 62,
+      "observations": 78,
+      "attack_observations": 44,
+      "candidate_exact_label_accuracy": 0.4358974358974359,
+      "decision_states": {
+        "UNCERTAIN": 78
+      },
+      "runtime_stats": {
+        "processed_total": 78,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 4.790630200001033,
+        "flows_per_sec": 16.281782718270172,
+        "inference_p95_ms": 55.821199999627424,
+        "state_sizes": {
+          "c2": 8,
+          "graph_edges": 8,
+          "incidents": 0,
+          "dedupe": 78
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "low_rate_dns_tunnel",
+      "seed": 2026091806,
+      "packets": 31,
+      "observations": 49,
+      "attack_observations": 12,
+      "candidate_exact_label_accuracy": 0.7551020408163265,
+      "decision_states": {
+        "UNCERTAIN": 49
+      },
+      "runtime_stats": {
+        "processed_total": 49,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 2.655225500000597,
+        "flows_per_sec": 18.454176490843803,
+        "inference_p95_ms": 53.491200000280514,
+        "state_sizes": {
+          "c2": 8,
+          "graph_edges": 8,
+          "incidents": 0,
+          "dedupe": 49
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "c2",
+      "seed": 2026091807,
+      "packets": 31,
+      "observations": 48,
+      "attack_observations": 12,
+      "candidate_exact_label_accuracy": 0.75,
+      "decision_states": {
+        "UNCERTAIN": 48
+      },
+      "runtime_stats": {
+        "processed_total": 48,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 2.6549952999994275,
+        "flows_per_sec": 18.07912804968444,
+        "inference_p95_ms": 55.603299999347655,
+        "state_sizes": {
+          "c2": 11,
+          "graph_edges": 11,
+          "incidents": 0,
+          "dedupe": 48
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "botnet",
+      "seed": 2026091808,
+      "packets": 28,
+      "observations": 45,
+      "attack_observations": 9,
+      "candidate_exact_label_accuracy": 0.8,
+      "decision_states": {
+        "UNCERTAIN": 45
+      },
+      "runtime_stats": {
+        "processed_total": 45,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 2.5517299999992247,
+        "flows_per_sec": 17.63509462208528,
+        "inference_p95_ms": 53.26889999923878,
+        "state_sizes": {
+          "c2": 11,
+          "graph_edges": 11,
+          "incidents": 0,
+          "dedupe": 45
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "encrypted_malware",
+      "seed": 2026091809,
+      "packets": 30,
+      "observations": 48,
+      "attack_observations": 12,
+      "candidate_exact_label_accuracy": 0.75,
+      "decision_states": {
+        "UNCERTAIN": 48
+      },
+      "runtime_stats": {
+        "processed_total": 48,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 2.72257350000109,
+        "flows_per_sec": 17.630378022845218,
+        "inference_p95_ms": 57.54990000059479,
+        "state_sizes": {
+          "c2": 8,
+          "graph_edges": 8,
+          "incidents": 0,
+          "dedupe": 48
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "exfiltration",
+      "seed": 2026091810,
+      "packets": 69,
+      "observations": 84,
+      "attack_observations": 47,
+      "candidate_exact_label_accuracy": 0.9761904761904762,
+      "decision_states": {
+        "UNCERTAIN": 84
+      },
+      "runtime_stats": {
+        "processed_total": 84,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 4.485965200001374,
+        "flows_per_sec": 18.725067238589876,
+        "inference_p95_ms": 52.755299999262206,
+        "state_sizes": {
+          "c2": 10,
+          "graph_edges": 10,
+          "incidents": 0,
+          "dedupe": 84
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    },
+    {
+      "family": "low_slow_exfiltration",
+      "seed": 2026091811,
+      "packets": 25,
+      "observations": 41,
+      "attack_observations": 6,
+      "candidate_exact_label_accuracy": 0.8536585365853658,
+      "decision_states": {
+        "UNCERTAIN": 41
+      },
+      "runtime_stats": {
+        "processed_total": 41,
+        "duplicates_total": 0,
+        "alerts_total": 0,
+        "errors_total": 0,
+        "uptime_s": 2.312144999999873,
+        "flows_per_sec": 17.73245190072519,
+        "inference_p95_ms": 52.097799998591654,
+        "state_sizes": {
+          "c2": 10,
+          "graph_edges": 10,
+          "incidents": 0,
+          "dedupe": 41
+        },
+        "model_profile": [
+          "unversioned"
+        ],
+        "drift_status": "NONE"
+      }
+    }
+  ],
+  "elapsed_seconds": 173.66766469999857,
+  "compatibility": {
+    "original_bundle_sha256": "f8dc446bf6d6d3f0470dcc6f8e6f5ee424194069158cd3a59dc072a82a6172c2",
+    "portable_tree_parity": "portable_trees/windows_parity.json",
+    "line_endings_restored": [
+      "policy.json",
+      "training_report.json"
+    ]
+  },
+  "agent1_model_sha256": {
+    "dga_context_xgb": "ee2151493b5d47461a4c101cfdab1e805e723be4a9527a8eaebe1e9affc90cf6",
+    "dga_char_attention": "be7d6a1783624911e9a9250637e3428e2976358037a9228852ee4293625a1e07",
+    "dns_tunnel_fast_gbdt": "54d446d0efa276bbc42bea10bc2125f7130accf8c151a633251666be0ec2c4ab",
+    "dns_tunnel_bytecnn": "044b9f968431a32820eb6bd1851f5575c8f2b471108d319762244b1a4e8a4824",
+    "dns_tunnel_sequence": "225096df0ec59348230c7b8d4780eba981070db1e4ea3bec52b75dcb52096209"
+  },
+  "limitations": [
+    "Fresh seeds from the same simulator algorithms; not a real-world benchmark.",
+    "12 compact scenarios, one seed each, three clients and two servers, 90 seconds each.",
+    "Partial snapshots are correlated; final-flow snapshot metrics are reported separately.",
+    "Candidate threshold crossings ignore final calibration and policy approval gates; they are not actual alerts.",
+    "C2, botnet and encrypted-malware heads unavailable: no class accuracy claimed.",
+    "Encrypted-malware simulation emits dummy opaque bytes, not genuine malware TLS sessions.",
+    "No fitting, threshold tuning or adaptation performed on this evaluation.",
+    "Offline model path exercised; Redis/backend/dashboard delivery not tested.",
+    "Windows XGBoost cannot load the original Linux memory snapshot; six unchanged trees were exported with Linux and verified against Linux predictions."
+  ],
+  "supported_macro_recall": 0.6422387434070271,
+  "supported_macro_f1": 0.6901900985450444,
+  "environment": {
+    "python": "3.13.1 (tags/v3.13.1:0671451, Dec  3 2024, 19:06:28) [MSC v.1942 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "xgboost": "3.4.1",
+      "torch": "2.13.0",
+      "numpy": "2.2.2",
+      "scikit-learn": "1.9.0",
+      "dpkt": "1.9.8",
+      "pydantic": "2.11.3",
+      "joblib": "1.6.0"
+    }
+  }
+}

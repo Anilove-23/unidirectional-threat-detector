@@ -1,0 +1,129 @@
+{
+  "title": "Specialist Out-of-Distribution (OOD) & Evasion Robustness Benchmark",
+  "checkpoint": "C:\\Users\\ASUS\\Desktop\\SIH_2026\\artifacts\\specialists\\0.1.0-sim",
+  "c2_beaconing_ood": {
+    "burst_and_sleep": {
+      "count": 100,
+      "detected": 0,
+      "recall": 0.0,
+      "mean_score": 0.0
+    },
+    "high_jitter_60pct": {
+      "count": 100,
+      "detected": 2,
+      "recall": 0.02,
+      "mean_score": 0.0389
+    },
+    "missed_callbacks_35pct": {
+      "count": 100,
+      "detected": 7,
+      "recall": 0.07,
+      "mean_score": 0.0499
+    },
+    "benign_periodic_ntp_hard_negatives": {
+      "count": 100,
+      "false_alarms": 100,
+      "fpr": 1.0,
+      "mean_score": 1.0
+    },
+    "overall_binary": {
+      "tp": 9,
+      "fp": 100,
+      "fn": 291,
+      "tn": 0,
+      "precision": 0.0826,
+      "recall": 0.03,
+      "f1": 0.044,
+      "fpr": 1.0,
+      "roc_auc": 0.005
+    }
+  },
+  "botnet_graphsage_ood": {
+    "p2p_decentralized_mesh": {
+      "BOTNET_HOST": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1327,
+        "tn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "fpr": 0.0,
+        "roc_auc": 0.0
+      },
+      "BOTNET_COORDINATION": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1327,
+        "tn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "fpr": 0.0,
+        "roc_auc": 0.0
+      }
+    },
+    "hierarchical_3tier_tree": {
+      "BOTNET_HOST": {
+        "tp": 1616,
+        "fp": 0,
+        "fn": 200,
+        "tn": 0,
+        "precision": 1.0,
+        "recall": 0.8899,
+        "f1": 0.9417,
+        "fpr": 0.0,
+        "roc_auc": 1.0
+      },
+      "BOTNET_COORDINATION": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 200,
+        "tn": 1616,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "fpr": 0.0,
+        "roc_auc": 0.8275
+      }
+    },
+    "benign_cluster_hard_negatives": {
+      "BOTNET_HOST": {
+        "tp": 0,
+        "fp": 647,
+        "fn": 0,
+        "tn": 355,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "fpr": 0.6457,
+        "roc_auc": 0.0
+      },
+      "BOTNET_COORDINATION": {
+        "tp": 0,
+        "fp": 23,
+        "fn": 0,
+        "tn": 979,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "fpr": 0.023,
+        "roc_auc": 0.0
+      }
+    }
+  },
+  "dns_graphsage_ood": {
+    "novel_base32_tunnel": {
+      "count": 50,
+      "mean_score": 1.0,
+      "detected": 50,
+      "false_alarms": null
+    },
+    "cdn_prefetch_hard_negatives": {
+      "count": 50,
+      "mean_score": 0.4593,
+      "detected": null,
+      "false_alarms": 11
+    }
+  }
+}

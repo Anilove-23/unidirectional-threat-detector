@@ -1,0 +1,13 @@
+{
+  "schema_version": "2.0.0",
+  "version": "2.0.0-sim-20260918",
+  "status": "candidate",
+  "bundle": "bundle.joblib",
+  "policy": "policy.json",
+  "dataset_index_sha256": "d68fb074157d5af26cb8625446cf37b10a3ad32fb094425ccd6211f8d4792a99",
+  "artifacts": {
+    "bundle.joblib": "f8dc446bf6d6d3f0470dcc6f8e6f5ee424194069158cd3a59dc072a82a6172c2",
+    "policy.json": "498839d72fb4a300bc3870dd5929b4453c7846174bc835feb2e11c1a808ea266",
+    "training_report.json": "579e8d9d40ee5dda23eb7de6babbedc9b3ec7e3e206b133a20b4c04838426cb7"
+  }
+}

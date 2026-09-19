@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0-retrain-real",
+  "seed": 26,
+  "epochs": 6,
+  "trees": 50,
+  "duration_s": 60.0,
+  "max_rows_per_scenario_class": 120,
+  "threads": 2,
+  "cicids": "C:\\Users\\ASUS\\Desktop\\SIH_2026\\ingestion\\dataset\\CICIDS2017_improved",
+  "split_policy": "scenario, run, seed and domain disjoint; same generator algorithms across splits",
+  "cicids_usage": "external test only",
+  "numeric_feature_paths": [
+    "flow.packet_count",
+    "flow.duration_s",
+    "flow.pps",
+    "flow.iat_s_mean",
+    "flow.iat_s_min",
+    "flow.iat_s_max",
+    "flow.psh_count",
+    "flow.urg_count",
+    "flow.rst_count"
+  ]
+}

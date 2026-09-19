@@ -1,0 +1,34 @@
+{
+  "version": "thresholds-2.0.0-retrain-real",
+  "routing_version": "routing-2.0.0",
+  "approved": false,
+  "thresholds": {
+    "DDoS": 1.0,
+    "PORT_SCAN": 1.0,
+    "DGA": 0.85,
+    "DNS_TUNNEL": 0.85,
+    "C2_BEACONING": 0.85,
+    "BOTNET_HOST": 0.85,
+    "BOTNET_COORDINATION": 0.85,
+    "ENCRYPTED_MALWARE": 0.85,
+    "DATA_EXFILTRATION": 0.9677419066429138,
+    "BRUTE_FORCE": 0.85,
+    "WEB_ATTACK": 0.85
+  },
+  "review_floor": 0.4,
+  "unknown_threshold": 0.8,
+  "benign_ceiling": 0.2,
+  "min_visibility": 0.6,
+  "max_disagreement": 0.3,
+  "required_coverage": [
+    "DDoS",
+    "PORT_SCAN",
+    "DGA",
+    "DNS_TUNNEL",
+    "C2_BEACONING",
+    "BOTNET_HOST",
+    "BOTNET_COORDINATION",
+    "ENCRYPTED_MALWARE",
+    "DATA_EXFILTRATION"
+  ]
+}

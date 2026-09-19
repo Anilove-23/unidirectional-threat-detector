@@ -1,0 +1,55 @@
+{
+  "total_rows_evaluated": 5000,
+  "benign_rows": 3000,
+  "attack_rows": 2000,
+  "heads": {
+    "DDoS": {
+      "score_column": "p_DDoS",
+      "roc_auc": 0.740595,
+      "gates": {
+        "unconstrained_peak_f1": {
+          "threshold": 0.9,
+          "tp": 800.0,
+          "fp": 2179.0,
+          "fn": 0.0,
+          "tn": 2021.0,
+          "benign_fp": 1263.0,
+          "benign_total": 3000.0,
+          "benign_fpr": 0.421,
+          "precision": 0.268546,
+          "recall": 1.0,
+          "f1": 0.423392,
+          "specificity": 0.48119,
+          "balanced_accuracy": 0.740595,
+          "mcc": 0.359475
+        },
+        "gate_benign_fpr_under_1pct": null,
+        "gate_benign_fpr_under_01pct": null
+      }
+    },
+    "PORT_SCAN": {
+      "score_column": "p_PORT_SCAN",
+      "roc_auc": 0.58804,
+      "gates": {
+        "unconstrained_peak_f1": {
+          "threshold": 0.5,
+          "tp": 169.0,
+          "fp": 281.0,
+          "fn": 531.0,
+          "tn": 4019.0,
+          "benign_fp": 190.0,
+          "benign_total": 3000.0,
+          "benign_fpr": 0.063333,
+          "precision": 0.375556,
+          "recall": 0.241429,
+          "f1": 0.293913,
+          "specificity": 0.934651,
+          "balanced_accuracy": 0.58804,
+          "mcc": 0.213492
+        },
+        "gate_benign_fpr_under_1pct": null,
+        "gate_benign_fpr_under_01pct": null
+      }
+    }
+  }
+}
